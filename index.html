@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boyne 2026 — Ryder Cup Scoreboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --red: #c41e3a;
+    --red-dark: #9a1830;
+    --red-light: #e8344f;
+    --blue: #003da5;
+    --blue-dark: #002d7a;
+    --blue-light: #1a5fd4;
+    --gold: #d4a843;
+    --bg: #0a0e14;
+    --bg-card: #131a24;
+    --text: #e8edf3;
+    --text-muted: #7a8ba3;
+    --border: #1e2d3d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(180deg, #0f1520 0%, var(--bg) 100%);
+    padding: 2.5rem 1.5rem 0.75rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.15rem;
+  }
+  .hero-event {
+    font-family: 'Oswald', sans-serif;
+    font-size: 4.5rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 0.15rem;
+  }
+  .hero-venue {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  /* ── MASSIVE SCORE ── */
+  .main-score {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+    padding: 1.5rem 0 0.5rem;
+  }
+  .team-block { text-align: center; flex: 0 0 auto; min-width: 160px; }
+  .team-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .team-label.red { color: var(--red-light); }
+  .team-label.blue { color: var(--blue-light); }
+  .team-nickname {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.05em;
+  }
+  .big-number {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .big-number.red { color: var(--red); }
+  .big-number.blue { color: var(--blue); }
+  .score-sep {
+    font-family: 'Oswald', sans-serif;
+    color: var(--text-muted);
+    padding-bottom: 1.5rem;
+  }
+
+  /* ── MASTER BAR ── */
+  .master-bar-wrap { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; margin-bottom: 0.4rem; }
+  .master-bar {
+    height: 72px;
+    border-radius: 36px;
+    overflow: hidden;
+    display: flex;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    position: relative;
+  }
+  .master-bar .red-fill {
+    background: linear-gradient(90deg, var(--red-dark), var(--red));
+    height: 100%;
+    transition: width 0.8s ease;
+    display: flex; align-items: center; justify-content: flex-end;
+    padding-right: 16px; min-width: 50px;
+  }
+  .master-bar .blue-fill {
+    background: linear-gradient(90deg, var(--blue), var(--blue-dark));
+    height: 100%;
+    transition: width 0.8s ease;
+    display: flex; align-items: center; justify-content: flex-start;
+    padding-left: 16px; min-width: 50px;
+  }
+  .master-bar .remaining {
+    flex: 1;
+    background: repeating-linear-gradient(-45deg, transparent, transparent 4px, rgba(255,255,255,0.02) 4px, rgba(255,255,255,0.02) 8px);
+  }
+  .master-bar .bar-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+  .master-bar .win-line {
+    position: absolute; left: 50%; top: -4px; bottom: -4px; width: 2px; background: var(--gold); z-index: 10;
+  }
+  .master-bar .win-marker {
+    position: absolute; left: 50%; transform: translateX(-50%); top: -18px;
+    font-family: 'Oswald', sans-serif; font-size: 0.55rem; font-weight: 600;
+    color: var(--gold); letter-spacing: 0.1em; white-space: nowrap;
+  }
+
+  /* ── STATUS STRIP ── */
+  .status-wrap { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
+  .status-strip {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.6rem 0; border-bottom: 1px solid var(--border); margin-bottom: 0.5rem;
+  }
+  .status-item { text-align: center; }
+  .status-label {
+    font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.1rem;
+  }
+  .status-value { font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 600; }
+  .status-value.red { color: var(--red-light); }
+  .status-value.blue { color: var(--blue-light); }
+  .status-value.gold { color: var(--gold); }
+  .status-value.neutral { color: var(--text); }
+
+  /* ── PROJECTION ── */
+  .proj-wrap { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
+  .projection {
+    text-align: center; padding: 0.5rem 1rem; border-radius: 8px; margin-bottom: 1rem;
+    font-family: 'Oswald', sans-serif; font-size: 0.8rem; font-weight: 600;
+    letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .projection.red-leading {
+    background: linear-gradient(90deg, rgba(196,30,58,0.15), rgba(196,30,58,0.05));
+    border: 1px solid rgba(196,30,58,0.3); color: var(--red-light);
+  }
+  .projection.blue-leading {
+    background: linear-gradient(90deg, rgba(0,61,165,0.05), rgba(0,61,165,0.15));
+    border: 1px solid rgba(0,61,165,0.3); color: var(--blue-light);
+  }
+  .projection.tied {
+    background: linear-gradient(90deg, rgba(212,168,67,0.05), rgba(212,168,67,0.1), rgba(212,168,67,0.05));
+    border: 1px solid rgba(212,168,67,0.3); color: var(--gold);
+  }
+
+  /* ── CONTENT AREA ── */
+  .content { max-width: 900px; margin: 0 auto; padding: 0 1.5rem 2rem; }
+
+  /* ── DAY HEADERS ── */
+  .day-header {
+    display: flex; align-items: center; gap: 0.75rem; margin: 1.5rem 0 0.6rem;
+  }
+  .day-header .day-label {
+    font-family: 'Oswald', sans-serif; font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); white-space: nowrap;
+  }
+  .day-header .day-line { flex: 1; height: 1px; background: var(--border); }
+  .day-header .day-course {
+    font-size: 0.6rem; color: var(--text-muted); letter-spacing: 0.05em; white-space: nowrap;
+  }
+
+  /* ── MATCH CARDS ── */
+  .match-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 0.75rem 0.85rem; margin-bottom: 0.5rem;
+  }
+  .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; }
+  .match-format {
+    font-family: 'Oswald', sans-serif; font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 0.05em; text-transform: uppercase; color: var(--text);
+  }
+  .match-pts-badge {
+    font-family: 'Oswald', sans-serif; font-size: 0.6rem; font-weight: 500;
+    padding: 0.1rem 0.45rem; border-radius: 10px;
+    background: rgba(212,168,67,0.12); color: var(--gold); letter-spacing: 0.05em; margin-left: 0.4rem;
+  }
+  .match-status { font-size: 0.6rem; color: var(--text-muted); font-weight: 500; }
+  .match-status.live { color: #4ade80; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+  .match-detail { font-size: 0.6rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+
+  /* ═══════════════════════════════
+     CHEVRON ROWS
+     ═══════════════════════════════ */
+  .chevron-matches { display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .chevron-row {
+    position: relative; display: flex; align-items: stretch;
+    border-radius: 6px; overflow: hidden; background: rgba(255,255,255,0.03);
+  }
+
+  /* Player name panels */
+  .chev-names {
+    position: absolute; top: 0; bottom: 0; display: flex; flex-direction: column;
+    justify-content: center; padding: 0.25rem 0.65rem; z-index: 5; gap: 0.05rem;
+  }
+  .chev-names.left { left: 0; text-align: left; }
+  .chev-names.right { right: 0; text-align: right; }
+  .chev-player { font-size: 0.75rem; font-weight: 700; color: #fff; line-height: 1.3; }
+
+  /* Center overlay */
+  .chev-center {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    z-index: 10; text-align: center; pointer-events: none;
+  }
+  .chev-match-label {
+    font-family: 'Oswald', sans-serif; font-size: 0.55rem; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.75);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.9); margin-bottom: 0.1rem;
+  }
+  .chev-pts {
+    font-family: 'Oswald', sans-serif; font-size: 1.2rem; font-weight: 700;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.9); line-height: 1;
+  }
+  .chev-pts .r { color: #fff; }
+  .chev-pts .s { color: rgba(255,255,255,0.7); padding: 0 0.1rem; font-size: 0.9rem; }
+  .chev-pts .b { color: #fff; }
+  .chev-outcome {
+    font-family: 'Oswald', sans-serif; font-size: 0.5rem; font-weight: 600;
+    letter-spacing: 0.08em; text-shadow: 0 1px 4px rgba(0,0,0,0.9); margin-top: 0.05rem;
+  }
+
+  .chev-live-dot {
+    position: absolute; top: 3px; left: 50%; transform: translateX(-50%); z-index: 11;
+    font-size: 0.45rem; font-weight: 600; color: #4ade80;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.9); animation: pulse 2s infinite;
+  }
+
+  .chevron-row.upcoming { opacity: 0.45; }
+  .chevron-row.halved { outline: 1px solid rgba(212,168,67,0.3); }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center; padding: 1.5rem 1rem; font-size: 0.6rem;
+    color: var(--text-muted); letter-spacing: 0.05em;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .hero-event { font-size: 1.6rem; }
+    .big-number { font-size: 5rem !important; }
+    .score-sep { font-size: 1.5rem !important; }
+    .main-score { gap: 0.75rem; }
+    .team-block { min-width: 100px; }
+    .status-strip { flex-wrap: wrap; gap: 0.4rem; }
+    .status-item { flex: 1 1 30%; }
+    .chev-player { font-size: 0.65rem; }
+    .chev-pts { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-title">Boyne Golf Trip &bull; May 11&ndash;15, 2026</div>
+  <div class="hero-event">The Ryder Cup</div>
+</div>
+
+<div id="app"></div>
+
+<div class="footer">First to 24.5 wins &bull; 48 points available &bull; Boyne 2026</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// DATA — Edit scores here during the trip
+// ═══════════════════════════════════════════════
+
+const TOTAL_POINTS = 48;
+const POINTS_TO_WIN = 24.5;
+
+const data = {
+  red: { name: "Stiff Shaft Swingers", captain: "Luke Vandenbosch" },
+  blue: { name: "Gaylord Gooners", captain: "Ryan Versolatto" },
+
+  days: [
+    {
+      day: 1, session: "PM", course: "The Monument — Boyne Mountain",
+      rounds: [{
+        format: "Irish Rumble", id: "ir",
+        detail: "8v8 &bull; Escalating count &bull; 18 holes",
+        pointsAvail: 4, status: "final",
+        matches: [{
+          label: "",
+          red: [["Stiff Shaft", "Swingers"]], blue: [["Gaylord", "Gooners"]],
+          redPts: 4, bluePts: 0,
+        }]
+      }]
+    },
+    {
+      day: 2, session: "AM", course: "The Heather — Boyne Highlands",
+      rounds: [{
+        format: "Lone Ranger", id: "lr",
+        detail: "Two 4v4 sub-matches &bull; 80% HCP &bull; 18 holes",
+        pointsAvail: 4, status: "final",
+        matches: [
+          {
+            label: "Match A",
+            red: [["Kyle","Elliott"],["Nick","Grimshaw"],["Alex","Churchill"],["Jesse","Joosten"]],
+            blue: [["Steve","Rioux"],["Ryan","Versolatto"],["Tyler","Barnwell"],["Ryan","Dixon"]],
+            redPts: 0, bluePts: 2,
+          },
+          {
+            label: "Match B",
+            red: [["Justin","Vere"],["William","Churchill"],["Corey","Joosten"],["Luke","Vandenbosch"]],
+            blue: [["Josh","MacDonald"],["Andrew","Versolatto"],["Mike","Grimshaw"],["Jeff","Hogg"]],
+            redPts: 2, bluePts: 0,
+          },
+        ]
+      }]
+    },
+    {
+      day: 2, session: "PM", course: "Donald Ross Memorial — Boyne Highlands",
+      rounds: [{
+        format: "6-6-6", id: "666",
+        detail: "2v2 Matchplay &bull; Scramble / Best Ball / Alt Shot &bull; 18 holes",
+        pointsAvail: 8, status: "final",
+        matches: [
+          { label: "Match 1",
+            red: [["Luke","Vandenbosch"],["Corey","Joosten"]], blue: [["Mike","Grimshaw"],["Ryan","Dixon"]],
+            redPts: 0, bluePts: 2 },
+          { label: "Match 2",
+            red: [["Kyle","Elliott"],["Jesse","Joosten"]], blue: [["Andrew","Versolatto"],["Jeff","Hogg"]],
+            redPts: 0, bluePts: 2 },
+          { label: "Match 3",
+            red: [["Nick","Grimshaw"],["William","Churchill"]], blue: [["Tyler","Barnwell"],["Josh","MacDonald"]],
+            redPts: 2, bluePts: 0 },
+          { label: "Match 4",
+            red: [["Justin","Vere"],["Alex","Churchill"]], blue: [["Steve","Rioux"],["Ryan","Versolatto"]],
+            redPts: 1, bluePts: 1 },
+        ]
+      }]
+    },
+    {
+      day: 3, session: "AM", course: "Bay Harbor — Links / Quarry",
+      rounds: [{
+        format: "Blind Pairs", id: "bp",
+        detail: "Singles → Paired by card draw &bull; 80% HCP &bull; 18 holes",
+        pointsAvail: 4, status: "final",
+        matches: [
+          { label: "Jacks",
+            red: [["Nick","Grimshaw"],["Corey","Joosten"]], blue: [["Ryan","Versolatto"],["Tyler","Barnwell"]],
+            redPts: 1, bluePts: 0 },
+          { label: "Queens",
+            red: [["Justin","Vere"],["Alex","Churchill"]], blue: [["Steve","Rioux"],["Jeff","Hogg"]],
+            redPts: 0, bluePts: 1 },
+          { label: "Kings",
+            red: [["Kyle","Elliott"],["William","Churchill"]], blue: [["Josh","MacDonald"],["Mike","Grimshaw"]],
+            redPts: 1, bluePts: 0 },
+          { label: "Aces",
+            red: [["Luke","Vandenbosch"],["Jesse","Joosten"]], blue: [["Andrew","Versolatto"],["Ryan","Dixon"]],
+            redPts: 0.5, bluePts: 0.5 },
+        ]
+      }]
+    },
+    {
+      day: 3, session: "PM", course: "Bay Harbor — Preserve",
+      rounds: [{
+        format: "Worst Ball", id: "wb",
+        detail: "8v8 &bull; Worst score counts &bull; 9 holes",
+        pointsAvail: 4, status: "live", liveHole: "Hole 6 of 9",
+        matches: [{
+          label: "",
+          red: [["Stiff Shaft","Swingers"]], blue: [["Gaylord","Gooners"]],
+          redPts: 0, bluePts: 0,
+        }]
+      }]
+    },
+    {
+      day: 4, session: "AM", course: "Arthur Hills — Boyne Highlands",
+      rounds: [{
+        format: "1v1 Matchplay", id: "mp",
+        detail: "8 individual matches &bull; 18 holes &bull; 3 pts each",
+        pointsAvail: 24, status: "upcoming",
+        matches: [
+          { label: "Match 1", red: [["Justin","Vere"]], blue: [["Steve","Rioux"]], redPts: 0, bluePts: 0 },
+          { label: "Match 2", red: [["Kyle","Elliott"]], blue: [["Andrew","Versolatto"]], redPts: 0, bluePts: 0 },
+          { label: "Match 3", red: [["Nick","Grimshaw"]], blue: [["Josh","MacDonald"]], redPts: 0, bluePts: 0 },
+          { label: "Match 4", red: [["William","Churchill"]], blue: [["Ryan","Versolatto"]], redPts: 0, bluePts: 0 },
+          { label: "Match 5", red: [["Corey","Joosten"]], blue: [["Tyler","Barnwell"]], redPts: 0, bluePts: 0 },
+          { label: "Match 6", red: [["Alex","Churchill"]], blue: [["Mike","Grimshaw"]], redPts: 0, bluePts: 0 },
+          { label: "Match 7", red: [["Luke","Vandenbosch"]], blue: [["Ryan","Dixon"]], redPts: 0, bluePts: 0 },
+          { label: "Match 8", red: [["Jesse","Joosten"]], blue: [["Jeff","Hogg"]], redPts: 0, bluePts: 0 },
+        ]
+      }]
+    }
+  ]
+};
+
+// ═══════════════════════════════════════════════
+// COMPUTE
+// ═══════════════════════════════════════════════
+
+function computeTotals() {
+  let redTotal = 0, blueTotal = 0, decided = 0, remaining = 0;
+  data.days.forEach(day => day.rounds.forEach(round => {
+    if (round.status === "upcoming") { remaining += round.pointsAvail; return; }
+    round.matches.forEach(m => {
+      redTotal += m.redPts; blueTotal += m.bluePts;
+      decided += m.redPts + m.bluePts;
+    });
+    if (round.status === "live") {
+      const pts = round.matches.reduce((s,m) => s + m.redPts + m.bluePts, 0);
+      remaining += round.pointsAvail - pts;
+    }
+  }));
+  return { redTotal, blueTotal, decided, remaining };
+}
+
+// ═══════════════════════════════════════════════
+// CHEVRON SVG — only the winner gets a colored arrow
+// ═══════════════════════════════════════════════
+
+let svgIdx = 0;
+// winner: "red", "blue", "halved", or "none"
+function chevronSVG(winner, h) {
+  const id = svgIdx++;
+  const tip = 3.5; // chevron point size in viewBox units
+
+  // Winner's arrow extends ~60% across, pushing into the loser's territory
+  // Loser side: no arrow at all, just neutral bg
+  let paths = '';
+
+  if (winner === 'red') {
+    // Red arrow from left, tip at ~62%
+    const rEnd = 62;
+    paths = `<path d="M0 0 L${rEnd-tip} 0 L${rEnd} ${h/2} L${rEnd-tip} ${h} L0 ${h}Z" fill="url(#rg${id})"/>`;
+  } else if (winner === 'blue') {
+    // Blue arrow from right, tip at ~38%
+    const bStart = 38;
+    paths = `<path d="M100 0 L${bStart+tip} 0 L${bStart} ${h/2} L${bStart+tip} ${h} L100 ${h}Z" fill="url(#bg${id})"/>`;
+  } else if (winner === 'halved') {
+    // Both arrows meet in the middle, even
+    const mid = 50;
+    paths = `
+      <path d="M0 0 L${mid-tip-1} 0 L${mid-1} ${h/2} L${mid-tip-1} ${h} L0 ${h}Z" fill="url(#rg${id})" opacity="0.7"/>
+      <path d="M100 0 L${mid+tip+1} 0 L${mid+1} ${h/2} L${mid+tip+1} ${h} L100 ${h}Z" fill="url(#bg${id})" opacity="0.7"/>
+    `;
+  }
+  // winner === 'none': no colored arrows at all (upcoming/live)
+
+  return `<svg viewBox="0 0 100 ${h}" preserveAspectRatio="none" style="width:100%;height:100%;display:block;">
+    <defs>
+      <linearGradient id="rg${id}" x1="0%" x2="100%"><stop offset="0%" stop-color="#9a1830"/><stop offset="100%" stop-color="#c41e3a"/></linearGradient>
+      <linearGradient id="bg${id}" x1="0%" x2="100%"><stop offset="0%" stop-color="#003da5"/><stop offset="100%" stop-color="#002d7a"/></linearGradient>
+    </defs>
+    ${paths}
+  </svg>`;
+}
+
+// ═══════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════
+
+function render() {
+  const t = computeTotals();
+  const redPct = (t.redTotal / TOTAL_POINTS) * 100;
+  const bluePct = (t.blueTotal / TOTAL_POINTS) * 100;
+  const redNeeds = Math.max(0, POINTS_TO_WIN - t.redTotal);
+  const blueNeeds = Math.max(0, POINTS_TO_WIN - t.blueTotal);
+
+  let projClass, projText;
+  if (t.redTotal > t.blueTotal) {
+    projClass = "red-leading";
+    projText = `${data.red.name} lead by ${fp(t.redTotal - t.blueTotal)} — ${fp(t.remaining)} pts remaining`;
+  } else if (t.blueTotal > t.redTotal) {
+    projClass = "blue-leading";
+    projText = `${data.blue.name} lead by ${fp(t.blueTotal - t.redTotal)} — ${fp(t.remaining)} pts remaining`;
+  } else {
+    projClass = "tied";
+    projText = `All square — ${fp(t.remaining)} pts remaining`;
+  }
+  if (t.redTotal >= POINTS_TO_WIN) { projClass = "red-leading"; projText = `${data.red.name} have won the Ryder Cup!`; }
+  else if (t.blueTotal >= POINTS_TO_WIN) { projClass = "blue-leading"; projText = `${data.blue.name} have won the Ryder Cup!`; }
+  else if (redNeeds > t.remaining) { projClass = "blue-leading"; projText = `${data.blue.name} have clinched the Ryder Cup!`; }
+  else if (blueNeeds > t.remaining) { projClass = "red-leading"; projText = `${data.red.name} have clinched the Ryder Cup!`; }
+
+  // Responsive big number size
+  const bigSize = window.innerWidth < 600 ? '3rem' : '4.5rem';
+  const sepSize = window.innerWidth < 600 ? '1rem' : '1.5rem';
+
+  let h = '';
+
+  // ── MAIN SCORE ──
+  h += `<div class="main-score">
+    <div class="team-block">
+      <div class="team-label red">${data.red.name}</div>
+      <div class="big-number red" style="font-size:${bigSize}">${fp(t.redTotal)}</div>
+    </div>
+    <div class="score-sep" style="font-size:${sepSize};padding-bottom:0.5rem">&ndash;</div>
+    <div class="team-block">
+      <div class="team-label blue">${data.blue.name}</div>
+      <div class="big-number blue" style="font-size:${bigSize}">${fp(t.blueTotal)}</div>
+    </div>
+  </div>`;
+
+  // ── MASTER BAR ──
+  h += `<div class="master-bar-wrap"><div class="master-bar">
+    <div class="win-marker">24.5 TO WIN</div><div class="win-line"></div>
+    <div class="red-fill" style="width:${redPct}%">${redPct>5?`<span class="bar-label">${fp(t.redTotal)}</span>`:''}</div>
+    <div class="remaining"></div>
+    <div class="blue-fill" style="width:${bluePct}%">${bluePct>5?`<span class="bar-label">${fp(t.blueTotal)}</span>`:''}</div>
+  </div></div>`;
+
+  // ── STATUS ──
+  h += `<div class="status-wrap"><div class="status-strip">
+    <div class="status-item"><div class="status-label">Red Needs</div><div class="status-value red">${fp(redNeeds)}</div></div>
+    <div class="status-item"><div class="status-label">Decided</div><div class="status-value neutral">${fp(t.decided)} / ${TOTAL_POINTS}</div></div>
+    <div class="status-item"><div class="status-label">Remaining</div><div class="status-value gold">${fp(t.remaining)}</div></div>
+    <div class="status-item"><div class="status-label">Blue Needs</div><div class="status-value blue">${fp(blueNeeds)}</div></div>
+  </div></div>`;
+
+  // ── PROJECTION ──
+  h += `<div class="proj-wrap"><div class="projection ${projClass}">${projText}</div></div>`;
+
+  // ── MATCHES ──
+  h += `<div class="content">`;
+
+  data.days.forEach(day => {
+    h += `<div class="day-header">
+      <span class="day-label">Day ${day.day} &bull; ${day.session}</span>
+      <span class="day-line"></span>
+      <span class="day-course">${day.course}</span>
+    </div>`;
+
+    day.rounds.forEach(round => {
+      const sLabel = round.status === 'final' ? 'Final' : round.status === 'live' ? `● Live — ${round.liveHole||''}` : 'Upcoming';
+      const sClass = round.status === 'live' ? 'live' : '';
+
+      h += `<div class="match-card">
+        <div class="match-header">
+          <div><span class="match-format">${round.format}</span><span class="match-pts-badge">${round.pointsAvail} PTS</span></div>
+          <span class="match-status ${sClass}">${sLabel}</span>
+        </div>
+        <div class="match-detail">${round.detail}</div>
+        <div class="chevron-matches">`;
+
+      round.matches.forEach(m => {
+        const isUp = round.status === 'upcoming';
+        const isLive = round.status === 'live';
+        const isHalved = m.redPts === m.bluePts && m.redPts > 0;
+        const numPlayers = Math.max(m.red.length, m.blue.length);
+
+        // Row height based on player count
+        const rowH = numPlayers <= 1 ? 44 : numPlayers <= 2 ? 56 : 76;
+
+        // Determine winner for chevron
+        let winner = 'none'; // upcoming / live
+        if (!isUp && !isLive) {
+          if (m.redPts > m.bluePts) winner = 'red';
+          else if (m.bluePts > m.redPts) winner = 'blue';
+          else if (m.redPts > 0) winner = 'halved';
+        }
+
+        const cls = `chevron-row${isUp?' upcoming':''}${isHalved?' halved':''}`;
+
+        h += `<div class="${cls}" style="height:${rowH}px">`;
+
+        // SVG background — only winner gets the colored arrow
+        h += `<div style="position:absolute;inset:0;z-index:1">${chevronSVG(winner, rowH)}</div>`;
+
+        // Red names (left) — "N. Grimshaw" format
+        h += `<div class="chev-names left">`;
+        m.red.forEach(p => h += `<div class="chev-player">${p[0][0]}. ${p[1]}</div>`);
+        h += `</div>`;
+
+        // Blue names (right) — "N. Grimshaw" format
+        h += `<div class="chev-names right">`;
+        m.blue.forEach(p => h += `<div class="chev-player">${p[0][0]}. ${p[1]}</div>`);
+        h += `</div>`;
+
+        // Center: just the Ryder Cup points
+        h += `<div class="chev-center">`;
+        if (isLive) h += `<div class="chev-live-dot">● LIVE</div>`;
+        if (m.label) h += `<div class="chev-match-label">${m.label}</div>`;
+
+        if (isUp) {
+          h += `<div class="chev-pts" style="color:var(--text-muted);font-size:0.85rem">TBD</div>`;
+        } else if (isLive) {
+          h += `<div class="chev-pts" style="color:var(--text-muted);font-size:0.85rem">IN PLAY</div>`;
+        } else {
+          h += `<div class="chev-pts"><span class="r">${fp(m.redPts)}</span><span class="s">:</span><span class="b">${fp(m.bluePts)}</span></div>`;
+          // Outcome label
+          let oc = '';
+          if (m.redPts > m.bluePts) oc = 'RED WIN';
+          else if (m.bluePts > m.redPts) oc = 'BLUE WIN';
+          else if (m.redPts > 0) oc = 'HALVED';
+          if (oc) h += `<div class="chev-outcome" style="color:rgba(255,255,255,0.8)">${oc}</div>`;
+        }
+        h += `</div>`; // chev-center
+
+        h += `</div>`; // chevron-row
+      });
+
+      h += `</div></div>`; // chevron-matches, match-card
+    });
+  });
+
+  h += `</div>`; // content
+  document.getElementById('app').innerHTML = h;
+}
+
+function fp(n) { return n % 1 === 0.5 ? n.toFixed(1) : String(n); }
+
+render();
+window.addEventListener('resize', render);
+</script>
+</body>
+</html>

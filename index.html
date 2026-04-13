@@ -40,7 +40,7 @@
   }
   .hero-title {
     font-family: 'Oswald', sans-serif;
-    font-size: 1.4rem;
+    font-size: 1rem;
     font-weight: 500;
     letter-spacing: 0.3em;
     text-transform: uppercase;
@@ -49,7 +49,7 @@
   }
   .hero-event {
     font-family: 'Oswald', sans-serif;
-    font-size: 4.5rem;
+    font-size: 3.5rem;
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -100,7 +100,7 @@
   .score-sep {
     font-family: 'Oswald', sans-serif;
     color: var(--text-muted);
-    padding-bottom: 1.5rem;
+    align-self: flex-end;
   }
 
   /* ── MASTER BAR ── */
@@ -134,6 +134,7 @@
   }
   .master-bar .bar-label {
     font-family: 'Oswald', sans-serif;
+    margin-top: -2px;
     font-size: 2.2rem;
     font-weight: 700;
     color: white;
@@ -279,13 +280,14 @@
 
   /* ── RESPONSIVE ── */
   @media (max-width: 600px) {
-    .hero-event { font-size: 1.6rem; }
+    .hero-title { font-size: 0.75rem; }
+    .hero-event { font-size: 2.2rem; }
     .big-number { font-size: 5rem !important; }
     .score-sep { font-size: 1.5rem !important; }
     .main-score { gap: 0.75rem; }
     .team-block { min-width: 100px; }
-    .status-strip { flex-wrap: wrap; gap: 0.4rem; }
-    .status-item { flex: 1 1 30%; }
+    .status-strip { flex-wrap: nowrap; }
+    .status-item { flex: 1 1 25%; min-width: 0; }
     .chev-player { font-size: 0.65rem; }
     .chev-pts { font-size: 1rem; }
   }
@@ -323,7 +325,7 @@ const data = {
         pointsAvail: 4, status: "final",
         matches: [{
           label: "",
-          red: [["Stiff Shaft", "Swingers"]], blue: [["Gaylord", "Gooners"]],
+          red: [["Stiff Shaft", "Swingers"]], blue: [["Gaylord", "Gooners"]], isTeam: true,
           redPts: 4, bluePts: 0,
         }]
       }]
@@ -402,7 +404,7 @@ const data = {
         pointsAvail: 4, status: "live", liveHole: "Hole 6 of 9",
         matches: [{
           label: "",
-          red: [["Stiff Shaft","Swingers"]], blue: [["Gaylord","Gooners"]],
+          red: [["Stiff Shaft","Swingers"]], blue: [["Gaylord","Gooners"]], isTeam: true,
           redPts: 0, bluePts: 0,
         }]
       }]
@@ -474,8 +476,8 @@ function chevronSVG(winner, h) {
     // Both arrows meet in the middle, even
     const mid = 50;
     paths = `
-      <path d="M0 0 L${mid-tip-1} 0 L${mid-1} ${h/2} L${mid-tip-1} ${h} L0 ${h}Z" fill="url(#rg${id})" opacity="0.7"/>
-      <path d="M100 0 L${mid+tip+1} 0 L${mid+1} ${h/2} L${mid+tip+1} ${h} L100 ${h}Z" fill="url(#bg${id})" opacity="0.7"/>
+      <path d="M0 0 L${mid-tip-1} 0 L${mid-1} ${h/2} L${mid-tip-1} ${h} L0 ${h}Z" fill="url(#rg${id})" opacity="0.9"/>
+      <path d="M100 0 L${mid+tip+1} 0 L${mid+1} ${h/2} L${mid+tip+1} ${h} L100 ${h}Z" fill="url(#bg${id})" opacity="0.9"/>
     `;
   }
   // winner === 'none': no colored arrows at all (upcoming/live)
@@ -528,7 +530,7 @@ function render() {
       <div class="team-label red">${data.red.name}</div>
       <div class="big-number red" style="font-size:${bigSize}">${fp(t.redTotal)}</div>
     </div>
-    <div class="score-sep" style="font-size:${sepSize};padding-bottom:0.5rem">&ndash;</div>
+    <div class="score-sep" style="font-size:${sepSize}">&ndash;</div>
     <div class="team-block">
       <div class="team-label blue">${data.blue.name}</div>
       <div class="big-number blue" style="font-size:${bigSize}">${fp(t.blueTotal)}</div>
@@ -583,7 +585,7 @@ function render() {
         const numPlayers = Math.max(m.red.length, m.blue.length);
 
         // Row height based on player count
-        const rowH = numPlayers <= 1 ? 44 : numPlayers <= 2 ? 56 : 76;
+        const rowH = numPlayers <= 1 ? 48 : numPlayers <= 2 ? 62 : 82;
 
         // Determine winner for chevron
         let winner = 'none'; // upcoming / live
@@ -600,14 +602,14 @@ function render() {
         // SVG background — only winner gets the colored arrow
         h += `<div style="position:absolute;inset:0;z-index:1">${chevronSVG(winner, rowH)}</div>`;
 
-        // Red names (left) — "N. Grimshaw" format
+        // Red names (left)
         h += `<div class="chev-names left">`;
-        m.red.forEach(p => h += `<div class="chev-player">${p[0][0]}. ${p[1]}</div>`);
+        m.red.forEach(p => h += `<div class="chev-player">${m.isTeam ? p[1] : p[0][0]+'. '+p[1]}</div>`);
         h += `</div>`;
 
-        // Blue names (right) — "N. Grimshaw" format
+        // Blue names (right)
         h += `<div class="chev-names right">`;
-        m.blue.forEach(p => h += `<div class="chev-player">${p[0][0]}. ${p[1]}</div>`);
+        m.blue.forEach(p => h += `<div class="chev-player">${m.isTeam ? p[1] : p[0][0]+'. '+p[1]}</div>`);
         h += `</div>`;
 
         // Center: just the Ryder Cup points

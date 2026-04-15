@@ -493,11 +493,11 @@ const data = {
       rounds: [{
         format: "Irish Rumble", id: "ir",
         detail: "8v8 &bull; Escalating count &bull; 18 holes",
-        pointsAvail: 4, status: "final",
+        pointsAvail: 4, status: "upcoming",
         matches: [{
           label: "",
           red: [["Stiff Shaft", "Swingers"]], blue: [["Gaylord", "Gooners"]], isTeam: true,
-          redPts: 0, bluePts: 4,
+          redPts: 0, bluePts: 0,
         }]
       }]
     },
@@ -506,19 +506,19 @@ const data = {
       rounds: [{
         format: "Lone Ranger", id: "lr",
         detail: "Two 4v4 sub-matches &bull; 80% HCP &bull; 18 holes",
-        pointsAvail: 4, status: "final",
+        pointsAvail: 4, status: "upcoming",
         matches: [
           {
             label: "Match A",
             red: [["Kyle","Elliott"],["Nick","Grimshaw"],["Alex","Churchill"],["Jesse","Joosten"]],
             blue: [["Steve","Rioux"],["Ryan","Versolatto"],["Tyler","Barnwell"],["Ryan","Dixon"]],
-            redPts: 1, bluePts: 1,
+            redPts: 0, bluePts: 0,
           },
           {
             label: "Match B",
             red: [["Justin","Vere"],["William","Churchill"],["Corey","Joosten"],["Luke","Vandenbosch"]],
             blue: [["Josh","MacDonald"],["Andrew","Versolatto"],["Mike","Grimshaw"],["Jeff","Hogg"]],
-            redPts: 2, bluePts: 0,
+            redPts: 0, bluePts: 0,
           },
         ]
       }]
@@ -528,20 +528,20 @@ const data = {
       rounds: [{
         format: "6-6-6", id: "666",
         detail: "2v2 Matchplay &bull; Scramble / Best Ball / Alt Shot &bull; 18 holes",
-        pointsAvail: 8, status: "final",
+        pointsAvail: 8, status: "upcoming",
         matches: [
           { label: "Match 1",
-            red: [["Luke","Vandenbosch"],["Corey","Joosten"]], blue: [["Mike","Grimshaw"],["Ryan","Dixon"]],
-            redPts: 2, bluePts: 0 },
+            red: [["", "Draft pending"]], blue: [["", "Draft pending"]], isTeam: true,
+            redPts: 0, bluePts: 0 },
           { label: "Match 2",
-            red: [["Kyle","Elliott"],["Jesse","Joosten"]], blue: [["Andrew","Versolatto"],["Jeff","Hogg"]],
-            redPts: 0, bluePts: 2 },
+            red: [["", "Draft pending"]], blue: [["", "Draft pending"]], isTeam: true,
+            redPts: 0, bluePts: 0 },
           { label: "Match 3",
-            red: [["Nick","Grimshaw"],["William","Churchill"]], blue: [["Tyler","Barnwell"],["Josh","MacDonald"]],
-            redPts: 2, bluePts: 0 },
+            red: [["", "Draft pending"]], blue: [["", "Draft pending"]], isTeam: true,
+            redPts: 0, bluePts: 0 },
           { label: "Match 4",
-            red: [["Justin","Vere"],["Alex","Churchill"]], blue: [["Steve","Rioux"],["Ryan","Versolatto"]],
-            redPts: 1, bluePts: 1 },
+            red: [["", "Draft pending"]], blue: [["", "Draft pending"]], isTeam: true,
+            redPts: 0, bluePts: 0 },
         ]
       }]
     },
@@ -550,20 +550,20 @@ const data = {
       rounds: [{
         format: "Blind Pairs", id: "bp",
         detail: "Singles → Paired by card draw &bull; 80% HCP &bull; 18 holes",
-        pointsAvail: 4, status: "final",
+        pointsAvail: 4, status: "upcoming",
         matches: [
           { label: "Jacks",
-            red: [["Nick","Grimshaw"],["Corey","Joosten"]], blue: [["Ryan","Versolatto"],["Tyler","Barnwell"]],
-            redPts: 1, bluePts: 0 },
+            red: [["", "Card pull pending"]], blue: [["", "Card pull pending"]], isTeam: true,
+            redPts: 0, bluePts: 0 },
           { label: "Queens",
-            red: [["Justin","Vere"],["Alex","Churchill"]], blue: [["Steve","Rioux"],["Jeff","Hogg"]],
-            redPts: 0, bluePts: 1 },
+            red: [["", "Card pull pending"]], blue: [["", "Card pull pending"]], isTeam: true,
+            redPts: 0, bluePts: 0 },
           { label: "Kings",
-            red: [["Kyle","Elliott"],["William","Churchill"]], blue: [["Josh","MacDonald"],["Mike","Grimshaw"]],
-            redPts: 0.5, bluePts: 0.5 },
+            red: [["", "Card pull pending"]], blue: [["", "Card pull pending"]], isTeam: true,
+            redPts: 0, bluePts: 0 },
           { label: "Aces",
-            red: [["Luke","Vandenbosch"],["Jesse","Joosten"]], blue: [["Andrew","Versolatto"],["Ryan","Dixon"]],
-            redPts: 0, bluePts: 1 },
+            red: [["", "Card pull pending"]], blue: [["", "Card pull pending"]], isTeam: true,
+            redPts: 0, bluePts: 0 },
         ]
       }]
     },
@@ -572,11 +572,11 @@ const data = {
       rounds: [{
         format: "Worst Ball", id: "wb",
         detail: "8v8 &bull; Worst score counts &bull; 9 holes",
-        pointsAvail: 4, status: "final",
+        pointsAvail: 4, status: "upcoming",
         matches: [{
           label: "",
           red: [["Stiff Shaft","Swingers"]], blue: [["Gaylord","Gooners"]], isTeam: true,
-          redPts: 4, bluePts: 0,
+          redPts: 0, bluePts: 0,
         }]
       }]
     },
@@ -587,14 +587,14 @@ const data = {
         detail: "8 individual matches &bull; 18 holes &bull; 3 pts each",
         pointsAvail: 24, status: "upcoming",
         matches: [
-          { label: "Match 1", red: [["Justin","Vere"]], blue: [["Steve","Rioux"]], redPts: 0, bluePts: 0 },
-          { label: "Match 2", red: [["Kyle","Elliott"]], blue: [["Andrew","Versolatto"]], redPts: 0, bluePts: 0 },
-          { label: "Match 3", red: [["Nick","Grimshaw"]], blue: [["Ryan","Versolatto"]], redPts: 0, bluePts: 0 },
-          { label: "Match 4", red: [["William","Churchill"]], blue: [["Josh","MacDonald"]], redPts: 0, bluePts: 0 },
-          { label: "Match 5", red: [["Corey","Joosten"]], blue: [["Tyler","Barnwell"]], redPts: 0, bluePts: 0 },
-          { label: "Match 6", red: [["Alex","Churchill"]], blue: [["Mike","Grimshaw"]], redPts: 0, bluePts: 0 },
-          { label: "Match 7", red: [["Luke","Vandenbosch"]], blue: [["Ryan","Dixon"]], redPts: 0, bluePts: 0 },
-          { label: "Match 8", red: [["Jesse","Joosten"]], blue: [["Jeff","Hogg"]], redPts: 0, bluePts: 0 },
+          { label: "Match 1", red: [["", "Draft pending"]], blue: [["", "Draft pending"]], isTeam: true, redPts: 0, bluePts: 0 },
+          { label: "Match 2", red: [["", "Draft pending"]], blue: [["", "Draft pending"]], isTeam: true, redPts: 0, bluePts: 0 },
+          { label: "Match 3", red: [["", "Draft pending"]], blue: [["", "Draft pending"]], isTeam: true, redPts: 0, bluePts: 0 },
+          { label: "Match 4", red: [["", "Draft pending"]], blue: [["", "Draft pending"]], isTeam: true, redPts: 0, bluePts: 0 },
+          { label: "Match 5", red: [["", "Draft pending"]], blue: [["", "Draft pending"]], isTeam: true, redPts: 0, bluePts: 0 },
+          { label: "Match 6", red: [["", "Draft pending"]], blue: [["", "Draft pending"]], isTeam: true, redPts: 0, bluePts: 0 },
+          { label: "Match 7", red: [["", "Draft pending"]], blue: [["", "Draft pending"]], isTeam: true, redPts: 0, bluePts: 0 },
+          { label: "Match 8", red: [["", "Draft pending"]], blue: [["", "Draft pending"]], isTeam: true, redPts: 0, bluePts: 0 },
         ]
       }]
     }
@@ -609,24 +609,24 @@ const data = {
 
 const fedex = {
   // Set this once enough rounds have completed that the leaderboard is meaningful (e.g. after round 1).
-  showLeaderboard: true,
+  showLeaderboard: false,
   players: [
-    { first: "Kyle",    last: "Elliott",      team: "red",  total: 193 },
-    { first: "Nick",    last: "Grimshaw",     team: "red",  total: 186 },
-    { first: "Alex",    last: "Churchill",    team: "red",  total: 166 },
-    { first: "Jesse",   last: "Joosten",      team: "red",  total: 161 },
-    { first: "Justin",  last: "Vere",         team: "red",  total: 203 },
-    { first: "William", last: "Churchill",    team: "red",  total: 171 },
-    { first: "Corey",   last: "Joosten",      team: "red",  total: 186 },
-    { first: "Luke",    last: "Vandenbosch",  team: "red",  total: 162 },
-    { first: "Steve",   last: "Rioux",        team: "blue", total: 196 },
-    { first: "Ryan",    last: "Versolatto",   team: "blue", total: 174 },
-    { first: "Tyler",   last: "Barnwell",     team: "blue", total: 178 },
-    { first: "Ryan",    last: "Dixon",        team: "blue", total: 159 },
-    { first: "Josh",    last: "MacDonald",    team: "blue", total: 166 },
-    { first: "Andrew",  last: "Versolatto",   team: "blue", total: 209 },
-    { first: "Mike",    last: "Grimshaw",     team: "blue", total: 156 },
-    { first: "Jeff",    last: "Hogg",         team: "blue", total: 153 },
+    { first: "Kyle",    last: "Elliott",      team: "red",  total: 0 },
+    { first: "Nick",    last: "Grimshaw",     team: "red",  total: 0 },
+    { first: "Alex",    last: "Churchill",    team: "red",  total: 0 },
+    { first: "Jesse",   last: "Joosten",      team: "red",  total: 0 },
+    { first: "Justin",  last: "Vere",         team: "red",  total: 0 },
+    { first: "William", last: "Churchill",    team: "red",  total: 0 },
+    { first: "Corey",   last: "Joosten",      team: "red",  total: 0 },
+    { first: "Luke",    last: "Vandenbosch",  team: "red",  total: 0 },
+    { first: "Steve",   last: "Rioux",        team: "blue", total: 0 },
+    { first: "Ryan",    last: "Versolatto",   team: "blue", total: 0 },
+    { first: "Tyler",   last: "Barnwell",     team: "blue", total: 0 },
+    { first: "Ryan",    last: "Dixon",        team: "blue", total: 0 },
+    { first: "Josh",    last: "MacDonald",    team: "blue", total: 0 },
+    { first: "Andrew",  last: "Versolatto",   team: "blue", total: 0 },
+    { first: "Mike",    last: "Grimshaw",     team: "blue", total: 0 },
+    { first: "Jeff",    last: "Hogg",         team: "blue", total: 0 },
   ]
 };
 
@@ -649,67 +649,29 @@ const sideAction = [
     id: "ir", day: 1, session: "PM", format: "Irish Rumble",
     course: "The Monument — Boyne Mountain",
     detail: "Skins pot $220 &bull; 2 CTPs &bull; 1 Long Drive",
-    status: "final",
-    ctps: [
-      { hole: "Hole 5",  player: "K. Elliott" },
-      { hole: "Hole 14", player: "A. Versolatto" },
-    ],
-    longDrive: { hole: "Hole 9", player: "R. Dixon" },
-    skins: [
-      { player: "J. Vere",      count: 2, payout: 88 },
-      { player: "S. Rioux",     count: 1, payout: 44 },
-      { player: "N. Grimshaw",  count: 1, payout: 44 },
-      { player: "J. Hogg",      count: 1, payout: 44 },
-    ]
+    status: "upcoming",
+    ctps: [], longDrive: null, skins: []
   },
   {
     id: "lr", day: 2, session: "AM", format: "Lone Ranger",
     course: "The Heather — Boyne Highlands",
     detail: "Skins pot $220 &bull; 2 CTPs &bull; 1 Long Drive",
-    status: "final",
-    ctps: [
-      { hole: "Hole 3",  player: "J. Vere" },
-      { hole: "Hole 11", player: "A. Versolatto" },
-    ],
-    longDrive: { hole: "Hole 7", player: "M. Grimshaw" },
-    skins: [
-      { player: "A. Versolatto", count: 3, payout: 132 },
-      { player: "K. Elliott",    count: 1, payout: 44 },
-      { player: "T. Barnwell",   count: 1, payout: 44 },
-    ]
+    status: "upcoming",
+    ctps: [], longDrive: null, skins: []
   },
   {
     id: "bp", day: 3, session: "AM", format: "Blind Pairs",
     course: "Bay Harbor — Links / Quarry",
     detail: "Skins pot $220 &bull; 2 CTPs &bull; 1 Long Drive",
-    status: "final",
-    ctps: [
-      { hole: "Hole 6",  player: "S. Rioux" },
-      { hole: "Hole 17", player: "J. Vere", sponsor: "Hole sponsored by GingeTV President J. Joosten. Winner receives a 1 year subscription to GingeTV FREE." },
-    ],
-    longDrive: { hole: "Hole 13", player: "J. MacDonald" },
-    skins: [
-      { player: "J. Vere",        count: 2, payout: 88 },
-      { player: "C. Joosten",     count: 1, payout: 44 },
-      { player: "R. Versolatto",  count: 1, payout: 44 },
-      { player: "J. MacDonald",   count: 1, payout: 44 },
-    ]
+    status: "upcoming",
+    ctps: [], longDrive: null, skins: []
   },
   {
     id: "wb", day: 3, session: "PM", format: "Worst Ball",
     course: "Bay Harbor — Preserve",
     detail: "Skins pot $220 &bull; 2 CTPs &bull; 1 Long Drive",
-    status: "final",
-    ctps: [
-      { hole: "Hole 4", player: "K. Elliott", sponsor: "Hole sponsored by Long Putters Commissioner Kyle R. Elliot. Winner receives a 2027 Masters Pool automatic invite with a 15% off discount coupon + 1 domestic lager." },
-      { hole: "Hole 8", player: "N. Grimshaw" },
-    ],
-    longDrive: { hole: "Hole 6", player: "A. Versolatto" },
-    skins: [
-      { player: "K. Elliott",      count: 2, payout: 110 },
-      { player: "W. Churchill",    count: 1, payout: 55 },
-      { player: "R. Dixon",        count: 1, payout: 55 },
-    ]
+    status: "upcoming",
+    ctps: [], longDrive: null, skins: []
   },
   {
     id: "bc", day: 4, session: "PM", format: "Boyne Cup",

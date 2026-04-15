@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Boyne 2026 — Ryder Cup Scoreboard</title>
+<title>Boyne 2026 — Scoreboard</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
@@ -17,6 +17,7 @@
     --gold: #d4a843;
     --bg: #0a0e14;
     --bg-card: #131a24;
+    --bg-card-2: #182230;
     --text: #e8edf3;
     --text-muted: #7a8ba3;
     --border: #1e2d3d;
@@ -34,13 +35,13 @@
   /* ── HERO ── */
   .hero {
     background: linear-gradient(180deg, #0f1520 0%, var(--bg) 100%);
-    padding: 2.5rem 1.5rem 0.75rem;
+    padding: 2rem 1.5rem 0.5rem;
     text-align: center;
     border-bottom: 1px solid var(--border);
   }
   .hero-title {
     font-family: 'Oswald', sans-serif;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 500;
     letter-spacing: 0.3em;
     text-transform: uppercase;
@@ -49,23 +50,50 @@
   }
   .hero-event {
     font-family: 'Oswald', sans-serif;
-    font-size: 3.5rem;
+    font-size: 3rem;
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
     color: var(--text);
     line-height: 1;
-    margin-bottom: 0.15rem;
-  }
-  .hero-venue {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
   }
 
-  /* ── MASSIVE SCORE ── */
+  /* ── TABS ── */
+  .tabs-wrap {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .tabs {
+    max-width: 900px; margin: 0 auto;
+    display: flex; gap: 0;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 0.85rem 0.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── MASSIVE SCORE (Ryder) ── */
   .main-score {
     display: flex;
     align-items: center;
@@ -84,12 +112,6 @@
   }
   .team-label.red { color: var(--red-light); }
   .team-label.blue { color: var(--blue-light); }
-  .team-nickname {
-    font-size: 0.65rem;
-    color: var(--text-muted);
-    margin-bottom: 0.4rem;
-    letter-spacing: 0.05em;
-  }
   .big-number {
     font-family: 'Oswald', sans-serif;
     font-weight: 700;
@@ -221,17 +243,12 @@
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
   .match-detail { font-size: 0.6rem; color: var(--text-muted); margin-bottom: 0.5rem; }
 
-  /* ═══════════════════════════════
-     CHEVRON ROWS
-     ═══════════════════════════════ */
+  /* ── CHEVRON ROWS ── */
   .chevron-matches { display: flex; flex-direction: column; gap: 0.5rem; }
-
   .chevron-row {
     position: relative; display: flex; align-items: stretch;
     border-radius: 6px; overflow: hidden; background: rgba(255,255,255,0.03);
   }
-
-  /* Player name panels */
   .chev-names {
     position: absolute; top: 0; bottom: 0; display: flex; flex-direction: column;
     justify-content: center; padding: 0.25rem 0.65rem; z-index: 5; gap: 0.05rem;
@@ -239,8 +256,6 @@
   .chev-names.left { left: 0; text-align: left; }
   .chev-names.right { right: 0; text-align: right; }
   .chev-player { font-size: 0.75rem; font-weight: 700; color: #fff; line-height: 1.3; }
-
-  /* Center overlay */
   .chev-center {
     position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
     z-index: 10; text-align: center; pointer-events: none;
@@ -261,16 +276,157 @@
     font-family: 'Oswald', sans-serif; font-size: 0.5rem; font-weight: 600;
     letter-spacing: 0.08em; text-shadow: 0 1px 4px rgba(0,0,0,0.9); margin-top: 0.05rem;
   }
-
   .chev-live-dot {
     position: absolute; top: 3px; left: 50%; transform: translateX(-50%); z-index: 11;
     font-size: 0.45rem; font-weight: 600; color: #4ade80;
     letter-spacing: 0.08em; text-transform: uppercase;
     text-shadow: 0 1px 4px rgba(0,0,0,0.9); animation: pulse 2s infinite;
   }
+  .match-card.upcoming { opacity: 0.5; }
+  .side-card.upcoming  { opacity: 0.5; }
 
-  .chevron-row.upcoming { opacity: 0.45; }
-  .chevron-row.halved { outline: 1px solid rgba(212,168,67,0.3); }
+  /* ── BOYNE CUP / FEDEX TAB ── */
+  .boyne-intro { max-width: 900px; margin: 0 auto; padding: 1.5rem 1.5rem 0.75rem; text-align: center; }
+  .boyne-intro h2 {
+    font-family: 'Oswald', sans-serif; font-size: 2rem; font-weight: 700;
+    letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold);
+  }
+  .boyne-intro p {
+    font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;
+  }
+  .fedex-table {
+    width: 100%; border-collapse: collapse; margin-top: 0.5rem;
+    background: var(--bg-card); border-radius: 10px; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .fedex-table th {
+    font-family: 'Oswald', sans-serif; font-size: 0.6rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted);
+    padding: 0.6rem 0.5rem; text-align: left; border-bottom: 1px solid var(--border);
+    background: var(--bg-card-2);
+  }
+  .fedex-table th.num, .fedex-table td.num { text-align: center; }
+  .fedex-table th.right, .fedex-table td.right { text-align: right; padding-right: 0.85rem; }
+  .fedex-table td {
+    padding: 0.55rem 0.5rem; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .fedex-table tr:last-child td { border-bottom: none; }
+  .fedex-table .rank {
+    font-family: 'Oswald', sans-serif; font-weight: 700; color: var(--text-muted);
+    width: 40px; text-align: center;
+  }
+  .fedex-table .rank.top { color: var(--gold); }
+  .fedex-table .player { font-weight: 600; }
+  .fedex-table .team-dot {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    margin-right: 0.5rem; vertical-align: middle;
+  }
+  .fedex-table .team-dot.red { background: var(--red); }
+  .fedex-table .team-dot.blue { background: var(--blue); }
+  .fedex-table .total {
+    font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 1rem;
+  }
+  .fedex-table .strokes {
+    font-family: 'Oswald', sans-serif; font-weight: 600; color: var(--gold);
+  }
+  .fedex-table .strokes.zero { color: var(--text-muted); }
+
+  .fedex-legend {
+    max-width: 900px; margin: 1rem auto 0; padding: 0.75rem 1rem;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+    font-size: 0.7rem; color: var(--text-muted); line-height: 1.5;
+  }
+  .fedex-legend strong { color: var(--text); font-weight: 600; }
+
+  /* ── SIDE ACTION TAB ── */
+  .side-intro { max-width: 900px; margin: 0 auto; padding: 1.5rem 1.5rem 0.5rem; text-align: center; }
+  .side-intro h2 {
+    font-family: 'Oswald', sans-serif; font-size: 2rem; font-weight: 700;
+    letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold);
+  }
+  .side-intro p {
+    font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;
+  }
+
+  .side-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 0.85rem 0.95rem; margin-bottom: 0.6rem;
+  }
+  .side-card-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 0.4rem;
+  }
+  .side-card-format {
+    font-family: 'Oswald', sans-serif; font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 0.05em; text-transform: uppercase; color: var(--text);
+  }
+  .side-card-status { font-size: 0.6rem; color: var(--text-muted); font-weight: 500; }
+  .side-card-status.final { color: var(--gold); }
+  .side-card-detail { font-size: 0.6rem; color: var(--text-muted); margin-bottom: 0.7rem; }
+
+  .side-section {
+    margin-top: 0.65rem; padding-top: 0.55rem; border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .side-section:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+  .side-section-label {
+    font-family: 'Oswald', sans-serif; font-size: 0.6rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+  .side-row {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 0.4rem 0; font-size: 0.8rem;
+  }
+  .side-row + .side-row { border-top: 1px dashed rgba(255,255,255,0.05); }
+  .side-row .label-l {
+    color: var(--text-muted); font-size: 0.7rem; min-width: 70px;
+    padding-top: 0.05rem;
+  }
+  .side-row .player-block {
+    flex: 1; padding: 0 0.5rem; min-width: 0;
+  }
+  .side-row .player {
+    font-weight: 600; color: var(--text); line-height: 1.25;
+  }
+  .side-row .sponsor {
+    font-size: 0.62rem; color: var(--text-muted); line-height: 1.35;
+    margin-top: 0.15rem; font-style: italic;
+  }
+  .side-row .meta {
+    font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 0.85rem;
+    color: var(--gold); white-space: nowrap; padding-top: 0.05rem;
+  }
+  .side-empty {
+    font-size: 0.7rem; color: var(--text-muted); font-style: italic;
+    padding: 0.25rem 0;
+  }
+
+  /* Skins table layout */
+  .skins-header, .skins-row {
+    display: flex; align-items: center; padding: 0.4rem 0;
+  }
+  .skins-header {
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding-bottom: 0.3rem; margin-bottom: 0.1rem;
+  }
+  .skins-row + .skins-row { border-top: 1px dashed rgba(255,255,255,0.05); }
+  .sk-player { flex: 1; font-weight: 600; color: var(--text); font-size: 0.8rem; }
+  .sk-count {
+    width: 70px; text-align: center; font-weight: 600;
+    color: var(--text); font-size: 0.85rem;
+    font-family: 'Oswald', sans-serif;
+  }
+  .sk-payout {
+    width: 80px; text-align: right; font-family: 'Oswald', sans-serif;
+    font-weight: 600; font-size: 0.85rem; color: var(--gold);
+  }
+  .skins-header .sk-player,
+  .skins-header .sk-count,
+  .skins-header .sk-payout {
+    font-size: 0.55rem; font-weight: 500; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    font-family: 'Inter', sans-serif;
+  }
 
   /* ── FOOTER ── */
   .footer {
@@ -280,8 +436,8 @@
 
   /* ── RESPONSIVE ── */
   @media (max-width: 600px) {
-    .hero-title { font-size: 0.75rem; }
-    .hero-event { font-size: 2.2rem; }
+    .hero-title { font-size: 0.7rem; }
+    .hero-event { font-size: 1.9rem; }
     .big-number { font-size: 5rem !important; }
     .score-sep { font-size: 1.5rem !important; }
     .main-score { gap: 0.75rem; }
@@ -290,6 +446,9 @@
     .status-item { flex: 1 1 25%; min-width: 0; }
     .chev-player { font-size: 0.65rem; }
     .chev-pts { font-size: 1rem; }
+    .tab-btn { font-size: 0.7rem; padding: 0.7rem 0.3rem; letter-spacing: 0.05em; }
+    .fedex-table th, .fedex-table td { padding: 0.45rem 0.35rem; font-size: 0.75rem; }
+    .fedex-table .total { font-size: 0.85rem; }
   }
 </style>
 </head>
@@ -297,20 +456,32 @@
 
 <div class="hero">
   <div class="hero-title">Boyne Golf Trip &bull; May 11&ndash;15, 2026</div>
-  <div class="hero-event">The Ryder Cup</div>
+  <div class="hero-event">Boyne 2026</div>
 </div>
 
-<div id="app"></div>
+<div class="tabs-wrap"><div class="tabs">
+  <button class="tab-btn active" data-tab="ryder">Ryder Cup</button>
+  <button class="tab-btn" data-tab="boyne">Boyne Cup</button>
+  <button class="tab-btn" data-tab="side">Side Action</button>
+</div></div>
 
-<div class="footer">First to 24.5 wins &bull; 48 points available &bull; Boyne 2026</div>
+<div id="view-ryder" class="view active"></div>
+<div id="view-boyne" class="view"></div>
+<div id="view-side" class="view"></div>
+
+<div class="footer">Boyne 2026 &bull; One source of truth</div>
 
 <script>
 // ═══════════════════════════════════════════════
-// DATA — Edit scores here during the trip
+// CONSTANTS
 // ═══════════════════════════════════════════════
 
 const TOTAL_POINTS = 48;
 const POINTS_TO_WIN = 24.5;
+
+// ═══════════════════════════════════════════════
+// RYDER CUP DATA
+// ═══════════════════════════════════════════════
 
 const data = {
   red: { name: "Stiff Shaft Swingers", captain: "Luke Vandenbosch" },
@@ -326,7 +497,7 @@ const data = {
         matches: [{
           label: "",
           red: [["Stiff Shaft", "Swingers"]], blue: [["Gaylord", "Gooners"]], isTeam: true,
-          redPts: 4, bluePts: 0,
+          redPts: 0, bluePts: 4,
         }]
       }]
     },
@@ -341,7 +512,7 @@ const data = {
             label: "Match A",
             red: [["Kyle","Elliott"],["Nick","Grimshaw"],["Alex","Churchill"],["Jesse","Joosten"]],
             blue: [["Steve","Rioux"],["Ryan","Versolatto"],["Tyler","Barnwell"],["Ryan","Dixon"]],
-            redPts: 0, bluePts: 2,
+            redPts: 1, bluePts: 1,
           },
           {
             label: "Match B",
@@ -361,7 +532,7 @@ const data = {
         matches: [
           { label: "Match 1",
             red: [["Luke","Vandenbosch"],["Corey","Joosten"]], blue: [["Mike","Grimshaw"],["Ryan","Dixon"]],
-            redPts: 0, bluePts: 2 },
+            redPts: 2, bluePts: 0 },
           { label: "Match 2",
             red: [["Kyle","Elliott"],["Jesse","Joosten"]], blue: [["Andrew","Versolatto"],["Jeff","Hogg"]],
             redPts: 0, bluePts: 2 },
@@ -389,10 +560,10 @@ const data = {
             redPts: 0, bluePts: 1 },
           { label: "Kings",
             red: [["Kyle","Elliott"],["William","Churchill"]], blue: [["Josh","MacDonald"],["Mike","Grimshaw"]],
-            redPts: 1, bluePts: 0 },
+            redPts: 0.5, bluePts: 0.5 },
           { label: "Aces",
             red: [["Luke","Vandenbosch"],["Jesse","Joosten"]], blue: [["Andrew","Versolatto"],["Ryan","Dixon"]],
-            redPts: 0.5, bluePts: 0.5 },
+            redPts: 0, bluePts: 1 },
         ]
       }]
     },
@@ -405,7 +576,7 @@ const data = {
         matches: [{
           label: "",
           red: [["Stiff Shaft","Swingers"]], blue: [["Gaylord","Gooners"]], isTeam: true,
-          redPts: 0, bluePts: 4,
+          redPts: 4, bluePts: 0,
         }]
       }]
     },
@@ -431,6 +602,125 @@ const data = {
 };
 
 // ═══════════════════════════════════════════════
+// FEDEX / BOYNE CUP DATA
+// 16 players. Update `total` (best 3 of 5) from Squabbit screenshots after each eligible round.
+// `total` = sum of player's best 3 round scores so far.
+// ═══════════════════════════════════════════════
+
+const fedex = {
+  // Set this once enough rounds have completed that the leaderboard is meaningful (e.g. after round 1).
+  showLeaderboard: true,
+  players: [
+    { first: "Kyle",    last: "Elliott",      team: "red",  total: 193 },
+    { first: "Nick",    last: "Grimshaw",     team: "red",  total: 186 },
+    { first: "Alex",    last: "Churchill",    team: "red",  total: 166 },
+    { first: "Jesse",   last: "Joosten",      team: "red",  total: 161 },
+    { first: "Justin",  last: "Vere",         team: "red",  total: 203 },
+    { first: "William", last: "Churchill",    team: "red",  total: 171 },
+    { first: "Corey",   last: "Joosten",      team: "red",  total: 186 },
+    { first: "Luke",    last: "Vandenbosch",  team: "red",  total: 162 },
+    { first: "Steve",   last: "Rioux",        team: "blue", total: 196 },
+    { first: "Ryan",    last: "Versolatto",   team: "blue", total: 174 },
+    { first: "Tyler",   last: "Barnwell",     team: "blue", total: 178 },
+    { first: "Ryan",    last: "Dixon",        team: "blue", total: 159 },
+    { first: "Josh",    last: "MacDonald",    team: "blue", total: 166 },
+    { first: "Andrew",  last: "Versolatto",   team: "blue", total: 209 },
+    { first: "Mike",    last: "Grimshaw",     team: "blue", total: 156 },
+    { first: "Jeff",    last: "Hogg",         team: "blue", total: 153 },
+  ]
+};
+
+// Starting strokes lookup based on FedEx position
+function startingStrokes(rank) {
+  if (rank === 1) return -3;
+  if (rank <= 3) return -2;
+  if (rank <= 6) return -1;
+  return 0;
+}
+
+// ═══════════════════════════════════════════════
+// SIDE ACTION DATA
+// One entry per FedEx-eligible round (5 rounds; 666 has no side action).
+// After each round, fill in ctps[], longDrive, and skins[] from Squabbit.
+// ═══════════════════════════════════════════════
+
+const sideAction = [
+  {
+    id: "ir", day: 1, session: "PM", format: "Irish Rumble",
+    course: "The Monument — Boyne Mountain",
+    detail: "Skins pot $220 &bull; 2 CTPs &bull; 1 Long Drive",
+    status: "final",
+    ctps: [
+      { hole: "Hole 5",  player: "K. Elliott" },
+      { hole: "Hole 14", player: "A. Versolatto" },
+    ],
+    longDrive: { hole: "Hole 9", player: "R. Dixon" },
+    skins: [
+      { player: "J. Vere",      count: 2, payout: 88 },
+      { player: "S. Rioux",     count: 1, payout: 44 },
+      { player: "N. Grimshaw",  count: 1, payout: 44 },
+      { player: "J. Hogg",      count: 1, payout: 44 },
+    ]
+  },
+  {
+    id: "lr", day: 2, session: "AM", format: "Lone Ranger",
+    course: "The Heather — Boyne Highlands",
+    detail: "Skins pot $220 &bull; 2 CTPs &bull; 1 Long Drive",
+    status: "final",
+    ctps: [
+      { hole: "Hole 3",  player: "J. Vere" },
+      { hole: "Hole 11", player: "A. Versolatto" },
+    ],
+    longDrive: { hole: "Hole 7", player: "M. Grimshaw" },
+    skins: [
+      { player: "A. Versolatto", count: 3, payout: 132 },
+      { player: "K. Elliott",    count: 1, payout: 44 },
+      { player: "T. Barnwell",   count: 1, payout: 44 },
+    ]
+  },
+  {
+    id: "bp", day: 3, session: "AM", format: "Blind Pairs",
+    course: "Bay Harbor — Links / Quarry",
+    detail: "Skins pot $220 &bull; 2 CTPs &bull; 1 Long Drive",
+    status: "final",
+    ctps: [
+      { hole: "Hole 6",  player: "S. Rioux" },
+      { hole: "Hole 17", player: "J. Vere", sponsor: "Hole sponsored by GingeTV President J. Joosten. Winner receives a 1 year subscription to GingeTV FREE." },
+    ],
+    longDrive: { hole: "Hole 13", player: "J. MacDonald" },
+    skins: [
+      { player: "J. Vere",        count: 2, payout: 88 },
+      { player: "C. Joosten",     count: 1, payout: 44 },
+      { player: "R. Versolatto",  count: 1, payout: 44 },
+      { player: "J. MacDonald",   count: 1, payout: 44 },
+    ]
+  },
+  {
+    id: "wb", day: 3, session: "PM", format: "Worst Ball",
+    course: "Bay Harbor — Preserve",
+    detail: "Skins pot $220 &bull; 2 CTPs &bull; 1 Long Drive",
+    status: "final",
+    ctps: [
+      { hole: "Hole 4", player: "K. Elliott", sponsor: "Hole sponsored by Long Putters Commissioner Kyle R. Elliot. Winner receives a 2027 Masters Pool automatic invite with a 15% off discount coupon + 1 domestic lager." },
+      { hole: "Hole 8", player: "N. Grimshaw" },
+    ],
+    longDrive: { hole: "Hole 6", player: "A. Versolatto" },
+    skins: [
+      { player: "K. Elliott",      count: 2, payout: 110 },
+      { player: "W. Churchill",    count: 1, payout: 55 },
+      { player: "R. Dixon",        count: 1, payout: 55 },
+    ]
+  },
+  {
+    id: "bc", day: 4, session: "PM", format: "Boyne Cup",
+    course: "Donald Ross Memorial — Boyne Highlands",
+    detail: "Skins pot $220 &bull; 2 CTPs &bull; 1 Long Drive &bull; Net strokeplay championship",
+    status: "upcoming",
+    ctps: [], longDrive: null, skins: []
+  },
+];
+
+// ═══════════════════════════════════════════════
 // COMPUTE
 // ═══════════════════════════════════════════════
 
@@ -450,38 +740,31 @@ function computeTotals() {
   return { redTotal, blueTotal, decided, remaining };
 }
 
+function fp(n) { return n % 1 === 0.5 ? n.toFixed(1) : String(n); }
+
 // ═══════════════════════════════════════════════
-// CHEVRON SVG — only the winner gets a colored arrow
+// CHEVRON SVG
 // ═══════════════════════════════════════════════
 
 let svgIdx = 0;
-// winner: "red", "blue", "halved", or "none"
 function chevronSVG(winner, h) {
   const id = svgIdx++;
-  const tip = 3.5; // chevron point size in viewBox units
-
-  // Winner's arrow extends ~60% across, pushing into the loser's territory
-  // Loser side: no arrow at all, just neutral bg
+  const tip = 3.5;
   let paths = '';
-
   if (winner === 'red') {
-    // Red arrow from left, tip at ~62%
-    const rEnd = 62;
+    // Winner extends 15% further into opponent territory (62 → 77)
+    const rEnd = 77;
     paths = `<path d="M0 0 L${rEnd-tip} 0 L${rEnd} ${h/2} L${rEnd-tip} ${h} L0 ${h}Z" fill="url(#rg${id})"/>`;
   } else if (winner === 'blue') {
-    // Blue arrow from right, tip at ~38%
-    const bStart = 38;
+    const bStart = 23;
     paths = `<path d="M100 0 L${bStart+tip} 0 L${bStart} ${h/2} L${bStart+tip} ${h} L100 ${h}Z" fill="url(#bg${id})"/>`;
   } else if (winner === 'halved') {
-    // Both arrows meet in the middle, even
-    const mid = 50;
+    // Halved: flat 50/50 split, no chevron tips, dimmed to de-emphasize
     paths = `
-      <path d="M0 0 L${mid-tip-1} 0 L${mid-1} ${h/2} L${mid-tip-1} ${h} L0 ${h}Z" fill="url(#rg${id})" opacity="0.9"/>
-      <path d="M100 0 L${mid+tip+1} 0 L${mid+1} ${h/2} L${mid+tip+1} ${h} L100 ${h}Z" fill="url(#bg${id})" opacity="0.9"/>
+      <rect x="0" y="0" width="50" height="${h}" fill="url(#rg${id})"/>
+      <rect x="50" y="0" width="50" height="${h}" fill="url(#bg${id})"/>
     `;
   }
-  // winner === 'none': no colored arrows at all (upcoming/live)
-
   return `<svg viewBox="0 0 100 ${h}" preserveAspectRatio="none" style="width:100%;height:100%;display:block;">
     <defs>
       <linearGradient id="rg${id}" x1="0%" x2="100%"><stop offset="0%" stop-color="#9a1830"/><stop offset="100%" stop-color="#c41e3a"/></linearGradient>
@@ -492,10 +775,10 @@ function chevronSVG(winner, h) {
 }
 
 // ═══════════════════════════════════════════════
-// RENDER
+// RENDER — RYDER CUP
 // ═══════════════════════════════════════════════
 
-function render() {
+function renderRyder() {
   const t = computeTotals();
   const redPct = (t.redTotal / TOTAL_POINTS) * 100;
   const bluePct = (t.blueTotal / TOTAL_POINTS) * 100;
@@ -518,13 +801,11 @@ function render() {
   else if (redNeeds > t.remaining) { projClass = "blue-leading"; projText = `${data.blue.name} have clinched the Ryder Cup!`; }
   else if (blueNeeds > t.remaining) { projClass = "red-leading"; projText = `${data.red.name} have clinched the Ryder Cup!`; }
 
-  // Responsive big number size
   const bigSize = window.innerWidth < 600 ? '3rem' : '4.5rem';
   const sepSize = window.innerWidth < 600 ? '1rem' : '1.5rem';
 
   let h = '';
 
-  // ── MAIN SCORE ──
   h += `<div class="main-score">
     <div class="team-block">
       <div class="team-label red">${data.red.name}</div>
@@ -537,7 +818,6 @@ function render() {
     </div>
   </div>`;
 
-  // ── MASTER BAR ──
   h += `<div class="master-bar-wrap"><div class="master-bar">
     <div class="win-marker">24.5 TO WIN</div><div class="win-line"></div>
     <div class="red-fill" style="width:${redPct}%">${redPct>5?`<span class="bar-label">${fp(t.redTotal)}</span>`:''}</div>
@@ -545,7 +825,6 @@ function render() {
     <div class="blue-fill" style="width:${bluePct}%">${bluePct>5?`<span class="bar-label">${fp(t.blueTotal)}</span>`:''}</div>
   </div></div>`;
 
-  // ── STATUS ──
   h += `<div class="status-wrap"><div class="status-strip">
     <div class="status-item"><div class="status-label">Red Needs</div><div class="status-value red">${fp(redNeeds)}</div></div>
     <div class="status-item"><div class="status-label">Decided</div><div class="status-value neutral">${fp(t.decided)} / ${TOTAL_POINTS}</div></div>
@@ -553,12 +832,9 @@ function render() {
     <div class="status-item"><div class="status-label">Blue Needs</div><div class="status-value blue">${fp(blueNeeds)}</div></div>
   </div></div>`;
 
-  // ── PROJECTION ──
   h += `<div class="proj-wrap"><div class="projection ${projClass}">${projText}</div></div>`;
 
-  // ── MATCHES ──
   h += `<div class="content">`;
-
   data.days.forEach(day => {
     h += `<div class="day-header">
       <span class="day-label">Day ${day.day} &bull; ${day.session}</span>
@@ -570,7 +846,7 @@ function render() {
       const sLabel = round.status === 'final' ? 'Final' : round.status === 'live' ? `● Live — ${round.liveHole||''}` : 'Upcoming';
       const sClass = round.status === 'live' ? 'live' : '';
 
-      h += `<div class="match-card">
+      h += `<div class="match-card${round.status==='upcoming'?' upcoming':''}">
         <div class="match-header">
           <div><span class="match-format">${round.format}</span><span class="match-pts-badge">${round.pointsAvail} PTS</span></div>
           <span class="match-status ${sClass}">${sLabel}</span>
@@ -583,70 +859,234 @@ function render() {
         const isLive = round.status === 'live';
         const isHalved = m.redPts === m.bluePts && m.redPts > 0;
         const numPlayers = Math.max(m.red.length, m.blue.length);
-
-        // Row height based on player count
         const rowH = numPlayers <= 1 ? 48 : numPlayers <= 2 ? 62 : 82;
 
-        // Determine winner for chevron
-        let winner = 'none'; // upcoming / live
+        let winner = 'none';
         if (!isUp && !isLive) {
           if (m.redPts > m.bluePts) winner = 'red';
           else if (m.bluePts > m.redPts) winner = 'blue';
           else if (m.redPts > 0) winner = 'halved';
         }
 
-        const cls = `chevron-row${isUp?' upcoming':''}${isHalved?' halved':''}`;
-
+        const cls = `chevron-row`;
         h += `<div class="${cls}" style="height:${rowH}px">`;
-
-        // SVG background — only winner gets the colored arrow
         h += `<div style="position:absolute;inset:0;z-index:1">${chevronSVG(winner, rowH)}</div>`;
-
-        // Red names (left)
         h += `<div class="chev-names left">`;
         m.red.forEach(p => h += `<div class="chev-player">${m.isTeam ? p[1] : p[0][0]+'. '+p[1]}</div>`);
         h += `</div>`;
-
-        // Blue names (right)
         h += `<div class="chev-names right">`;
         m.blue.forEach(p => h += `<div class="chev-player">${m.isTeam ? p[1] : p[0][0]+'. '+p[1]}</div>`);
         h += `</div>`;
-
-        // Center: just the Ryder Cup points
         h += `<div class="chev-center">`;
         if (isLive) h += `<div class="chev-live-dot">● LIVE</div>`;
         if (m.label) h += `<div class="chev-match-label">${m.label}</div>`;
-
         if (isUp) {
           h += `<div class="chev-pts" style="color:var(--text-muted);font-size:0.85rem">TBD</div>`;
         } else if (isLive) {
           h += `<div class="chev-pts" style="color:var(--text-muted);font-size:0.85rem">IN PLAY</div>`;
         } else {
           h += `<div class="chev-pts"><span class="r">${fp(m.redPts)}</span><span class="s">:</span><span class="b">${fp(m.bluePts)}</span></div>`;
-          // Outcome label
           let oc = '';
           if (m.redPts > m.bluePts) oc = 'RED WIN';
           else if (m.bluePts > m.redPts) oc = 'BLUE WIN';
           else if (m.redPts > 0) oc = 'HALVED';
           if (oc) h += `<div class="chev-outcome" style="color:rgba(255,255,255,0.8)">${oc}</div>`;
         }
-        h += `</div>`; // chev-center
-
-        h += `</div>`; // chevron-row
+        h += `</div></div>`;
       });
 
-      h += `</div></div>`; // chevron-matches, match-card
+      h += `</div></div>`;
     });
   });
+  h += `</div>`;
 
-  h += `</div>`; // content
-  document.getElementById('app').innerHTML = h;
+  h += `<div class="footer" style="padding-top:0.5rem">First to 24.5 wins &bull; 48 points available</div>`;
+
+  document.getElementById('view-ryder').innerHTML = h;
 }
 
-function fp(n) { return n % 1 === 0.5 ? n.toFixed(1) : String(n); }
+// ═══════════════════════════════════════════════
+// RENDER — BOYNE CUP (FedEx)
+// ═══════════════════════════════════════════════
 
-render();
-window.addEventListener('resize', render);
+function renderBoyne() {
+  let h = '';
+  h += `<div class="boyne-intro">
+    <h2>Boyne Cup</h2>
+    <p>FedEx points across 5 eligible rounds &bull; Best 3 of 5 count &bull; Determines starting strokes for the championship</p>
+  </div>`;
+
+  h += `<div class="content" style="padding-top:1rem">`;
+
+  if (!fedex.showLeaderboard) {
+    h += `<div class="side-card" style="text-align:center;padding:2rem 1rem">
+      <div class="side-card-format" style="margin-bottom:0.5rem">Standings open after Round 1</div>
+      <div class="match-detail">Eligible rounds: Irish Rumble, Lone Ranger, Blind Pairs, Worst Ball, 1v1 Matchplay</div>
+    </div>`;
+  } else {
+    // Sort players by total descending
+    const ranked = [...fedex.players].map(p => ({...p})).sort((a,b) => b.total - a.total);
+    // Assign ranks (with ties)
+    let lastTotal = null, lastRank = 0;
+    ranked.forEach((p, i) => {
+      if (p.total !== lastTotal) { lastRank = i + 1; lastTotal = p.total; }
+      p.rank = lastRank;
+    });
+
+    h += `<table class="fedex-table">
+      <thead>
+        <tr>
+          <th class="num">#</th>
+          <th>Player</th>
+          <th class="right">Total</th>
+          <th class="right">Strokes</th>
+        </tr>
+      </thead>
+      <tbody>`;
+    ranked.forEach(p => {
+      const strokes = startingStrokes(p.rank);
+      const strokesDisp = strokes === 0 ? 'E' : strokes;
+      const strokesCls = strokes === 0 ? 'zero' : '';
+      const rankCls = p.rank === 1 ? 'rank top' : 'rank';
+      h += `<tr>
+        <td class="${rankCls}">${p.rank}</td>
+        <td class="player"><span class="team-dot ${p.team}"></span>${p.first[0]}. ${p.last}</td>
+        <td class="right total">${p.total}</td>
+        <td class="right strokes ${strokesCls}">${strokesDisp}</td>
+      </tr>`;
+    });
+    h += `</tbody></table>`;
+  }
+
+  h += `<div class="fedex-legend">
+    <strong>Scoring:</strong> Each eligible round, players earn points by net finish position (1st = 75, 2nd = 69, 3rd = 65, … 16th = 46). Ties split the points.<br>
+    <strong>Best 3 of 5:</strong> Only your top 3 round scores count toward the FedEx total.<br>
+    <strong>Starting strokes (Boyne Cup championship):</strong> 1st = -3 &bull; 2nd–3rd = -2 &bull; 4th–6th = -1 &bull; 7th–16th = even
+  </div>`;
+
+  h += `</div>`;
+  document.getElementById('view-boyne').innerHTML = h;
+}
+
+// ═══════════════════════════════════════════════
+// RENDER — SIDE ACTION
+// ═══════════════════════════════════════════════
+
+function renderSide() {
+  let h = '';
+  h += `<div class="side-intro">
+    <h2>Side Action</h2>
+    <p>Closest-to-pin &bull; Long Drive &bull; Skins &bull; By round</p>
+  </div>`;
+
+  h += `<div class="content" style="padding-top:1rem">`;
+
+  sideAction.forEach(round => {
+    const isUp = round.status === 'upcoming';
+    const sLabel = round.status === 'final' ? 'Final' : round.status === 'live' ? '● Live' : 'Upcoming';
+    const sClass = round.status === 'final' ? 'final' : (round.status === 'live' ? 'live' : '');
+
+    h += `<div class="day-header">
+      <span class="day-label">Day ${round.day} &bull; ${round.session}</span>
+      <span class="day-line"></span>
+      <span class="day-course">${round.course}</span>
+    </div>`;
+
+    h += `<div class="side-card${isUp?' upcoming':''}">
+      <div class="side-card-header">
+        <div class="side-card-format">${round.format}</div>
+        <div class="side-card-status ${sClass}">${sLabel}</div>
+      </div>
+      <div class="side-card-detail">${round.detail}</div>`;
+
+    // CTPs (each pays $20; optional sponsor message)
+    h += `<div class="side-section">
+      <div class="side-section-label">Closest to Pin</div>`;
+    if (isUp || round.ctps.length === 0) {
+      h += `<div class="side-empty">${isUp ? 'TBD' : 'No CTP winners recorded.'}</div>`;
+    } else {
+      round.ctps.forEach(c => {
+        h += `<div class="side-row">
+          <div class="label-l">${c.hole}</div>
+          <div class="player-block">
+            <div class="player">${c.player}</div>
+            ${c.sponsor ? `<div class="sponsor">${c.sponsor}</div>` : ''}
+          </div>
+          <div class="meta">$20</div>
+        </div>`;
+      });
+    }
+    h += `</div>`;
+
+    // Long Drive
+    h += `<div class="side-section">
+      <div class="side-section-label">Long Drive</div>`;
+    if (isUp || !round.longDrive) {
+      h += `<div class="side-empty">${isUp ? 'TBD' : 'No Long Drive winner recorded.'}</div>`;
+    } else {
+      h += `<div class="side-row">
+        <div class="label-l">${round.longDrive.hole}</div>
+        <div class="player-block">
+          <div class="player">${round.longDrive.player}</div>
+          ${round.longDrive.sponsor ? `<div class="sponsor">${round.longDrive.sponsor}</div>` : ''}
+        </div>
+      </div>`;
+    }
+    h += `</div>`;
+
+    // Skins
+    h += `<div class="side-section">
+      <div class="side-section-label">Skins</div>`;
+    if (isUp || round.skins.length === 0) {
+      h += `<div class="side-empty">${isUp ? 'TBD' : 'No skins won (carryover or pot retained).'}</div>`;
+    } else {
+      // Header row
+      h += `<div class="skins-header">
+        <div class="sk-player">Player</div>
+        <div class="sk-count">Skins</div>
+        <div class="sk-payout">Payout</div>
+      </div>`;
+      round.skins.forEach(s => {
+        h += `<div class="skins-row">
+          <div class="sk-player">${s.player}</div>
+          <div class="sk-count">${s.count}</div>
+          <div class="sk-payout">$${s.payout}</div>
+        </div>`;
+      });
+    }
+    h += `</div>`;
+
+    h += `</div>`; // side-card
+  });
+
+  h += `</div>`;
+  document.getElementById('view-side').innerHTML = h;
+}
+
+// ═══════════════════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════════════════
+
+function setupTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+      document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === `view-${tab}`));
+      window.scrollTo({top: 0, behavior: 'instant'});
+    });
+  });
+}
+
+function renderAll() {
+  renderRyder();
+  renderBoyne();
+  renderSide();
+}
+
+renderAll();
+setupTabs();
+window.addEventListener('resize', renderAll);
 </script>
 </body>
 </html>

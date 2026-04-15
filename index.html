@@ -206,6 +206,26 @@
     background: linear-gradient(90deg, rgba(212,168,67,0.05), rgba(212,168,67,0.1), rgba(212,168,67,0.05));
     border: 1px solid rgba(212,168,67,0.3); color: var(--gold);
   }
+  .host-divider {
+    max-width: 900px; margin: 0.5rem auto 1.5rem; padding: 0 1.5rem;
+  }
+  .host-divider-bar {
+    text-align: center; padding: 0.6rem 1rem; border-radius: 8px;
+    font-family: 'Oswald', sans-serif; font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .host-divider-bar.red {
+    background: linear-gradient(90deg, rgba(196,30,58,0.18), rgba(196,30,58,0.06));
+    border: 1px solid rgba(196,30,58,0.35); color: var(--red-light);
+  }
+  .host-divider-bar.blue {
+    background: linear-gradient(90deg, rgba(0,61,165,0.06), rgba(0,61,165,0.18));
+    border: 1px solid rgba(0,61,165,0.35); color: var(--blue-light);
+  }
+  .host-divider-bar.flip {
+    background: linear-gradient(90deg, rgba(212,168,67,0.05), rgba(212,168,67,0.12), rgba(212,168,67,0.05));
+    border: 1px solid rgba(212,168,67,0.35); color: var(--gold);
+  }
 
   /* ── CONTENT AREA ── */
   .content { max-width: 900px; margin: 0 auto; padding: 0 1.5rem 2rem; }
@@ -256,6 +276,12 @@
   .chev-names.left { left: 0; text-align: left; }
   .chev-names.right { right: 0; text-align: right; }
   .chev-player { font-size: 0.75rem; font-weight: 700; color: #fff; line-height: 1.3; }
+  .chev-roster {
+    font-size: 0.55rem; font-weight: 400; color: rgba(255,255,255,0.65);
+    line-height: 1.35; margin-top: 0.15rem; max-width: 180px;
+  }
+  .chev-names.left .chev-roster { text-align: left; }
+  .chev-names.right .chev-roster { text-align: right; }
   .chev-center {
     position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
     z-index: 10; text-align: center; pointer-events: none;
@@ -317,6 +343,18 @@
   }
   .fedex-table .rank.top { color: var(--gold); }
   .fedex-table .player { font-weight: 600; }
+  .champ-badge {
+    display: inline-block;
+    margin-left: 0.4rem;
+    padding: 0.05rem 0.4rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #1a1a1a;
+    background: var(--gold);
+    border-radius: 3px;
+    vertical-align: middle;
+  }
   .fedex-table .team-dot {
     display: inline-block; width: 8px; height: 8px; border-radius: 50%;
     margin-right: 0.5rem; vertical-align: middle;
@@ -497,6 +535,8 @@ const data = {
         matches: [{
           label: "",
           red: [["Stiff Shaft", "Swingers"]], blue: [["Gaylord", "Gooners"]], isTeam: true,
+          redRoster: ["K. Elliott", "N. Grimshaw", "A. Churchill", "J. Joosten", "J. Vere", "W. Churchill", "C. Joosten", "L. Vandenbosch"],
+          blueRoster: ["S. Rioux", "R. Versolatto", "T. Barnwell", "R. Dixon", "J. MacDonald", "A. Versolatto", "M. Grimshaw", "J. Hogg"],
           redPts: 0, bluePts: 0,
         }]
       }]
@@ -531,16 +571,16 @@ const data = {
         pointsAvail: 8, status: "upcoming",
         matches: [
           { label: "Match 1",
-            red: [["", "Draft pending"]], blue: [["", "Draft pending"]], isTeam: true,
+            red: [["", "Pick 1"], ["", "Pick 2"]], blue: [["", "Pick 1"], ["", "Pick 2"]], isTeam: true,
             redPts: 0, bluePts: 0 },
           { label: "Match 2",
-            red: [["", "Draft pending"]], blue: [["", "Draft pending"]], isTeam: true,
+            red: [["", "Pick 1"], ["", "Pick 2"]], blue: [["", "Pick 1"], ["", "Pick 2"]], isTeam: true,
             redPts: 0, bluePts: 0 },
           { label: "Match 3",
-            red: [["", "Draft pending"]], blue: [["", "Draft pending"]], isTeam: true,
+            red: [["", "Pick 1"], ["", "Pick 2"]], blue: [["", "Pick 1"], ["", "Pick 2"]], isTeam: true,
             redPts: 0, bluePts: 0 },
           { label: "Match 4",
-            red: [["", "Draft pending"]], blue: [["", "Draft pending"]], isTeam: true,
+            red: [["", "Pick 1"], ["", "Pick 2"]], blue: [["", "Pick 1"], ["", "Pick 2"]], isTeam: true,
             redPts: 0, bluePts: 0 },
         ]
       }]
@@ -549,20 +589,24 @@ const data = {
       day: 3, session: "AM", course: "Bay Harbor — Links / Quarry",
       rounds: [{
         format: "Blind Pairs", id: "bp",
-        detail: "Singles → Paired by card draw &bull; 80% HCP &bull; 18 holes",
+        detail: "Singles → Paired by card draw &bull; Team sum &bull; 18 holes",
         pointsAvail: 4, status: "upcoming",
         matches: [
           { label: "Jacks",
-            red: [["", "Card pull pending"]], blue: [["", "Card pull pending"]], isTeam: true,
+            red: [["", "J♥"], ["", "J♦"]],
+            blue: [["", "J♠"], ["", "J♣"]], isTeam: true,
             redPts: 0, bluePts: 0 },
           { label: "Queens",
-            red: [["", "Card pull pending"]], blue: [["", "Card pull pending"]], isTeam: true,
+            red: [["", "Q♥"], ["", "Q♦"]],
+            blue: [["", "Q♠"], ["", "Q♣"]], isTeam: true,
             redPts: 0, bluePts: 0 },
           { label: "Kings",
-            red: [["", "Card pull pending"]], blue: [["", "Card pull pending"]], isTeam: true,
+            red: [["", "K♥"], ["", "K♦"]],
+            blue: [["", "K♠"], ["", "K♣"]], isTeam: true,
             redPts: 0, bluePts: 0 },
           { label: "Aces",
-            red: [["", "Card pull pending"]], blue: [["", "Card pull pending"]], isTeam: true,
+            red: [["", "A♥"], ["", "A♦"]],
+            blue: [["", "A♠"], ["", "A♣"]], isTeam: true,
             redPts: 0, bluePts: 0 },
         ]
       }]
@@ -576,6 +620,8 @@ const data = {
         matches: [{
           label: "",
           red: [["Stiff Shaft","Swingers"]], blue: [["Gaylord","Gooners"]], isTeam: true,
+          redRoster: ["K. Elliott", "N. Grimshaw", "A. Churchill", "J. Joosten", "J. Vere", "W. Churchill", "C. Joosten", "L. Vandenbosch"],
+          blueRoster: ["S. Rioux", "R. Versolatto", "T. Barnwell", "R. Dixon", "J. MacDonald", "A. Versolatto", "M. Grimshaw", "J. Hogg"],
           redPts: 0, bluePts: 0,
         }]
       }]
@@ -609,7 +655,7 @@ const data = {
 
 const fedex = {
   // Set this once enough rounds have completed that the leaderboard is meaningful (e.g. after round 1).
-  showLeaderboard: false,
+  showLeaderboard: true,
   players: [
     { first: "Kyle",    last: "Elliott",      team: "red",  total: 0 },
     { first: "Nick",    last: "Grimshaw",     team: "red",  total: 0 },
@@ -797,7 +843,27 @@ function renderRyder() {
   h += `<div class="proj-wrap"><div class="projection ${projClass}">${projText}</div></div>`;
 
   h += `<div class="content">`;
-  data.days.forEach(day => {
+
+  // Group entries by day number for host-divider logic
+  const byDay = {};
+  data.days.forEach(e => { (byDay[e.day] = byDay[e.day] || []).push(e); });
+  const dayStatus = (d) => {
+    const entries = byDay[d] || [];
+    if (!entries.length) return 'none';
+    const allFinal = entries.every(e => e.rounds.every(r => r.status === 'final'));
+    const anyStarted = entries.some(e => e.rounds.some(r => r.status === 'live' || r.status === 'final'));
+    if (allFinal) return 'final';
+    if (anyStarted) return 'live';
+    return 'upcoming';
+  };
+  const dayPoints = (d) => {
+    let r = 0, b = 0;
+    (byDay[d] || []).forEach(e => e.rounds.forEach(rd => rd.matches.forEach(m => { r += m.redPts; b += m.bluePts; })));
+    return { red: r, blue: b };
+  };
+  const DAY_NAMES = { 1: 'Monday', 2: 'Tuesday', 3: 'Wednesday', 4: 'Thursday' };
+
+  data.days.forEach((day, i) => {
     h += `<div class="day-header">
       <span class="day-label">Day ${day.day} &bull; ${day.session}</span>
       <span class="day-line"></span>
@@ -821,7 +887,8 @@ function renderRyder() {
         const isLive = round.status === 'live';
         const isHalved = m.redPts === m.bluePts && m.redPts > 0;
         const numPlayers = Math.max(m.red.length, m.blue.length);
-        const rowH = numPlayers <= 1 ? 48 : numPlayers <= 2 ? 62 : 82;
+        const hasRoster = !!(m.redRoster || m.blueRoster);
+        const rowH = hasRoster ? 92 : (numPlayers <= 1 ? 48 : numPlayers <= 2 ? 62 : 82);
 
         let winner = 'none';
         if (!isUp && !isLive) {
@@ -835,9 +902,11 @@ function renderRyder() {
         h += `<div style="position:absolute;inset:0;z-index:1">${chevronSVG(winner, rowH)}</div>`;
         h += `<div class="chev-names left">`;
         m.red.forEach(p => h += `<div class="chev-player">${m.isTeam ? p[1] : p[0][0]+'. '+p[1]}</div>`);
+        if (m.redRoster) h += `<div class="chev-roster">${m.redRoster.join(' &bull; ')}</div>`;
         h += `</div>`;
         h += `<div class="chev-names right">`;
         m.blue.forEach(p => h += `<div class="chev-player">${m.isTeam ? p[1] : p[0][0]+'. '+p[1]}</div>`);
+        if (m.blueRoster) h += `<div class="chev-roster">${m.blueRoster.join(' &bull; ')}</div>`;
         h += `</div>`;
         h += `<div class="chev-center">`;
         if (isLive) h += `<div class="chev-live-dot">● LIVE</div>`;
@@ -859,6 +928,28 @@ function renderRyder() {
 
       h += `</div></div>`;
     });
+
+    // Host divider: render after the LAST entry of a day, only if that day is final AND next day hasn't started
+    const isLastEntryOfDay = (i === data.days.length - 1) || (data.days[i+1].day !== day.day);
+    if (isLastEntryOfDay) {
+      const nextDayStatus = dayStatus(day.day + 1);
+      if (dayStatus(day.day) === 'final' && (nextDayStatus === 'upcoming' || nextDayStatus === 'none')) {
+        const pts = dayPoints(day.day);
+        const dn = DAY_NAMES[day.day] || `Day ${day.day}`;
+        let barCls, barText;
+        if (pts.red > pts.blue) {
+          barCls = 'blue';
+          barText = `${dn} hosts: ${data.blue.name} 🏠 &nbsp;&bull;&nbsp; ${fp(pts.red)}–${fp(pts.blue)}`;
+        } else if (pts.blue > pts.red) {
+          barCls = 'red';
+          barText = `${dn} hosts: ${data.red.name} 🏠 &nbsp;&bull;&nbsp; ${fp(pts.red)}–${fp(pts.blue)}`;
+        } else {
+          barCls = 'flip';
+          barText = `${dn} tied ${fp(pts.red)}–${fp(pts.blue)} &nbsp;&bull;&nbsp; Coin flip for host`;
+        }
+        h += `<div class="host-divider"><div class="host-divider-bar ${barCls}">${barText}</div></div>`;
+      }
+    }
   });
   h += `</div>`;
 
@@ -905,14 +996,23 @@ function renderBoyne() {
         </tr>
       </thead>
       <tbody>`;
+    const allZero = ranked.every(p => p.total === 0);
     ranked.forEach(p => {
       const strokes = startingStrokes(p.rank);
-      const strokesDisp = strokes === 0 ? 'E' : strokes;
-      const strokesCls = strokes === 0 ? 'zero' : '';
-      const rankCls = p.rank === 1 ? 'rank top' : 'rank';
+      let strokesDisp, strokesCls, rankDisp;
+      if (allZero || p.total === 0) {
+        strokesDisp = '—';
+        strokesCls = 'zero';
+        rankDisp = '—';
+      } else {
+        strokesDisp = strokes === 0 ? 'E' : strokes;
+        strokesCls = strokes === 0 ? 'zero' : '';
+        rankDisp = p.rank;
+      }
+      const rankCls = (!allZero && p.rank === 1 && p.total > 0) ? 'rank top' : 'rank';
       h += `<tr>
-        <td class="${rankCls}">${p.rank}</td>
-        <td class="player"><span class="team-dot ${p.team}"></span>${p.first[0]}. ${p.last}</td>
+        <td class="${rankCls}">${rankDisp}</td>
+        <td class="player">${p.first[0]}. ${p.last}${(p.first === 'Ryan' && p.last === 'Versolatto') ? ' <span class="champ-badge" title="2025 Boyne Cup Champion">★ \'25</span>' : ''}</td>
         <td class="right total">${p.total}</td>
         <td class="right strokes ${strokesCls}">${strokesDisp}</td>
       </tr>`;

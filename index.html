@@ -282,6 +282,7 @@
   }
   .chev-names.left .chev-roster { text-align: left; }
   .chev-names.right .chev-roster { text-align: right; }
+  .chev-roster .rname { white-space: nowrap; }
   .chev-center {
     position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
     z-index: 10; text-align: center; pointer-events: none;
@@ -545,7 +546,7 @@ const data = {
       day: 2, session: "AM", course: "The Heather — Boyne Highlands",
       rounds: [{
         format: "Lone Ranger", id: "lr",
-        detail: "Two 4v4 sub-matches &bull; 80% HCP &bull; 18 holes",
+        detail: "Two 4v4 sub-matches &bull; 18 holes",
         pointsAvail: 4, status: "upcoming",
         matches: [
           {
@@ -902,11 +903,11 @@ function renderRyder() {
         h += `<div style="position:absolute;inset:0;z-index:1">${chevronSVG(winner, rowH)}</div>`;
         h += `<div class="chev-names left">`;
         m.red.forEach(p => h += `<div class="chev-player">${m.isTeam ? p[1] : p[0][0]+'. '+p[1]}</div>`);
-        if (m.redRoster) h += `<div class="chev-roster">${m.redRoster.join(' &bull; ')}</div>`;
+        if (m.redRoster) h += `<div class="chev-roster">${m.redRoster.map(n => `<span class="rname">${n}</span>`).join(' &bull; ')}</div>`;
         h += `</div>`;
         h += `<div class="chev-names right">`;
         m.blue.forEach(p => h += `<div class="chev-player">${m.isTeam ? p[1] : p[0][0]+'. '+p[1]}</div>`);
-        if (m.blueRoster) h += `<div class="chev-roster">${m.blueRoster.join(' &bull; ')}</div>`;
+        if (m.blueRoster) h += `<div class="chev-roster">${m.blueRoster.map(n => `<span class="rname">${n}</span>`).join(' &bull; ')}</div>`;
         h += `</div>`;
         h += `<div class="chev-center">`;
         if (isLive) h += `<div class="chev-live-dot">● LIVE</div>`;

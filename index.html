@@ -400,6 +400,7 @@
   .round-block {
     margin-top: 0.9rem;
   }
+  .round-block.upcoming { opacity: 0.5; }
   .round-block-header {
     display: flex; justify-content: space-between; align-items: baseline;
     margin-bottom: 0.3rem; padding: 0 0.1rem;
@@ -410,6 +411,12 @@
   }
   .round-block-course {
     font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.03em;
+  }
+  .round-block-empty {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 0.85rem 1rem; text-align: center;
+    font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.08em;
+    text-transform: uppercase; font-family: 'Oswald', sans-serif;
   }
   .fedex-table.compact th { padding: 0.45rem 0.5rem; font-size: 0.55rem; }
   .fedex-table.compact td { padding: 0.4rem 0.5rem; font-size: 0.78rem; }
@@ -1082,13 +1089,19 @@ function rankNetResults(results) {
 }
 
 function renderRoundLeaderboard(round) {
-  const ranked = rankNetResults(round.results);
-  let h = `<div class="round-block">
+  const isFinal = round.status === 'final' && round.results && round.results.length > 0;
+  const cls = isFinal ? 'round-block' : 'round-block upcoming';
+  let h = `<div class="${cls}">
     <div class="round-block-header">
       <span class="round-block-title">${round.format}</span>
       <span class="round-block-course">${round.course}</span>
-    </div>
-    <table class="fedex-table compact"><tbody>`;
+    </div>`;
+  if (!isFinal) {
+    h += `<div class="round-block-empty">Upcoming</div></div>`;
+    return h;
+  }
+  h += `<table class="fedex-table compact"><tbody>`;
+  const ranked = rankNetResults(round.results);
   ranked.forEach(p => {
     const rankCls = (p.rank === 1) ? 'rank top' : 'rank';
     const rankDisp = (p.tied ? 'T' : '') + p.rank;
@@ -1202,11 +1215,10 @@ function renderBoyne() {
     <strong>Starting strokes (Boyne Cup championship):</strong> 1st = -3 &bull; 2nd–3rd = -2 &bull; 4th–6th = -1 &bull; 7th–16th = even
   </div>`;
 
-  // ── PER-ROUND NET LEADERBOARDS (chronological, finals only) ─
-  const finalRounds = rounds.filter(r => r.status === 'final' && r.results.length > 0);
-  if (finalRounds.length > 0) {
+  // ── PER-ROUND NET LEADERBOARDS (chronological, all rounds; upcoming dimmed) ─
+  if (rounds.length > 0) {
     h += `<div class="rounds-header">Round-by-round net leaderboards</div>`;
-    finalRounds.forEach(r => { h += renderRoundLeaderboard(r); });
+    rounds.forEach(r => { h += renderRoundLeaderboard(r); });
   }
 
   h += `</div>`;

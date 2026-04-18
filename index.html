@@ -278,7 +278,7 @@
   .chev-player { font-size: 0.75rem; font-weight: 700; color: #fff; line-height: 1.3; }
   .chev-roster {
     font-size: 0.55rem; font-weight: 400; color: rgba(255,255,255,0.65);
-    line-height: 1.35; margin-top: 0.15rem; max-width: 180px;
+    line-height: 1.35; margin-top: 0.15rem; max-width: 150px;
   }
   .chev-names.left .chev-roster { text-align: left; }
   .chev-names.right .chev-roster { text-align: right; }
@@ -901,13 +901,20 @@ function renderRyder() {
         const cls = `chevron-row`;
         h += `<div class="${cls}" style="height:${rowH}px">`;
         h += `<div style="position:absolute;inset:0;z-index:1">${chevronSVG(winner, rowH)}</div>`;
+        const rosterHTML = (names) => {
+          const lines = [];
+          for (let i = 0; i < names.length; i += 2) {
+            lines.push(names.slice(i, i + 2).map(n => `<span class="rname">${n}</span>`).join(' &bull; '));
+          }
+          return lines.join('<br>');
+        };
         h += `<div class="chev-names left">`;
         m.red.forEach(p => h += `<div class="chev-player">${m.isTeam ? p[1] : p[0][0]+'. '+p[1]}</div>`);
-        if (m.redRoster) h += `<div class="chev-roster">${m.redRoster.map(n => `<span class="rname">${n}</span>`).join(' &bull; ')}</div>`;
+        if (m.redRoster) h += `<div class="chev-roster">${rosterHTML(m.redRoster)}</div>`;
         h += `</div>`;
         h += `<div class="chev-names right">`;
         m.blue.forEach(p => h += `<div class="chev-player">${m.isTeam ? p[1] : p[0][0]+'. '+p[1]}</div>`);
-        if (m.blueRoster) h += `<div class="chev-roster">${m.blueRoster.map(n => `<span class="rname">${n}</span>`).join(' &bull; ')}</div>`;
+        if (m.blueRoster) h += `<div class="chev-roster">${rosterHTML(m.blueRoster)}</div>`;
         h += `</div>`;
         h += `<div class="chev-center">`;
         if (isLive) h += `<div class="chev-live-dot">● LIVE</div>`;

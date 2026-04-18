@@ -377,6 +377,51 @@
   }
   .fedex-legend strong { color: var(--text); font-weight: 600; }
 
+  /* ── PER-ROUND NET LEADERBOARDS (de-emphasized) ── */
+  .rounds-header {
+    max-width: 900px; margin: 2rem auto 0.5rem; padding: 0 0;
+    font-family: 'Oswald', sans-serif; font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted);
+  }
+  .round-block {
+    margin-top: 0.9rem;
+  }
+  .round-block-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 0.3rem; padding: 0 0.1rem;
+  }
+  .round-block-title {
+    font-family: 'Oswald', sans-serif; font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 0.05em; text-transform: uppercase; color: var(--text);
+  }
+  .round-block-course {
+    font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.03em;
+  }
+  .fedex-table.compact th { padding: 0.45rem 0.5rem; font-size: 0.55rem; }
+  .fedex-table.compact td { padding: 0.4rem 0.5rem; font-size: 0.78rem; }
+  .fedex-table.compact .total { font-size: 0.85rem; }
+  .fedex-table.compact .rank { width: 34px; font-size: 0.75rem; }
+
+  /* ── BOYNE CUP CHAMPION BANNER ── */
+  .champ-banner {
+    max-width: 900px; margin: 0.5rem auto 1rem; padding: 1.1rem 1.25rem;
+    background: linear-gradient(135deg, rgba(212,168,67,0.18), rgba(212,168,67,0.06));
+    border: 1px solid rgba(212,168,67,0.45);
+    border-radius: 12px; text-align: center;
+  }
+  .champ-banner .label {
+    font-family: 'Oswald', sans-serif; font-size: 0.65rem; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold);
+    margin-bottom: 0.25rem;
+  }
+  .champ-banner .name {
+    font-family: 'Oswald', sans-serif; font-size: 1.6rem; font-weight: 700;
+    letter-spacing: 0.04em; color: var(--text); line-height: 1.15;
+  }
+  .champ-banner .sub {
+    font-size: 0.75rem; color: var(--text-muted); margin-top: 0.4rem;
+  }
+
   /* ── SIDE ACTION TAB ── */
   .side-intro { max-width: 900px; margin: 0 auto; padding: 1.5rem 1.5rem 0.5rem; text-align: center; }
   .side-intro h2 {
@@ -677,6 +722,33 @@ const fedex = {
   ]
 };
 
+// ═══════════════════════════════════════════════
+// PER-ROUND NET LEADERBOARDS
+// One entry per FedEx-eligible round. After each round, flip status to "final"
+// and fill `results` with {first, last, team, net} from the Squabbit net leaderboard.
+// Sort: lowest net first. Entries with same `net` display as tied (T-rank).
+// ═══════════════════════════════════════════════
+
+const rounds = [
+  { id: "ir", format: "Irish Rumble",  day: 1, session: "PM", course: "The Monument — Boyne Mountain", status: "upcoming", results: [] },
+  { id: "lr", format: "Lone Ranger",   day: 2, session: "AM", course: "The Heather — Boyne Highlands", status: "upcoming", results: [] },
+  { id: "bp", format: "Blind Pairs",   day: 3, session: "AM", course: "Bay Harbor — Links / Quarry",   status: "upcoming", results: [] },
+  { id: "wb", format: "Worst Ball",    day: 3, session: "PM", course: "Bay Harbor — Preserve",         status: "upcoming", results: [] },
+  { id: "mp", format: "1v1 Matchplay", day: 4, session: "AM", course: "Arthur Hills — Boyne Highlands", status: "upcoming", results: [] },
+];
+
+// ═══════════════════════════════════════════════
+// BOYNE CUP CHAMPIONSHIP (separate — promoted to top of tab when final)
+// Fill `results` same shape as rounds[]. `winner` auto-derives from top net; override only for tiebreak.
+// ═══════════════════════════════════════════════
+
+const boyneCup = {
+  id: "bc", format: "Boyne Cup", day: 4, session: "PM",
+  course: "Donald Ross Memorial — Boyne Highlands",
+  status: "upcoming", results: [],
+  winner: null, // optional override: e.g. "Kyle Elliott" if playoff-decided
+};
+
 // Starting strokes lookup based on FedEx position
 function startingStrokes(rank) {
   if (rank === 1) return -3;
@@ -970,6 +1042,52 @@ function renderRyder() {
 // RENDER — BOYNE CUP (FedEx)
 // ═══════════════════════════════════════════════
 
+// Rank a results array ({first,last,team,net}) with ties. Lower net = better.
+function rankNetResults(results) {
+  const sorted = [...results].sort((a, b) => a.net - b.net);
+  let lastNet = null, lastRank = 0, tieCount = 0;
+  sorted.forEach((p, i) => {
+    if (p.net !== lastNet) { lastRank = i + 1; lastNet = p.net; tieCount = 1; }
+    else { tieCount++; }
+    p.rank = lastRank;
+  });
+  // Mark ties (more than one player sharing a rank)
+  const counts = {};
+  sorted.forEach(p => counts[p.rank] = (counts[p.rank] || 0) + 1);
+  sorted.forEach(p => p.tied = counts[p.rank] > 1);
+  return sorted;
+}
+
+function renderRoundLeaderboard(round) {
+  const ranked = rankNetResults(round.results);
+  let h = `<div class="round-block">
+    <div class="round-block-header">
+      <span class="round-block-title">${round.format}</span>
+      <span class="round-block-course">${round.course}</span>
+    </div>
+    <table class="fedex-table compact"><tbody>`;
+  ranked.forEach(p => {
+    const rankCls = (p.rank === 1) ? 'rank top' : 'rank';
+    const rankDisp = (p.tied ? 'T' : '') + p.rank;
+    h += `<tr>
+      <td class="${rankCls}">${rankDisp}</td>
+      <td class="player"><span class="team-dot ${p.team}"></span>${p.first[0]}. ${p.last}</td>
+      <td class="right total">${p.net}</td>
+    </tr>`;
+  });
+  h += `</tbody></table></div>`;
+  return h;
+}
+
+function boyneCupWinnerName(bc) {
+  if (bc.winner) return bc.winner;
+  if (!bc.results || !bc.results.length) return null;
+  const ranked = rankNetResults(bc.results);
+  const top = ranked.filter(p => p.rank === 1);
+  if (top.length === 1) return `${top[0].first} ${top[0].last}`;
+  return null; // tied — require manual `winner` override
+}
+
 function renderBoyne() {
   let h = '';
   h += `<div class="boyne-intro">
@@ -979,12 +1097,31 @@ function renderBoyne() {
 
   h += `<div class="content" style="padding-top:1rem">`;
 
+  // ── BOYNE CUP CHAMPIONSHIP (at top when final) ─────────────
+  const bcFinal = boyneCup.status === 'final' && boyneCup.results.length > 0;
+  const bcWinner = bcFinal ? boyneCupWinnerName(boyneCup) : null;
+
+  if (bcFinal) {
+    if (bcWinner) {
+      h += `<div class="champ-banner">
+        <div class="label">2026 Boyne Cup Champion</div>
+        <div class="name">${bcWinner}</div>
+        <div class="sub">${boyneCup.course}</div>
+      </div>`;
+    }
+    h += renderRoundLeaderboard(boyneCup);
+  }
+
+  // ── FEDEX POINTS LEADERBOARD ────────────────────────────────
   if (!fedex.showLeaderboard) {
     h += `<div class="side-card" style="text-align:center;padding:2rem 1rem">
       <div class="side-card-format" style="margin-bottom:0.5rem">Standings open after Round 1</div>
       <div class="match-detail">Eligible rounds: Irish Rumble, Lone Ranger, Blind Pairs, Worst Ball, 1v1 Matchplay</div>
     </div>`;
   } else {
+    if (bcFinal) {
+      h += `<div class="rounds-header">FedEx Points — Final</div>`;
+    }
     // Sort players by total descending
     const ranked = [...fedex.players].map(p => ({...p})).sort((a,b) => b.total - a.total);
     // Assign ranks (with ties)
@@ -1018,9 +1155,14 @@ function renderBoyne() {
         rankDisp = p.rank;
       }
       const rankCls = (!allZero && p.rank === 1 && p.total > 0) ? 'rank top' : 'rank';
+      const isChamp25 = (p.first === 'Ryan' && p.last === 'Versolatto');
+      const isChamp26 = bcWinner && `${p.first} ${p.last}` === bcWinner;
+      let badges = '';
+      if (isChamp26) badges += ` <span class="champ-badge" title="2026 Boyne Cup Champion">★ '26</span>`;
+      if (isChamp25) badges += ` <span class="champ-badge" title="2025 Boyne Cup Champion">★ '25</span>`;
       h += `<tr>
         <td class="${rankCls}">${rankDisp}</td>
-        <td class="player">${p.first[0]}. ${p.last}${(p.first === 'Ryan' && p.last === 'Versolatto') ? ' <span class="champ-badge" title="2025 Boyne Cup Champion">★ \'25</span>' : ''}</td>
+        <td class="player">${p.first[0]}. ${p.last}${badges}</td>
         <td class="right total">${p.total}</td>
         <td class="right strokes ${strokesCls}">${strokesDisp}</td>
       </tr>`;
@@ -1033,6 +1175,13 @@ function renderBoyne() {
     <strong>Best 3 of 5:</strong> Only your top 3 round scores count toward the FedEx total.<br>
     <strong>Starting strokes (Boyne Cup championship):</strong> 1st = -3 &bull; 2nd–3rd = -2 &bull; 4th–6th = -1 &bull; 7th–16th = even
   </div>`;
+
+  // ── PER-ROUND NET LEADERBOARDS (chronological, finals only) ─
+  const finalRounds = rounds.filter(r => r.status === 'final' && r.results.length > 0);
+  if (finalRounds.length > 0) {
+    h += `<div class="rounds-header">Round-by-round net leaderboards</div>`;
+    finalRounds.forEach(r => { h += renderRoundLeaderboard(r); });
+  }
 
   h += `</div>`;
   document.getElementById('view-boyne').innerHTML = h;

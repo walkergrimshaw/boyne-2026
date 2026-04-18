@@ -356,6 +356,20 @@
     border-radius: 3px;
     vertical-align: middle;
   }
+  .rookie-badge {
+    display: inline-block;
+    margin-left: 0.35rem;
+    padding: 0.05rem 0.35rem;
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: rgba(122,139,163,0.12);
+    border: 1px solid rgba(122,139,163,0.3);
+    border-radius: 3px;
+    vertical-align: middle;
+  }
   .fedex-table .team-dot {
     display: inline-block; width: 8px; height: 8px; border-radius: 50%;
     margin-right: 0.5rem; vertical-align: middle;
@@ -748,6 +762,15 @@ const boyneCup = {
   status: "upcoming", results: [],
   winner: null, // optional override: e.g. "Kyle Elliott" if playoff-decided
 };
+
+// Players making their Boyne debut in 2026. Gets a muted "ROOKIE" badge on the FedEx table.
+const ROOKIES_2026 = new Set([
+  "Justin Vere",
+  "Jesse Joosten",
+  "Corey Joosten",
+  "Alex Churchill",
+  "Steve Rioux",
+]);
 
 // Starting strokes lookup based on FedEx position
 function startingStrokes(rank) {
@@ -1155,11 +1178,14 @@ function renderBoyne() {
         rankDisp = p.rank;
       }
       const rankCls = (!allZero && p.rank === 1 && p.total > 0) ? 'rank top' : 'rank';
+      const fullName = `${p.first} ${p.last}`;
       const isChamp25 = (p.first === 'Ryan' && p.last === 'Versolatto');
-      const isChamp26 = bcWinner && `${p.first} ${p.last}` === bcWinner;
+      const isChamp26 = bcWinner && fullName === bcWinner;
+      const isRookie = ROOKIES_2026.has(fullName);
       let badges = '';
       if (isChamp26) badges += ` <span class="champ-badge" title="2026 Boyne Cup Champion">★ '26</span>`;
       if (isChamp25) badges += ` <span class="champ-badge" title="2025 Boyne Cup Champion">★ '25</span>`;
+      if (isRookie)  badges += ` <span class="rookie-badge" title="2026 Boyne debut">Rookie</span>`;
       h += `<tr>
         <td class="${rankCls}">${rankDisp}</td>
         <td class="player">${p.first[0]}. ${p.last}${badges}</td>

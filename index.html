@@ -370,6 +370,39 @@
     border-radius: 3px;
     vertical-align: middle;
   }
+  .belt-badge {
+    display: inline-block;
+    margin-left: 0.35rem;
+    padding: 0.05rem 0.4rem;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #1a1a1a;
+    background: linear-gradient(135deg, #d4b073 0%, #8b6f47 100%);
+    border-radius: 3px;
+    vertical-align: middle;
+  }
+  /* Smaller variants for chevron names (0.75rem text) */
+  .champ-badge.badge-sm, .rookie-badge.badge-sm, .belt-badge.badge-sm {
+    font-size: 0.42rem; padding: 0.02rem 0.25rem; margin-left: 0.2rem;
+    letter-spacing: 0.03em;
+  }
+  /* Tiny variants for rosters (0.55rem text) — emoji-sized */
+  .champ-badge.badge-xs, .rookie-badge.badge-xs, .belt-badge.badge-xs {
+    display: inline-block; font-size: 0.45rem; padding: 0 0.18rem;
+    margin-left: 0.12rem; border-radius: 2px; letter-spacing: 0;
+    font-weight: 700; vertical-align: baseline;
+  }
+  /* Left-side variant: flips margin so badge sits BEFORE the name */
+  .champ-badge.left-side,
+  .rookie-badge.left-side,
+  .belt-badge.left-side { margin-left: 0; margin-right: 0.4rem; }
+  .champ-badge.left-side.badge-sm,
+  .rookie-badge.left-side.badge-sm,
+  .belt-badge.left-side.badge-sm { margin-right: 0.2rem; }
+  .champ-badge.left-side.badge-xs,
+  .rookie-badge.left-side.badge-xs,
+  .belt-badge.left-side.badge-xs { margin-right: 0.12rem; }
   .fedex-table .team-dot {
     display: inline-block; width: 8px; height: 8px; border-radius: 50%;
     margin-right: 0.5rem; vertical-align: middle;
@@ -390,6 +423,49 @@
     font-size: 0.7rem; color: var(--text-muted); line-height: 1.5;
   }
   .fedex-legend strong { color: var(--text); font-weight: 600; }
+
+  /* ── BED SELECTION (IR net ranking determines bunk pick order) ── */
+  .bed-block {
+    max-width: 900px; margin: 0.6rem auto 0; padding: 0.75rem 1rem;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+  }
+  .bed-block-title {
+    font-family: 'Oswald', sans-serif; font-size: 0.6rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold);
+    margin-bottom: 0.55rem;
+  }
+  .bed-block-note {
+    font-size: 0.62rem; color: var(--text-muted); font-style: italic;
+    margin-bottom: 0.5rem;
+  }
+  .bed-cols {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  }
+  @media (max-width: 600px) {
+    .bed-cols { grid-template-columns: 1fr; gap: 0.6rem; }
+  }
+  .bed-team-name {
+    font-family: 'Oswald', sans-serif; font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    padding-bottom: 0.25rem; margin-bottom: 0.3rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .bed-team-name.red  { color: var(--red); }
+  .bed-team-name.blue { color: var(--blue); }
+  .bed-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 0.2rem 0; font-size: 0.75rem;
+  }
+  .bed-row + .bed-row { border-top: 1px dashed rgba(255,255,255,0.04); }
+  .bed-row .bed-rank {
+    font-family: 'Oswald', sans-serif; color: var(--text-muted);
+    width: 1.5rem; font-size: 0.7rem;
+  }
+  .bed-row .bed-name { flex: 1; font-weight: 600; }
+  .bed-row .bed-net {
+    font-family: 'Oswald', sans-serif; font-weight: 600;
+    color: var(--text-muted); font-size: 0.72rem;
+  }
 
   /* ── PER-ROUND NET LEADERBOARDS (de-emphasized) ── */
   .rounds-header {
@@ -770,7 +846,7 @@ const boyneCup = {
   winner: null, // optional override: e.g. "Kyle Elliott" if playoff-decided
 };
 
-// Players making their Boyne debut in 2026. Gets a muted "ROOKIE" badge on the FedEx table.
+// Players making their Boyne debut in 2026. Gets a muted "ROOKIE" badge wherever their name appears.
 const ROOKIES_2026 = new Set([
   "Justin Vere",
   "Jesse Joosten",
@@ -779,12 +855,97 @@ const ROOKIES_2026 = new Set([
   "Steve Rioux",
 ]);
 
+// 2025 Boyne Cup Champion — gets a ★'25 badge wherever their name appears.
+const DEFENDING_CHAMP_NAME = "Ryan Versolatto";
+
 // Starting strokes lookup based on FedEx position
 function startingStrokes(rank) {
   if (rank === 1) return -3;
   if (rank <= 3) return -2;
   if (rank <= 6) return -1;
   return 0;
+}
+
+// ═══════════════════════════════════════════════
+// NAME CANONICALIZATION + BADGE HELPERS
+// Accepts any common name form ("Kyle Elliott", "K. Elliott", "Elliott")
+// and returns the canonical full name so badge lookups always match.
+// ═══════════════════════════════════════════════
+
+const PLAYER_LOOKUP = (() => {
+  const map = {};
+  fedex.players.forEach(p => {
+    const full = `${p.first} ${p.last}`;
+    map[full.toLowerCase()] = full;
+    map[`${p.first[0]}. ${p.last}`.toLowerCase()] = full;
+    map[`${p.first[0]}.${p.last}`.toLowerCase()] = full;
+    // Last-name-only only if unique
+    const last = p.last.toLowerCase();
+    if (map[last] === undefined) map[last] = full;
+    else map[last] = null; // collision (e.g. two Versolattos, two Grimshaws, two Joostens, two Ryans, two Churchills)
+  });
+  return map;
+})();
+
+function canonicalName(input) {
+  if (!input) return null;
+  return PLAYER_LOOKUP[input.trim().toLowerCase()] || null;
+}
+
+// Belt = most recent Longest Drive winner across any final side-action round.
+function beltHolderName() {
+  for (let i = sideAction.length - 1; i >= 0; i--) {
+    const r = sideAction[i];
+    if (r.status === 'final' && r.longDrive && r.longDrive.player) {
+      const canon = canonicalName(r.longDrive.player);
+      if (canon) return canon;
+    }
+  }
+  return null;
+}
+
+// Returns HTML badges for a given full name.
+// size: 'md' (default, pill-style) | 'sm' (tight pill) | 'xs' (tiny for rosters)
+// side: 'right' (default, badges after name) | 'left' (badges before name — flips margin)
+// Returns an empty string if no badges apply. Includes leading/trailing whitespace as appropriate.
+function nameBadges(fullName, size, side) {
+  if (!fullName) return '';
+  size = size || 'md';
+  side = side || 'right';
+  const sizeCls = size === 'md' ? '' : ` badge-${size}`;
+  const sideCls = side === 'left' ? ' left-side' : '';
+  const bcFinal = boyneCup.status === 'final' && boyneCup.results.length > 0;
+  const bcWinner = bcFinal ? boyneCupWinnerName(boyneCup) : null;
+  const belt = beltHolderName();
+  const badges = [];
+  if (bcWinner && fullName === bcWinner) {
+    badges.push(`<span class="champ-badge${sizeCls}${sideCls}" title="2026 Boyne Cup Champion">★ '26</span>`);
+  }
+  if (fullName === DEFENDING_CHAMP_NAME) {
+    badges.push(`<span class="champ-badge${sizeCls}${sideCls}" title="2025 Boyne Cup Champion">★ '25</span>`);
+  }
+  if (ROOKIES_2026.has(fullName)) {
+    badges.push(`<span class="rookie-badge${sizeCls}${sideCls}" title="2026 Boyne debut">Rookie</span>`);
+  }
+  if (belt && fullName === belt) {
+    badges.push(`<span class="belt-badge${sizeCls}${sideCls}" title="Current Belt Holder (Longest Drive)">🏆 Belt</span>`);
+  }
+  if (!badges.length) return '';
+  const joined = badges.join(' ');
+  // Whitespace is handled via CSS margin; string-level spacing returned for line-break opportunities.
+  return side === 'left' ? joined + ' ' : ' ' + joined;
+}
+
+// Badges keyed off a shortform name ("K. Elliott") — resolves to canonical first.
+function nameBadgesFromAny(input, size, side) {
+  return nameBadges(canonicalName(input), size, side);
+}
+
+// Helper: "badges + name" or "name + badges" based on team (Gooners → left on Boyne tab).
+function nameWithBadges(displayName, fullName, size, team) {
+  const side = team === 'blue' ? 'left' : 'right';
+  const badges = nameBadges(fullName, size, side);
+  return side === 'left' ? `${badges}${displayName}` : `${displayName}${badges}`;
 }
 
 // ═══════════════════════════════════════════════
@@ -1003,19 +1164,36 @@ function renderRyder() {
         const cls = `chevron-row`;
         h += `<div class="${cls}" style="height:${rowH}px">`;
         h += `<div style="position:absolute;inset:0;z-index:1">${chevronSVG(winner, rowH)}</div>`;
+        // Badge policy on Ryder Cup chevrons:
+        //   Lone Ranger (lr)  → no badges on chev names (roster already crowded)
+        //   Worst Ball (wb)   → no badges on rosters
+        //   Irish Rumble (ir) → badges on rosters
+        //   1v1 Matchplay (mp) → badges on chev names (once drafted)
+        const rosterBadgesOn = round.id !== 'wb';
+        const chevBadgesOn   = round.id !== 'lr';
         const rosterHTML = (names) => {
           const lines = [];
           for (let i = 0; i < names.length; i += 2) {
-            lines.push(names.slice(i, i + 2).map(n => `<span class="rname">${n}</span>`).join(' &bull; '));
+            lines.push(names.slice(i, i + 2).map(n => {
+              const badges = rosterBadgesOn ? nameBadgesFromAny(n, 'xs') : '';
+              return `<span class="rname">${n}${badges}</span>`;
+            }).join(' &bull; '));
           }
           return lines.join('<br>');
         };
+        const playerCell = (p) => {
+          if (m.isTeam) return p[1];
+          const shortName = `${p[0][0]}. ${p[1]}`;
+          const fullName = `${p[0]} ${p[1]}`;
+          const badges = chevBadgesOn ? nameBadges(fullName, 'sm') : '';
+          return `${shortName}${badges}`;
+        };
         h += `<div class="chev-names left">`;
-        m.red.forEach(p => h += `<div class="chev-player">${m.isTeam ? p[1] : p[0][0]+'. '+p[1]}</div>`);
+        m.red.forEach(p => h += `<div class="chev-player">${playerCell(p)}</div>`);
         if (m.redRoster) h += `<div class="chev-roster">${rosterHTML(m.redRoster)}</div>`;
         h += `</div>`;
         h += `<div class="chev-names right">`;
-        m.blue.forEach(p => h += `<div class="chev-player">${m.isTeam ? p[1] : p[0][0]+'. '+p[1]}</div>`);
+        m.blue.forEach(p => h += `<div class="chev-player">${playerCell(p)}</div>`);
         if (m.blueRoster) h += `<div class="chev-roster">${rosterHTML(m.blueRoster)}</div>`;
         h += `</div>`;
         h += `<div class="chev-center">`;
@@ -1105,13 +1283,43 @@ function renderRoundLeaderboard(round) {
   ranked.forEach(p => {
     const rankCls = (p.rank === 1) ? 'rank top' : 'rank';
     const rankDisp = (p.tied ? 'T' : '') + p.rank;
+    const nameHtml = nameWithBadges(`${p.first[0]}. ${p.last}`, `${p.first} ${p.last}`, 'md', p.team);
     h += `<tr>
       <td class="${rankCls}">${rankDisp}</td>
-      <td class="player"><span class="team-dot ${p.team}"></span>${p.first[0]}. ${p.last}</td>
+      <td class="player"><span class="team-dot ${p.team}"></span>${nameHtml}</td>
       <td class="right total">${p.net}</td>
     </tr>`;
   });
   h += `</tbody></table></div>`;
+  return h;
+}
+
+// Bed selection: each team's players sorted by IR net = bed pick order.
+// Renders only when IR round is final.
+function renderBedSelection(irRound) {
+  if (!irRound || irRound.status !== 'final' || !irRound.results || irRound.results.length === 0) return '';
+  const red = irRound.results.filter(p => p.team === 'red').sort((a,b) => a.net - b.net);
+  const blue = irRound.results.filter(p => p.team === 'blue').sort((a,b) => a.net - b.net);
+  const renderTeam = (players, teamName, teamCls) => {
+    let h = `<div><div class="bed-team-name ${teamCls}">${teamName}</div>`;
+    players.forEach((p, i) => {
+      const nameHtml = nameWithBadges(`${p.first[0]}. ${p.last}`, `${p.first} ${p.last}`, 'sm', p.team);
+      h += `<div class="bed-row">
+        <span class="bed-rank">${i + 1}.</span>
+        <span class="bed-name">${nameHtml}</span>
+        <span class="bed-net">${p.net}</span>
+      </div>`;
+    });
+    h += `</div>`;
+    return h;
+  };
+  let h = `<div class="bed-block">
+    <div class="bed-block-title">Bed Pick Order &mdash; Irish Rumble net</div>
+    <div class="bed-block-note">Within each team, lowest net picks bunks first.</div>
+    <div class="bed-cols">`;
+  h += renderTeam(red, data.red.name, 'red');
+  h += renderTeam(blue, data.blue.name, 'blue');
+  h += `</div></div>`;
   return h;
 }
 
@@ -1192,16 +1400,10 @@ function renderBoyne() {
       }
       const rankCls = (!allZero && p.rank === 1 && p.total > 0) ? 'rank top' : 'rank';
       const fullName = `${p.first} ${p.last}`;
-      const isChamp25 = (p.first === 'Ryan' && p.last === 'Versolatto');
-      const isChamp26 = bcWinner && fullName === bcWinner;
-      const isRookie = ROOKIES_2026.has(fullName);
-      let badges = '';
-      if (isChamp26) badges += ` <span class="champ-badge" title="2026 Boyne Cup Champion">★ '26</span>`;
-      if (isChamp25) badges += ` <span class="champ-badge" title="2025 Boyne Cup Champion">★ '25</span>`;
-      if (isRookie)  badges += ` <span class="rookie-badge" title="2026 Boyne debut">Rookie</span>`;
+      const nameHtml = nameWithBadges(`${p.first[0]}. ${p.last}`, fullName, 'md', p.team);
       h += `<tr>
         <td class="${rankCls}">${rankDisp}</td>
-        <td class="player">${p.first[0]}. ${p.last}${badges}</td>
+        <td class="player">${nameHtml}</td>
         <td class="right total">${p.total}</td>
         <td class="right strokes ${strokesCls}">${strokesDisp}</td>
       </tr>`;
@@ -1218,7 +1420,11 @@ function renderBoyne() {
   // ── PER-ROUND NET LEADERBOARDS (chronological, all rounds; upcoming dimmed) ─
   if (rounds.length > 0) {
     h += `<div class="rounds-header">Round-by-round net leaderboards</div>`;
-    rounds.forEach(r => { h += renderRoundLeaderboard(r); });
+    rounds.forEach(r => {
+      h += renderRoundLeaderboard(r);
+      // Bed selection appears directly under the Irish Rumble round block
+      if (r.id === 'ir') h += renderBedSelection(r);
+    });
   }
 
   h += `</div>`;
@@ -1263,10 +1469,11 @@ function renderSide() {
       h += `<div class="side-empty">${isUp ? 'TBD' : 'No CTP winners recorded.'}</div>`;
     } else {
       round.ctps.forEach(c => {
+        const badges = nameBadgesFromAny(c.player, 'sm');
         h += `<div class="side-row">
           <div class="label-l">${c.hole}</div>
           <div class="player-block">
-            <div class="player">${c.player}</div>
+            <div class="player">${c.player}${badges}</div>
             ${c.sponsor ? `<div class="sponsor">${c.sponsor}</div>` : ''}
           </div>
           <div class="meta">$20</div>
@@ -1281,10 +1488,11 @@ function renderSide() {
     if (isUp || !round.longDrive) {
       h += `<div class="side-empty">${isUp ? 'TBD' : 'No Long Drive winner recorded.'}</div>`;
     } else {
+      const ldBadges = nameBadgesFromAny(round.longDrive.player, 'sm');
       h += `<div class="side-row">
         <div class="label-l">${round.longDrive.hole}</div>
         <div class="player-block">
-          <div class="player">${round.longDrive.player}</div>
+          <div class="player">${round.longDrive.player}${ldBadges}</div>
           ${round.longDrive.sponsor ? `<div class="sponsor">${round.longDrive.sponsor}</div>` : ''}
         </div>
       </div>`;
@@ -1304,8 +1512,9 @@ function renderSide() {
         <div class="sk-payout">Payout</div>
       </div>`;
       round.skins.forEach(s => {
+        const sBadges = nameBadgesFromAny(s.player, 'sm');
         h += `<div class="skins-row">
-          <div class="sk-player">${s.player}</div>
+          <div class="sk-player">${s.player}${sBadges}</div>
           <div class="sk-count">${s.count}</div>
           <div class="sk-payout">$${s.payout}</div>
         </div>`;

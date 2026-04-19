@@ -615,6 +615,191 @@
     color: var(--text-muted); letter-spacing: 0.05em;
   }
 
+  /* ── WEATHER TAB ── */
+  .weather-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 2rem;
+  }
+  .weather-intro {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+    padding: 0 0.5rem;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+  }
+  .weather-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.1rem 1.2rem 1.2rem;
+    margin-bottom: 0.85rem;
+  }
+  .weather-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .weather-date {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    text-transform: uppercase;
+    line-height: 1.15;
+  }
+  .weather-date .wx-day-num {
+    color: var(--gold);
+    margin-right: 0.5rem;
+  }
+  .weather-course {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+    letter-spacing: 0.02em;
+  }
+  .weather-badge {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    padding: 0.25rem 0.55rem;
+    border-radius: 3px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .weather-badge.forecast {
+    color: var(--gold);
+    border-color: rgba(212, 168, 67, 0.35);
+    background: rgba(212, 168, 67, 0.08);
+  }
+  .wx-condition {
+    margin-top: 0.9rem;
+    font-size: 0.8rem;
+    color: var(--text);
+    text-align: center;
+    letter-spacing: 0.02em;
+  }
+  .wx-condition .wx-icon { font-size: 1rem; margin-right: 0.25rem; }
+
+  /* Temperature bar (iOS style) */
+  .wx-bar-wrap {
+    margin: 1.1rem 0 0.5rem;
+    position: relative;
+    padding: 0 2.25rem;
+  }
+  .wx-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg,
+      #4a7fd4 0%,
+      #6aa4e8 22%,
+      #8fc8b0 48%,
+      #e8b858 72%,
+      #d4603a 100%
+    );
+    position: relative;
+  }
+  .wx-marker {
+    position: absolute;
+    top: -4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--text);
+    border: 3px solid var(--bg-card);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+  .wx-marker-label {
+    position: absolute;
+    top: 20px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    line-height: 1.1;
+  }
+  .wx-marker-label .wx-time {
+    display: block;
+    font-size: 0.55rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.1rem;
+  }
+  .wx-endpoints {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 3.1rem;
+    padding: 0 0.25rem;
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Oswald', sans-serif;
+  }
+  .wx-endpoints .wx-low { color: #6aa4e8; font-weight: 600; font-size: 0.75rem; }
+  .wx-endpoints .wx-high { color: #d4603a; font-weight: 600; font-size: 0.75rem; }
+  .wx-endpoints .wx-range-label { font-weight: 500; }
+
+  /* Secondary weather info row */
+  .wx-meta {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--border);
+  }
+  .wx-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .wx-meta-label {
+    font-size: 0.52rem;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .wx-meta-value {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+  }
+  .wx-wind-arrow {
+    display: inline-block;
+    transform-origin: center center;
+    color: var(--text-muted);
+    margin-right: 0.2rem;
+  }
+
+  .weather-loading, .weather-error {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 1.5rem;
+    font-size: 0.8rem;
+  }
+  .weather-error { color: #e8805a; }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 600px) {
     .hero-title { font-size: 0.7rem; }
@@ -630,6 +815,9 @@
     .tab-btn { font-size: 0.7rem; padding: 0.7rem 0.3rem; letter-spacing: 0.05em; }
     .fedex-table th, .fedex-table td { padding: 0.45rem 0.35rem; font-size: 0.75rem; }
     .fedex-table .total { font-size: 0.85rem; }
+    .wx-meta { grid-template-columns: repeat(2, 1fr); gap: 0.9rem 1rem; }
+    .wx-bar-wrap { padding: 0 1.75rem; }
+    .wx-meta-value { font-size: 0.78rem; }
   }
 </style>
 </head>
@@ -644,11 +832,13 @@
   <button class="tab-btn active" data-tab="ryder">Ryder Cup</button>
   <button class="tab-btn" data-tab="boyne">Boyne Cup</button>
   <button class="tab-btn" data-tab="side">Side Action</button>
+  <button class="tab-btn" data-tab="weather">Weather</button>
 </div></div>
 
 <div id="view-ryder" class="view active"></div>
 <div id="view-boyne" class="view"></div>
 <div id="view-side" class="view"></div>
+<div id="view-weather" class="view"></div>
 
 <div class="footer">Boyne 2026</div>
 
@@ -1164,36 +1354,30 @@ function renderRyder() {
         const cls = `chevron-row`;
         h += `<div class="${cls}" style="height:${rowH}px">`;
         h += `<div style="position:absolute;inset:0;z-index:1">${chevronSVG(winner, rowH)}</div>`;
-        // Badge policy on Ryder Cup chevrons:
-        //   Lone Ranger (lr)  → no badges on chev names (roster already crowded)
-        //   Worst Ball (wb)   → no badges on rosters
-        //   Irish Rumble (ir) → badges on rosters
-        //   1v1 Matchplay (mp) → badges on chev names (once drafted)
-        const rosterBadgesOn = round.id !== 'wb';
-        const chevBadgesOn   = round.id !== 'lr';
+        // Ryder Cup badge policy:
+        //   Rosters (IR, WB): no badges — 8-name stacks are already tight.
+        //   Chev names (LR, 1v1 MP): badges on, team-aware —
+        //     Swingers (red, left column): badges right of name.
+        //     Gooners (blue, right column): badges left of name (reads naturally when right-aligned).
         const rosterHTML = (names) => {
           const lines = [];
           for (let i = 0; i < names.length; i += 2) {
-            lines.push(names.slice(i, i + 2).map(n => {
-              const badges = rosterBadgesOn ? nameBadgesFromAny(n, 'xs') : '';
-              return `<span class="rname">${n}${badges}</span>`;
-            }).join(' &bull; '));
+            lines.push(names.slice(i, i + 2).map(n => `<span class="rname">${n}</span>`).join(' &bull; '));
           }
           return lines.join('<br>');
         };
-        const playerCell = (p) => {
+        const playerCell = (p, team) => {
           if (m.isTeam) return p[1];
           const shortName = `${p[0][0]}. ${p[1]}`;
           const fullName = `${p[0]} ${p[1]}`;
-          const badges = chevBadgesOn ? nameBadges(fullName, 'sm') : '';
-          return `${shortName}${badges}`;
+          return nameWithBadges(shortName, fullName, 'sm', team);
         };
         h += `<div class="chev-names left">`;
-        m.red.forEach(p => h += `<div class="chev-player">${playerCell(p)}</div>`);
+        m.red.forEach(p => h += `<div class="chev-player">${playerCell(p, 'red')}</div>`);
         if (m.redRoster) h += `<div class="chev-roster">${rosterHTML(m.redRoster)}</div>`;
         h += `</div>`;
         h += `<div class="chev-names right">`;
-        m.blue.forEach(p => h += `<div class="chev-player">${playerCell(p)}</div>`);
+        m.blue.forEach(p => h += `<div class="chev-player">${playerCell(p, 'blue')}</div>`);
         if (m.blueRoster) h += `<div class="chev-roster">${rosterHTML(m.blueRoster)}</div>`;
         h += `</div>`;
         h += `<div class="chev-center">`;
@@ -1283,10 +1467,10 @@ function renderRoundLeaderboard(round) {
   ranked.forEach(p => {
     const rankCls = (p.rank === 1) ? 'rank top' : 'rank';
     const rankDisp = (p.tied ? 'T' : '') + p.rank;
-    const nameHtml = nameWithBadges(`${p.first[0]}. ${p.last}`, `${p.first} ${p.last}`, 'md', p.team);
+    const badges = nameBadges(`${p.first} ${p.last}`, 'md');
     h += `<tr>
       <td class="${rankCls}">${rankDisp}</td>
-      <td class="player"><span class="team-dot ${p.team}"></span>${nameHtml}</td>
+      <td class="player"><span class="team-dot ${p.team}"></span>${p.first[0]}. ${p.last}${badges}</td>
       <td class="right total">${p.net}</td>
     </tr>`;
   });
@@ -1303,10 +1487,10 @@ function renderBedSelection(irRound) {
   const renderTeam = (players, teamName, teamCls) => {
     let h = `<div><div class="bed-team-name ${teamCls}">${teamName}</div>`;
     players.forEach((p, i) => {
-      const nameHtml = nameWithBadges(`${p.first[0]}. ${p.last}`, `${p.first} ${p.last}`, 'sm', p.team);
+      const badges = nameBadges(`${p.first} ${p.last}`, 'sm');
       h += `<div class="bed-row">
         <span class="bed-rank">${i + 1}.</span>
-        <span class="bed-name">${nameHtml}</span>
+        <span class="bed-name">${p.first[0]}. ${p.last}${badges}</span>
         <span class="bed-net">${p.net}</span>
       </div>`;
     });
@@ -1400,10 +1584,10 @@ function renderBoyne() {
       }
       const rankCls = (!allZero && p.rank === 1 && p.total > 0) ? 'rank top' : 'rank';
       const fullName = `${p.first} ${p.last}`;
-      const nameHtml = nameWithBadges(`${p.first[0]}. ${p.last}`, fullName, 'md', p.team);
+      const badges = nameBadges(fullName, 'md');
       h += `<tr>
         <td class="${rankCls}">${rankDisp}</td>
-        <td class="player">${nameHtml}</td>
+        <td class="player">${p.first[0]}. ${p.last}${badges}</td>
         <td class="right total">${p.total}</td>
         <td class="right strokes ${strokesCls}">${strokesDisp}</td>
       </tr>`;
@@ -1530,6 +1714,432 @@ function renderSide() {
 }
 
 // ═══════════════════════════════════════════════
+// WEATHER TAB
+// ═══════════════════════════════════════════════
+
+const WEATHER_DAYS = [
+  { date: '2026-05-11', dayNum: 1, dayName: 'Mon', location: 'Boyne Mountain', course: 'The Monument', lat: 45.174967, lon: -84.929332 },
+  { date: '2026-05-12', dayNum: 2, dayName: 'Tue', location: 'Boyne Highlands', course: 'Heather (AM) · Donald Ross (PM)', lat: 45.4679683, lon: -84.9345758 },
+  { date: '2026-05-13', dayNum: 3, dayName: 'Wed', location: 'Bay Harbor', course: 'Links/Quarry (AM) · Preserve (PM)', lat: 45.3623068, lon: -85.0605549 },
+  { date: '2026-05-14', dayNum: 4, dayName: 'Thu', location: 'Boyne Highlands', course: 'Arthur Hills (AM) · Donald Ross (PM)', lat: 45.4679683, lon: -84.9345758 },
+];
+
+const WEATHER_TEE_HOURS = [9, 15, 20]; // 9am, 3pm, 8pm
+const WEATHER_BAR_HOURS = [9, 21];     // min/max computed across 9am–9pm
+let weatherCache = null;
+let weatherLoading = false;
+
+function wxDaysUntilDate(dateStr) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const target = new Date(dateStr + 'T00:00:00');
+  return Math.ceil((target - today) / 86400000);
+}
+
+function wmoIcon(code) {
+  if (code == null) return '·';
+  if (code === 0) return '☀';
+  if (code <= 2) return '⛅';
+  if (code === 3) return '☁';
+  if (code >= 45 && code <= 48) return '🌫';
+  if (code >= 51 && code <= 57) return '🌦';
+  if (code >= 61 && code <= 67) return '🌧';
+  if (code >= 71 && code <= 77) return '🌨';
+  if (code >= 80 && code <= 82) return '🌧';
+  if (code >= 95) return '⛈';
+  return '·';
+}
+
+function wmoDesc(code) {
+  if (code == null) return '—';
+  if (code === 0) return 'Clear';
+  if (code === 1) return 'Mostly clear';
+  if (code === 2) return 'Partly cloudy';
+  if (code === 3) return 'Overcast';
+  if (code >= 45 && code <= 48) return 'Fog';
+  if (code >= 51 && code <= 57) return 'Drizzle';
+  if (code >= 61 && code <= 65) return 'Rain';
+  if (code >= 66 && code <= 67) return 'Freezing rain';
+  if (code >= 71 && code <= 77) return 'Snow';
+  if (code >= 80 && code <= 82) return 'Rain showers';
+  if (code >= 95) return 'Thunderstorm';
+  return '—';
+}
+
+function wxCompass(deg) {
+  if (deg == null) return '';
+  const dirs = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+  return dirs[Math.round(deg / 22.5) % 16];
+}
+
+function wxFormatTime(iso) {
+  if (!iso) return '—';
+  const hm = iso.slice(11, 16);
+  if (!hm || hm.length < 4) return '—';
+  const [h, m] = hm.split(':').map(Number);
+  const ampm = h >= 12 ? 'p' : 'a';
+  const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+  return `${h12}:${String(m).padStart(2, '0')}${ampm}`;
+}
+
+function wxHourIndex(timeArr, hour) {
+  if (!timeArr) return -1;
+  for (let i = 0; i < timeArr.length; i++) {
+    const h = parseInt(timeArr[i].slice(11, 13), 10);
+    if (h === hour) return i;
+  }
+  return -1;
+}
+
+async function wxFetchForecast(lat, lon, date) {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+    `&hourly=temperature_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,precipitation_probability,precipitation,weather_code` +
+    `&daily=sunrise,sunset` +
+    `&timezone=America/Detroit&forecast_days=16&start_date=${date}&end_date=${date}` +
+    `&wind_speed_unit=kmh&temperature_unit=celsius&precipitation_unit=mm`;
+  let res;
+  try {
+    res = await fetch(url);
+  } catch (e) {
+    console.warn('[weather] forecast fetch network error', url, e);
+    throw new Error('network');
+  }
+  if (!res.ok) {
+    console.warn('[weather] forecast HTTP', res.status, url);
+    throw new Error('forecast HTTP ' + res.status);
+  }
+  const j = await res.json();
+  if (!j.hourly || !j.hourly.time || j.hourly.time.length === 0) {
+    console.warn('[weather] forecast empty payload', date, j);
+    throw new Error('forecast: no data for ' + date);
+  }
+  return j;
+}
+
+// Archive uses a minimal, well-supported variable set (weather_code and
+// apparent_temperature are sometimes rejected by ERA5 archive; we derive them).
+async function wxFetchHistorical(lat, lon, date) {
+  const [, mm, dd] = date.split('-');
+  const thisYear = new Date().getFullYear();
+  const years = [thisYear - 1, thisYear - 2, thisYear - 3];
+  const datasets = (await Promise.all(years.map(async y => {
+    const d = `${y}-${mm}-${dd}`;
+    const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}` +
+      `&hourly=temperature_2m,wind_speed_10m,wind_direction_10m,precipitation,cloud_cover` +
+      `&daily=sunrise,sunset` +
+      `&timezone=America/Detroit&start_date=${d}&end_date=${d}` +
+      `&wind_speed_unit=kmh&temperature_unit=celsius`;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        console.warn('[weather] archive HTTP', res.status, 'for', d, url);
+        return null;
+      }
+      const j = await res.json();
+      if (!j.hourly || !j.hourly.time || j.hourly.time.length === 0) {
+        console.warn('[weather] archive empty payload for', d, j);
+        return null;
+      }
+      return j;
+    } catch (e) {
+      console.warn('[weather] archive fetch error for', d, e);
+      return null;
+    }
+  }))).filter(Boolean);
+  if (datasets.length === 0) throw new Error('archive returned no data');
+  return wxAverageData(datasets, date);
+}
+
+// Hardcoded climatology fallback for northern Michigan in mid-May
+// (Petoskey / Harbor Springs / Boyne Mountain — Great Lakes influenced).
+// Based on NOAA 30-year normals. Used only when both forecast + archive fail.
+function wxClimatology(date) {
+  // Hourly values indexed by local hour 0–23
+  // Temp (°C): diurnal curve, low ~4–5°C pre-dawn, high ~17°C mid-afternoon
+  const temp = [6, 5, 5, 5, 4, 4, 5, 7, 9, 11, 13, 14, 15, 16, 17, 17, 16, 15, 13, 12, 11, 10, 8, 7];
+  // Feels-like (°C): wind chill at cooler hours
+  const feels = [3, 2, 2, 2, 1, 1, 2, 5, 7, 9, 11, 13, 14, 15, 16, 16, 15, 14, 12, 10, 9, 8, 6, 4];
+  // Wind (km/h): calmer at night, peaks mid-afternoon
+  const wind = [12, 12, 11, 11, 10, 10, 11, 13, 15, 17, 18, 19, 20, 21, 21, 20, 19, 17, 15, 13, 12, 12, 12, 12];
+  // Direction: prevailing WNW (~290°) — flat, since we don't have real data
+  const wdir = Array(24).fill(290);
+  // Precip probability: ~35% flat (mid-May northern MI average)
+  const precipProb = Array(24).fill(35);
+  const precip = Array(24).fill(0);
+  // Default to partly cloudy (Great Lakes region tends cloudy in spring)
+  const wcode = Array(24).fill(2);
+  return {
+    hourly: {
+      time: Array.from({ length: 24 }, (_, i) => `${date}T${String(i).padStart(2, '0')}:00`),
+      temperature_2m: temp,
+      apparent_temperature: feels,
+      wind_speed_10m: wind,
+      wind_direction_10m: wdir,
+      precipitation_probability: precipProb,
+      precipitation: precip,
+      weather_code: wcode,
+    },
+    daily: {
+      sunrise: [`${date}T06:15`],
+      sunset:  [`${date}T20:55`],
+    },
+  };
+}
+
+// Approximate "feels like" from temp (°C) + wind (km/h).
+// Canadian wind-chill formula applies when T ≤ 10°C and V > 4.8 km/h; else ≈ T.
+function wxFeelsLike(t, v) {
+  if (t == null) return null;
+  if (v == null || v <= 4.8 || t > 10) return t;
+  const p = Math.pow(v, 0.16);
+  return 13.12 + 0.6215 * t - 11.37 * p + 0.3965 * t * p;
+}
+
+// Derive a coarse WMO weather code from precipitation (mm/h) + cloud cover (%).
+function wxInferWmoCode(precipMm, cloudPct) {
+  if (precipMm != null && precipMm >= 0.5) return 61;        // light rain
+  if (precipMm != null && precipMm >= 0.1) return 51;        // drizzle
+  if (cloudPct == null) return 2;
+  if (cloudPct >= 85) return 3;                              // overcast
+  if (cloudPct >= 40) return 2;                              // partly cloudy
+  if (cloudPct >= 15) return 1;                              // mostly clear
+  return 0;                                                  // clear
+}
+
+function wxAverageData(datasets, targetDate) {
+  const base = datasets[0];
+  const hours = base.hourly.time.length;
+  const out = {
+    hourly: {
+      time: Array.from({ length: hours }, (_, i) => `${targetDate}T${String(i).padStart(2, '0')}:00`),
+      temperature_2m: [],
+      apparent_temperature: [],
+      wind_speed_10m: [],
+      wind_direction_10m: [],
+      precipitation: [],
+      precipitation_probability: [],
+      weather_code: [],
+    },
+    daily: {
+      sunrise: [`${targetDate}T${((base.daily.sunrise?.[0]) || '').slice(11, 16) || '06:10'}`],
+      sunset:  [`${targetDate}T${((base.daily.sunset?.[0])  || '').slice(11, 16) || '20:50'}`],
+    },
+  };
+  const avgScalar = (key, i) => {
+    const vals = datasets.map(d => d.hourly[key]?.[i]).filter(v => v != null);
+    return vals.length ? vals.reduce((s, v) => s + v, 0) / vals.length : null;
+  };
+  for (let i = 0; i < hours; i++) {
+    const tAvg = avgScalar('temperature_2m', i);
+    const wAvg = avgScalar('wind_speed_10m', i);
+    const pAvg = avgScalar('precipitation', i);
+    const cAvg = avgScalar('cloud_cover', i);
+    out.hourly.temperature_2m.push(tAvg);
+    out.hourly.wind_speed_10m.push(wAvg);
+    out.hourly.precipitation.push(pAvg);
+    out.hourly.apparent_temperature.push(wxFeelsLike(tAvg, wAvg));
+    out.hourly.weather_code.push(wxInferWmoCode(pAvg, cAvg));
+
+    // Circular mean for wind direction
+    const dirs = datasets.map(d => d.hourly.wind_direction_10m?.[i]).filter(v => v != null);
+    if (dirs.length) {
+      const x = dirs.reduce((s, v) => s + Math.cos(v * Math.PI / 180), 0);
+      const y = dirs.reduce((s, v) => s + Math.sin(v * Math.PI / 180), 0);
+      out.hourly.wind_direction_10m.push((Math.atan2(y, x) * 180 / Math.PI + 360) % 360);
+    } else {
+      out.hourly.wind_direction_10m.push(null);
+    }
+
+    // Precip probability from historical = % of years with >0.1mm at that hour
+    const precips = datasets.map(d => d.hourly.precipitation?.[i]).filter(v => v != null);
+    out.hourly.precipitation_probability.push(
+      precips.length ? (precips.filter(p => p > 0.1).length / precips.length) * 100 : null
+    );
+  }
+  return out;
+}
+
+// Source cascade: forecast (within 16d) → archive (3-yr avg) → climatology (hardcoded)
+async function wxLoadDay(day) {
+  const daysOut = wxDaysUntilDate(day.date);
+  const tryForecast = daysOut <= 16;
+  if (tryForecast) {
+    try {
+      const data = await wxFetchForecast(day.lat, day.lon, day.date);
+      return { day, data, source: 'forecast', daysOut, error: null };
+    } catch (e) {
+      console.warn('[weather] forecast failed, falling back to archive for', day.date, e.message);
+    }
+  }
+  try {
+    const data = await wxFetchHistorical(day.lat, day.lon, day.date);
+    return { day, data, source: 'archive', daysOut, error: null };
+  } catch (e) {
+    console.warn('[weather] archive failed, using climatology for', day.date, e.message);
+  }
+  // Final fallback: hardcoded May climatology (always succeeds)
+  return { day, data: wxClimatology(day.date), source: 'climatology', daysOut, error: null };
+}
+
+async function wxLoadAll() {
+  return Promise.all(WEATHER_DAYS.map(wxLoadDay));
+}
+
+function wxRenderCard({ day, data, source, error }) {
+  const badgeClass = source === 'forecast' ? 'forecast' : 'historical';
+  const badgeText =
+    source === 'forecast'   ? 'Forecast' :
+    source === 'archive'    ? 'Historical avg' :
+    source === 'climatology'? 'Typical May' : 'Unavailable';
+  const header = `
+    <div class="weather-card-head">
+      <div>
+        <div class="weather-date"><span class="wx-day-num">Day ${day.dayNum}</span>${day.dayName} · May ${day.date.slice(8, 10)}</div>
+        <div class="weather-course">${day.location}${day.course && day.course !== '—' ? ' · ' + day.course : ''}</div>
+      </div>
+      <div class="weather-badge ${badgeClass}">${badgeText}</div>
+    </div>`;
+
+  if (error || !data) {
+    return `<div class="weather-card">${header}<div class="weather-error">Weather unavailable${error ? ' (' + error + ')' : ''}</div></div>`;
+  }
+
+  // Build temp markers + min/max over the 9a–9p window
+  const windowTemps = [];
+  for (let h = WEATHER_BAR_HOURS[0]; h <= WEATHER_BAR_HOURS[1]; h++) {
+    const idx = wxHourIndex(data.hourly.time, h);
+    if (idx >= 0) {
+      const t = data.hourly.temperature_2m[idx];
+      if (t != null) windowTemps.push(t);
+    }
+  }
+  if (windowTemps.length === 0) {
+    return `<div class="weather-card">${header}<div class="weather-error">Weather unavailable (no hourly data)</div></div>`;
+  }
+  const minT = Math.min(...windowTemps);
+  const maxT = Math.max(...windowTemps);
+  const span = Math.max(maxT - minT, 1);
+
+  const markers = WEATHER_TEE_HOURS.map(hour => {
+    const idx = wxHourIndex(data.hourly.time, hour);
+    if (idx < 0) return null;
+    const t = data.hourly.temperature_2m[idx];
+    if (t == null) return null;
+    const rawPct = ((t - minT) / span) * 100;
+    const pct = Math.max(0, Math.min(100, rawPct));
+    const label = hour === 9 ? '9a' : hour === 15 ? '3p' : hour === 20 ? '8p' : (hour + 'h');
+    return { hour, pct, temp: t, label };
+  }).filter(Boolean);
+
+  const markerHtml = markers.map(m => `
+    <div class="wx-marker" style="left:${m.pct.toFixed(1)}%"></div>
+    <div class="wx-marker-label" style="left:${m.pct.toFixed(1)}%">
+      <span class="wx-time">${m.label}</span>${Math.round(m.temp)}°
+    </div>`).join('');
+
+  // Condition shown for mid-afternoon (most relevant for golf day)
+  const idx3p = wxHourIndex(data.hourly.time, 15);
+  const wCode = idx3p >= 0 ? data.hourly.weather_code[idx3p] : null;
+  const conditionHtml = `<div class="wx-condition"><span class="wx-icon">${wmoIcon(wCode)}</span>${wmoDesc(wCode)}</div>`;
+
+  // Meta: wind @ 3p, precip % @ 3p, feels (3p/8p), daylight
+  const idx8p = wxHourIndex(data.hourly.time, 20);
+  const wind = idx3p >= 0 ? data.hourly.wind_speed_10m[idx3p] : null;
+  const windDir = idx3p >= 0 ? data.hourly.wind_direction_10m[idx3p] : null;
+  const precip = idx3p >= 0 ? data.hourly.precipitation_probability[idx3p] : null;
+  const feels3p = idx3p >= 0 ? data.hourly.apparent_temperature[idx3p] : null;
+  const feels8p = idx8p >= 0 ? data.hourly.apparent_temperature[idx8p] : null;
+  const sunrise = data.daily?.sunrise?.[0];
+  const sunset  = data.daily?.sunset?.[0];
+
+  const windHtml = (wind != null)
+    ? `<span class="wx-wind-arrow" style="transform:rotate(${(((windDir || 0) + 180) % 360)}deg);">↑</span>${Math.round(wind)} km/h ${wxCompass(windDir)}`.trim()
+    : '—';
+  const precipHtml = (precip != null) ? `${Math.round(precip)}%` : '—';
+  const feelsHtml  = (feels3p != null || feels8p != null)
+    ? `${feels3p != null ? Math.round(feels3p) + '°' : '—'} / ${feels8p != null ? Math.round(feels8p) + '°' : '—'}`
+    : '—';
+  const daylightHtml = (sunrise && sunset) ? `${wxFormatTime(sunrise)} → ${wxFormatTime(sunset)}` : '—';
+
+  return `
+    <div class="weather-card">
+      ${header}
+      ${conditionHtml}
+      <div class="wx-bar-wrap">
+        <div class="wx-bar"></div>
+        ${markerHtml}
+      </div>
+      <div class="wx-endpoints">
+        <span class="wx-low">${Math.round(minT)}°</span>
+        <span class="wx-range-label">9am – 9pm</span>
+        <span class="wx-high">${Math.round(maxT)}°</span>
+      </div>
+      <div class="wx-meta">
+        <div class="wx-meta-item">
+          <span class="wx-meta-label">Wind (3p)</span>
+          <span class="wx-meta-value">${windHtml}</span>
+        </div>
+        <div class="wx-meta-item">
+          <span class="wx-meta-label">Precip (3p)</span>
+          <span class="wx-meta-value">${precipHtml}</span>
+        </div>
+        <div class="wx-meta-item">
+          <span class="wx-meta-label">Feels 3p / 8p</span>
+          <span class="wx-meta-value">${feelsHtml}</span>
+        </div>
+        <div class="wx-meta-item">
+          <span class="wx-meta-label">Daylight</span>
+          <span class="wx-meta-value">${daylightHtml}</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function wxRenderFromCache() {
+  const view = document.getElementById('view-weather');
+  if (!view || !weatherCache) return;
+  const allForecast     = weatherCache.every(r => r.source === 'forecast');
+  const anyForecast     = weatherCache.some (r => r.source === 'forecast');
+  const anyArchive      = weatherCache.some (r => r.source === 'archive');
+  const anyClimatology  = weatherCache.some (r => r.source === 'climatology');
+  const tripDaysOut = wxDaysUntilDate(WEATHER_DAYS[0].date);
+  let intro;
+  if (allForecast) {
+    intro = `Live forecast from Open-Meteo · ${tripDaysOut} day${tripDaysOut === 1 ? '' : 's'} until Day 1.`;
+  } else if (anyForecast) {
+    intro = `Mixed: earlier days on live forecast, later days on historical/typical averages. ${tripDaysOut} day${tripDaysOut === 1 ? '' : 's'} until Day 1.`;
+  } else if (anyArchive && !anyClimatology) {
+    intro = `Showing 3-year May averages from the Open-Meteo archive. Live forecast takes over as the trip gets within ~16 days (around May 1).`;
+  } else if (anyClimatology && !anyArchive) {
+    intro = `Showing typical mid-May conditions for northern Michigan (NOAA normals). Forecast API couldn't be reached — live forecast will take over when the trip is within ~16 days.`;
+  } else {
+    intro = `Mixed historical sources — some days from the 3-year archive, some from NOAA May normals. Live forecast replaces these as the trip gets closer.`;
+  }
+  view.innerHTML = `
+    <div class="weather-wrap">
+      <div class="weather-intro">${intro}</div>
+      ${weatherCache.map(wxRenderCard).join('')}
+    </div>`;
+}
+
+async function renderWeather() {
+  const view = document.getElementById('view-weather');
+  if (!view) return;
+  if (weatherCache) { wxRenderFromCache(); return; }
+  if (weatherLoading) return;
+  weatherLoading = true;
+  view.innerHTML = `<div class="weather-wrap"><div class="weather-loading">Loading weather…</div></div>`;
+  try {
+    weatherCache = await wxLoadAll();
+    wxRenderFromCache();
+  } catch (e) {
+    view.innerHTML = `<div class="weather-wrap"><div class="weather-error">Weather load failed: ${e.message}</div></div>`;
+  } finally {
+    weatherLoading = false;
+  }
+}
+
+// ═══════════════════════════════════════════════
 // TAB SWITCHING
 // ═══════════════════════════════════════════════
 
@@ -1548,6 +2158,7 @@ function renderAll() {
   renderRyder();
   renderBoyne();
   renderSide();
+  renderWeather();
 }
 
 renderAll();

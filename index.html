@@ -702,72 +702,47 @@
   }
   .wx-condition .wx-icon { font-size: 1rem; margin-right: 0.25rem; }
 
-  /* Temperature bar (iOS style) */
-  .wx-bar-wrap {
-    margin: 1.1rem 0 0.5rem;
-    position: relative;
-    padding: 0 2.25rem;
-  }
-  .wx-bar {
-    height: 8px;
-    border-radius: 4px;
-    background: linear-gradient(90deg,
-      #4a7fd4 0%,
-      #6aa4e8 22%,
-      #8fc8b0 48%,
-      #e8b858 72%,
-      #d4603a 100%
-    );
-    position: relative;
-  }
-  .wx-marker {
-    position: absolute;
-    top: -4px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--text);
-    border: 3px solid var(--bg-card);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-    transform: translateX(-50%);
-    pointer-events: none;
-  }
-  .wx-marker-label {
-    position: absolute;
-    top: 20px;
-    font-family: 'Oswald', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text);
-    text-align: center;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    line-height: 1.1;
-  }
-  .wx-marker-label .wx-time {
-    display: block;
-    font-size: 0.55rem;
-    color: var(--text-muted);
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 0.1rem;
-  }
-  .wx-endpoints {
+  /* Three-temp triad display (9a · 3p · 8p) */
+  .wx-triad {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-top: 3.1rem;
-    padding: 0 0.25rem;
-    font-size: 0.6rem;
-    color: var(--text-muted);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    font-family: 'Oswald', sans-serif;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1.2rem 0 0.6rem;
+    padding: 0.25rem 0;
   }
-  .wx-endpoints .wx-low { color: #6aa4e8; font-weight: 600; font-size: 0.75rem; }
-  .wx-endpoints .wx-high { color: #d4603a; font-weight: 600; font-size: 0.75rem; }
-  .wx-endpoints .wx-range-label { font-weight: 500; }
+  .wx-triad-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    min-width: 3.5rem;
+  }
+  .wx-triad-time {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .wx-triad-temp {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  .wx-triad-sep {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2rem;
+    font-weight: 200;
+    color: var(--text-muted);
+    opacity: 0.3;
+    line-height: 1;
+    transform: translateY(0.55rem);
+  }
 
   /* Secondary weather info row */
   .wx-meta {
@@ -828,7 +803,9 @@
     .fedex-table th, .fedex-table td { padding: 0.45rem 0.35rem; font-size: 0.75rem; }
     .fedex-table .total { font-size: 0.85rem; }
     .wx-meta { grid-template-columns: repeat(2, 1fr); gap: 0.9rem 1rem; }
-    .wx-bar-wrap { padding: 0 1.75rem; }
+    .wx-triad { gap: 0.6rem; }
+    .wx-triad-temp { font-size: 2rem; }
+    .wx-triad-item { min-width: 3rem; }
     .wx-meta-value { font-size: 0.78rem; }
   }
 </style>
@@ -1196,19 +1173,19 @@ const sideAction = [
   {
     id: "wb", day: 3, session: "PM", format: "Worst Ball",
     course: "Bay Harbor — Preserve",
-    detail: "Skins pot $220 &bull; 2 CTPs &bull; 1 Long Drive",
+    detail: "Skins pot $220 &bull; 2 CTPs",
     status: "upcoming",
     ctpHoles: [
       { hole: 5, yds: 145, par: 3 },
       { hole: 9, yds: 144, par: 3 },
     ],
-    ldHole: { hole: 7, yds: 303, par: 4 },
+    ldHole: null,
     ctps: [], longDrive: null, skins: []
   },
   {
     id: "mp", day: 4, session: "AM", format: "Match Play",
     course: "Arthur Hills — Boyne Highlands",
-    detail: "1 Long Drive &bull; No Skins &bull; No CTP",
+    detail: "1 Long Drive",
     status: "upcoming",
     noSkins: true,
     ctpHoles: [],
@@ -1694,14 +1671,13 @@ function renderSide() {
       <div class="side-card-detail">${round.detail}</div>`;
 
     // CTPs (each pays $20; optional sponsor message)
-    h += `<div class="side-section">
-      <div class="side-section-label">Closest to Pin</div>`;
     const ctpHoles = round.ctpHoles || [];
-    if (ctpHoles.length === 0) {
-      h += `<div class="side-empty">No CTP on this round.</div>`;
-    } else {
+    const ctpWinners = round.ctps || [];
+    if (ctpHoles.length > 0 || ctpWinners.length > 0) {
+      h += `<div class="side-section">
+        <div class="side-section-label">Closest to Pin</div>`;
       ctpHoles.forEach(ch => {
-        const win = (round.ctps || []).find(c => c.hole === ch.hole);
+        const win = ctpWinners.find(c => c.hole === ch.hole);
         const badges = win ? nameBadgesFromAny(win.player, 'sm') : '';
         const playerHtml = win
           ? `${win.player}${badges}`
@@ -1718,58 +1694,57 @@ function renderSide() {
           <div class="meta">$20</div>
         </div>`;
       });
+      h += `</div>`;
     }
-    h += `</div>`;
 
     // Long Drive
-    h += `<div class="side-section">
-      <div class="side-section-label">Long Drive</div>`;
     const ldHole = round.ldHole;
-    if (!ldHole) {
-      h += `<div class="side-empty">No Long Drive on this round.</div>`;
-    } else {
+    if (ldHole || round.longDrive) {
+      h += `<div class="side-section">
+        <div class="side-section-label">Long Drive</div>`;
       const win = round.longDrive;
       const ldBadges = win ? nameBadgesFromAny(win.player, 'sm') : '';
       const playerHtml = win
         ? `${win.player}${ldBadges}`
         : `<span class="tbd">TBD</span>`;
+      const holeRef = ldHole || { hole: win?.hole, yds: win?.yds, par: win?.par };
       h += `<div class="side-row">
         <div class="label-l">
-          <div class="label-hole">Hole ${ldHole.hole}</div>
-          <div class="label-detail">${ldHole.yds}y &middot; Par ${ldHole.par}</div>
+          <div class="label-hole">Hole ${holeRef.hole}</div>
+          ${holeRef.yds && holeRef.par ? `<div class="label-detail">${holeRef.yds}y &middot; Par ${holeRef.par}</div>` : ''}
         </div>
         <div class="player-block">
           <div class="player">${playerHtml}</div>
           ${win && win.sponsor ? `<div class="sponsor">${win.sponsor}</div>` : ''}
         </div>
       </div>`;
+      h += `</div>`;
     }
-    h += `</div>`;
 
-    // Skins
-    h += `<div class="side-section">
-      <div class="side-section-label">Skins</div>`;
-    if (round.noSkins) {
-      h += `<div class="side-empty">No Skins on this round.</div>`;
-    } else if (isUp || round.skins.length === 0) {
-      h += `<div class="side-empty">${isUp ? 'TBD' : 'No skins won (carryover or pot retained).'}</div>`;
-    } else {
-      // Header row
-      h += `<div class="skins-header">
-        <div class="sk-player">Player</div>
-        <div class="sk-count">Skins</div>
-        <div class="sk-payout">Payout</div>
-      </div>`;
-      round.skins.forEach(s => {
-        const sBadges = nameBadgesFromAny(s.player, 'sm');
-        h += `<div class="skins-row">
-          <div class="sk-player">${s.player}${sBadges}</div>
-          <div class="sk-count">${s.count}</div>
-          <div class="sk-payout">$${s.payout}</div>
+    // Skins — skip entirely when the round has no skins game
+    if (!round.noSkins) {
+      h += `<div class="side-section">
+        <div class="side-section-label">Skins</div>`;
+      if (isUp || round.skins.length === 0) {
+        h += `<div class="side-empty">${isUp ? 'TBD' : 'No skins won (carryover or pot retained).'}</div>`;
+      } else {
+        // Header row
+        h += `<div class="skins-header">
+          <div class="sk-player">Player</div>
+          <div class="sk-count">Skins</div>
+          <div class="sk-payout">Payout</div>
         </div>`;
-      });
+        round.skins.forEach(s => {
+          const sBadges = nameBadgesFromAny(s.player, 'sm');
+          h += `<div class="skins-row">
+            <div class="sk-player">${s.player}${sBadges}</div>
+            <div class="sk-count">${s.count}</div>
+            <div class="sk-payout">$${s.payout}</div>
+          </div>`;
+        });
+      }
+      h += `</div>`;
     }
-    h += `</div>`;
 
     h += `</div>`; // side-card
   });
@@ -1789,8 +1764,6 @@ const WEATHER_DAYS = [
   { date: '2026-05-14', dayNum: 4, dayName: 'Thu', location: 'Boyne Highlands', course: 'Arthur Hills (AM) · Donald Ross (PM)', lat: 45.4679683, lon: -84.9345758 },
 ];
 
-const WEATHER_TEE_HOURS = [9, 15, 20]; // 9am, 3pm, 8pm
-const WEATHER_BAR_HOURS = [9, 21];     // min/max computed across 9am–9pm
 let weatherCache = null;
 let weatherLoading = false;
 
@@ -2066,38 +2039,36 @@ function wxRenderCard({ day, data, source, error }) {
     return `<div class="weather-card">${header}<div class="weather-error">Weather unavailable${error ? ' (' + error + ')' : ''}</div></div>`;
   }
 
-  // Build temp markers + min/max over the 9a–9p window
-  const windowTemps = [];
-  for (let h = WEATHER_BAR_HOURS[0]; h <= WEATHER_BAR_HOURS[1]; h++) {
-    const idx = wxHourIndex(data.hourly.time, h);
-    if (idx >= 0) {
-      const t = data.hourly.temperature_2m[idx];
-      if (t != null) windowTemps.push(t);
-    }
+  // Three temps: 9AM, HIGH (max across 9AM–9PM daytime window), 8PM
+  const tempAt = (hour) => {
+    const idx = wxHourIndex(data.hourly.time, hour);
+    return idx >= 0 ? data.hourly.temperature_2m[idx] : null;
+  };
+  const dayWindowTemps = [];
+  for (let h = 9; h <= 21; h++) {
+    const t = tempAt(h);
+    if (t != null) dayWindowTemps.push(t);
   }
-  if (windowTemps.length === 0) {
+  const maxT = dayWindowTemps.length ? Math.max(...dayWindowTemps) : null;
+
+  const triadPoints = [
+    { label: '9AM',  temp: tempAt(9) },
+    { label: 'HIGH', temp: maxT },
+    { label: '8PM',  temp: tempAt(20) },
+  ];
+  if (triadPoints.every(p => p.temp == null)) {
     return `<div class="weather-card">${header}<div class="weather-error">Weather unavailable (no hourly data)</div></div>`;
   }
-  const minT = Math.min(...windowTemps);
-  const maxT = Math.max(...windowTemps);
-  const span = Math.max(maxT - minT, 1);
 
-  const markers = WEATHER_TEE_HOURS.map(hour => {
-    const idx = wxHourIndex(data.hourly.time, hour);
-    if (idx < 0) return null;
-    const t = data.hourly.temperature_2m[idx];
-    if (t == null) return null;
-    const rawPct = ((t - minT) / span) * 100;
-    const pct = Math.max(0, Math.min(100, rawPct));
-    const label = hour === 9 ? '9a' : hour === 15 ? '3p' : hour === 20 ? '8p' : (hour + 'h');
-    return { hour, pct, temp: t, label };
-  }).filter(Boolean);
-
-  const markerHtml = markers.map(m => `
-    <div class="wx-marker" style="left:${m.pct.toFixed(1)}%"></div>
-    <div class="wx-marker-label" style="left:${m.pct.toFixed(1)}%">
-      <span class="wx-time">${m.label}</span>${Math.round(m.temp)}°
-    </div>`).join('');
+  const triadHtml = triadPoints.map((p, i) => {
+    const sep = i < triadPoints.length - 1 ? `<div class="wx-triad-sep">|</div>` : '';
+    const tempHtml = p.temp != null ? `${Math.round(p.temp)}°` : '—';
+    return `
+      <div class="wx-triad-item">
+        <div class="wx-triad-time">${p.label}</div>
+        <div class="wx-triad-temp">${tempHtml}</div>
+      </div>${sep}`;
+  }).join('');
 
   // Condition shown for mid-afternoon (most relevant for golf day)
   const idx3p = wxHourIndex(data.hourly.time, 15);
@@ -2127,25 +2098,18 @@ function wxRenderCard({ day, data, source, error }) {
     <div class="weather-card">
       ${header}
       ${conditionHtml}
-      <div class="wx-bar-wrap">
-        <div class="wx-bar">${markerHtml}</div>
-      </div>
-      <div class="wx-endpoints">
-        <span class="wx-low">${Math.round(minT)}°</span>
-        <span class="wx-range-label">9am – 9pm</span>
-        <span class="wx-high">${Math.round(maxT)}°</span>
-      </div>
+      <div class="wx-triad">${triadHtml}</div>
       <div class="wx-meta">
         <div class="wx-meta-item">
-          <span class="wx-meta-label">Wind (3p)</span>
+          <span class="wx-meta-label">Wind (3PM)</span>
           <span class="wx-meta-value">${windHtml}</span>
         </div>
         <div class="wx-meta-item">
-          <span class="wx-meta-label">Precip (3p)</span>
+          <span class="wx-meta-label">Precip (3PM)</span>
           <span class="wx-meta-value">${precipHtml}</span>
         </div>
         <div class="wx-meta-item">
-          <span class="wx-meta-label">Feels 11a / 5p</span>
+          <span class="wx-meta-label">Feels 11AM / 5PM</span>
           <span class="wx-meta-value">${feelsHtml}</span>
         </div>
         <div class="wx-meta-item">

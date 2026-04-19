@@ -693,8 +693,15 @@
     border-color: rgba(212, 168, 67, 0.35);
     background: rgba(212, 168, 67, 0.08);
   }
+  /* Weather section rectangle — wraps condition + triad + meta */
+  .wx-section {
+    margin-top: 1rem;
+    padding: 1.1rem 0.9rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
   .wx-condition {
-    margin-top: 0.9rem;
     font-size: 0.8rem;
     color: var(--text);
     text-align: center;
@@ -708,7 +715,7 @@
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    margin: 1.2rem 0 0.6rem;
+    margin: 0.9rem 0 0.5rem;
     padding: 0.25rem 0;
   }
   .wx-triad-item {
@@ -733,6 +740,9 @@
     color: var(--text);
     line-height: 1;
     letter-spacing: -0.01em;
+  }
+  .wx-triad-item.is-high .wx-triad-temp {
+    font-size: 3.6rem;
   }
   .wx-triad-sep {
     font-family: 'Oswald', sans-serif;
@@ -787,6 +797,105 @@
   }
   .weather-error { color: #e8805a; }
 
+  /* Daily schedule block inside each day card */
+  .schedule-block {
+    margin-top: 1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--border);
+  }
+  .schedule-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 0.75rem;
+  }
+  .schedule-row {
+    display: grid;
+    grid-template-columns: 78px 24px 1fr;
+    gap: 0.65rem;
+    align-items: center;
+    padding: 0.4rem 0;
+  }
+  .schedule-row + .schedule-row {
+    border-top: 1px dashed rgba(255, 255, 255, 0.04);
+  }
+  .schedule-time {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .schedule-icon {
+    font-size: 0.95rem;
+    text-align: center;
+    line-height: 1;
+  }
+  .schedule-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: 0.05em;
+    line-height: 1.25;
+    text-transform: uppercase;
+  }
+  /* Tee-off rows — rounded rectangle, tall, emphasised */
+  .schedule-row.is-tee {
+    padding: 1.1rem 0.9rem;
+    margin: 0.35rem 0;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  /* Draft rows — rounded rectangle, normal height */
+  .schedule-row.is-draft {
+    padding: 0.5rem 0.9rem;
+    margin: 0.35rem 0;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .schedule-row.is-tee + .schedule-row,
+  .schedule-row + .schedule-row.is-tee,
+  .schedule-row.is-draft + .schedule-row,
+  .schedule-row + .schedule-row.is-draft {
+    border-top: none;
+  }
+  .schedule-row.is-tee .schedule-time {
+    font-size: 0.82rem;
+    color: var(--text);
+    font-weight: 600;
+  }
+  .schedule-row.is-tee .schedule-icon {
+    font-size: 1.15rem;
+  }
+  .schedule-row.is-tee .schedule-label {
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .schedule-row.is-tee .schedule-detail {
+    font-size: 0.65rem;
+    margin-top: 0.35rem;
+  }
+  .schedule-detail {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    text-transform: lowercase;
+    margin-top: 0.2rem;
+  }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 600px) {
     .hero-title { font-size: 0.7rem; }
@@ -805,8 +914,14 @@
     .wx-meta { grid-template-columns: repeat(2, 1fr); gap: 0.9rem 1rem; }
     .wx-triad { gap: 0.6rem; }
     .wx-triad-temp { font-size: 2rem; }
+    .wx-triad-item.is-high .wx-triad-temp { font-size: 3rem; }
     .wx-triad-item { min-width: 3rem; }
     .wx-meta-value { font-size: 0.78rem; }
+    .wx-section { padding: 0.9rem 0.7rem; }
+    .schedule-row { grid-template-columns: 64px 22px 1fr; gap: 0.55rem; }
+    .schedule-time { font-size: 0.62rem; }
+    .schedule-label { font-size: 0.78rem; }
+    .schedule-detail { font-size: 0.57rem; }
   }
 </style>
 </head>
@@ -821,7 +936,7 @@
   <button class="tab-btn active" data-tab="ryder">Ryder Cup</button>
   <button class="tab-btn" data-tab="boyne">Boyne Cup</button>
   <button class="tab-btn" data-tab="side">Side Action</button>
-  <button class="tab-btn" data-tab="weather">Weather</button>
+  <button class="tab-btn" data-tab="weather">Schedule</button>
 </div></div>
 
 <div id="view-ryder" class="view active"></div>
@@ -1758,11 +1873,51 @@ function renderSide() {
 // ═══════════════════════════════════════════════
 
 const WEATHER_DAYS = [
-  { date: '2026-05-11', dayNum: 1, dayName: 'Mon', location: 'Boyne Mountain', course: 'The Monument', lat: 45.174967, lon: -84.929332 },
+  { date: '2026-05-11', dayNum: 1, dayName: 'Mon', location: 'Boyne Mountain', course: 'The Monument', lat: 45.174967, lon: -84.929332, triadHours: [13, 'HIGH', 19] },
   { date: '2026-05-12', dayNum: 2, dayName: 'Tue', location: 'Boyne Highlands', course: 'Heather (AM) · Donald Ross (PM)', lat: 45.4679683, lon: -84.9345758 },
   { date: '2026-05-13', dayNum: 3, dayName: 'Wed', location: 'Bay Harbor', course: 'Links/Quarry (AM) · Preserve (PM)', lat: 45.3623068, lon: -85.0605549 },
   { date: '2026-05-14', dayNum: 4, dayName: 'Thu', location: 'Boyne Highlands', course: 'Arthur Hills (AM) · Donald Ross (PM)', lat: 45.4679683, lon: -84.9345758 },
 ];
+
+// Daily schedule — time blocks for each day.
+// Tee times from tee-times.md. Travel/meals/drafts from boyne-2026.md.
+// Lodging base: Highlands all 4 nights.
+const SCHEDULE_BY_DATE = {
+  '2026-05-11': [
+    { time: '6:40 AM',   icon: '🚗', label: 'Depart Apple Land Ranch',  detail: '~5 hr with border buffer' },
+    { time: '11:40 AM',  icon: '🛒', label: 'Gaylord stop',             detail: 'Walmart (beers + snacks) · Jimmy John\'s · 1 hr' },
+    { time: '1:10 PM',   icon: '⛳', label: 'Arrive Boyne Mountain',    detail: 'Practice facility · go in with purpose' },
+    { time: '2:10 PM',   icon: '🏌️', label: 'Irish Rumble tee off',    detail: 'The Monument', kind: 'tee' },
+    { time: '~7:30 PM',  icon: '🚗', label: 'Depart Boyne Mountain',    detail: '~40 min to Highlands' },
+    { time: '8:00 PM',   icon: '🍽', label: 'Dinner',                   detail: 'Slopeside Lounge' },
+    { time: 'After',     icon: '🏠', label: 'Check-in',                 detail: 'Townhouses · 2 min drive from Slopeside' },
+    { time: 'Evening',   icon: '🎲', label: '666 Draft',                kind: 'draft' },
+  ],
+  '2026-05-12': [
+    { time: '8:00 AM',   icon: '☕', label: 'Breakfast',                 detail: 'Main Lodge' },
+    { time: '9:00 AM',   icon: '🏌️', label: 'Lone Ranger tee off',      detail: 'The Heather', kind: 'tee' },
+    { time: '~2:15 PM',  icon: '🥪', label: 'Lunch',                     detail: '19th Tee' },
+    { time: '3:00 PM',   icon: '🏌️', label: '666 tee off',              detail: 'Donald Ross Memorial', kind: 'tee' },
+    { time: '8:00 PM',   icon: '🍽', label: 'Dinner',                    detail: 'Slopeside Lounge' },
+  ],
+  '2026-05-13': [
+    { time: '8:00 AM',   icon: '☕', label: 'Breakfast',                 detail: 'Main Lodge' },
+    { time: '~8:45 AM',  icon: '🚗', label: 'Drive to Bay Harbor',       detail: '~30 min south' },
+    { time: '9:40 AM',   icon: '🏌️', label: 'Blind Pairs tee off',      detail: 'Links / Quarry', kind: 'tee' },
+    { time: '~2:15 PM',  icon: '🥪', label: 'Lunch',                     detail: 'The Links Grille · blind pairs card pull' },
+    { time: '3:00 PM',   icon: '🏌️', label: 'Worst Ball tee off',       detail: 'Preserve · 9 holes', kind: 'tee' },
+    { time: '~6:15 PM',  icon: '🚗', label: 'Drive to Highlands',        detail: '~30 min north' },
+    { time: '8:00 PM',   icon: '🍽', label: 'Dinner',                    detail: 'Slopeside Lounge' },
+    { time: 'Evening',   icon: '🎲', label: '1v1 Matchplay Draft',       kind: 'draft' },
+  ],
+  '2026-05-14': [
+    { time: '8:10 AM',   icon: '☕', label: 'Breakfast',                 detail: 'Main Lodge · 1v1 matchups finalized' },
+    { time: '9:10 AM',   icon: '🏌️', label: '1v1 Matchplay tee off',    detail: 'Arthur Hills · Ryder Cup final', kind: 'tee' },
+    { time: '~2:15 PM',  icon: '🥪', label: 'Lunch',                     detail: 'Seminole Pub' },
+    { time: '3:20 PM',   icon: '🏌️', label: 'Boyne Cup tee off',        detail: 'Donald Ross Memorial · Ryan V opens', kind: 'tee' },
+    { time: '8:00 PM',   icon: '🥂', label: 'Final dinner',              detail: 'Slopeside Lounge · champion crowned' },
+  ],
+};
 
 let weatherCache = null;
 let weatherLoading = false;
@@ -1827,6 +1982,13 @@ function wxHourIndex(timeArr, hour) {
     if (h === hour) return i;
   }
   return -1;
+}
+
+function fmtHourLabel(h) {
+  if (h === 0) return '12AM';
+  if (h === 12) return '12PM';
+  if (h < 12) return h + 'AM';
+  return (h - 12) + 'PM';
 }
 
 async function wxFetchForecast(lat, lon, date) {
@@ -2035,8 +2197,25 @@ function wxRenderCard({ day, data, source, error }) {
       <div class="weather-badge ${badgeClass}">${badgeText}</div>
     </div>`;
 
+  // Build schedule block once — independent of weather availability.
+  const scheduleItems = SCHEDULE_BY_DATE[day.date] || [];
+  const scheduleHtml = scheduleItems.length ? `
+    <div class="schedule-block">
+      <div class="schedule-title">Schedule</div>
+      ${scheduleItems.map(item => {
+        const kindCls = item.kind === 'tee' ? ' is-tee' : (item.kind === 'draft' ? ' is-draft' : '');
+        const detail = item.detail ? `<span class="schedule-detail">${item.detail}</span>` : '';
+        return `
+          <div class="schedule-row${kindCls}">
+            <div class="schedule-time">${item.time}</div>
+            <div class="schedule-icon">${item.icon || ''}</div>
+            <div class="schedule-label">${item.label}${detail}</div>
+          </div>`;
+      }).join('')}
+    </div>` : '';
+
   if (error || !data) {
-    return `<div class="weather-card">${header}<div class="weather-error">Weather unavailable${error ? ' (' + error + ')' : ''}</div></div>`;
+    return `<div class="weather-card">${header}<div class="weather-error">Weather unavailable${error ? ' (' + error + ')' : ''}</div>${scheduleHtml}</div>`;
   }
 
   // Three temps: 9AM, HIGH (max across 9AM–9PM daytime window), 8PM
@@ -2051,20 +2230,21 @@ function wxRenderCard({ day, data, source, error }) {
   }
   const maxT = dayWindowTemps.length ? Math.max(...dayWindowTemps) : null;
 
-  const triadPoints = [
-    { label: '9AM',  temp: tempAt(9) },
-    { label: 'HIGH', temp: maxT },
-    { label: '8PM',  temp: tempAt(20) },
-  ];
+  const triadHours = day.triadHours || [9, 'HIGH', 20];
+  const triadPoints = triadHours.map(h => {
+    if (h === 'HIGH') return { label: 'HIGH', temp: maxT, emphasis: true };
+    return { label: fmtHourLabel(h), temp: tempAt(h) };
+  });
   if (triadPoints.every(p => p.temp == null)) {
-    return `<div class="weather-card">${header}<div class="weather-error">Weather unavailable (no hourly data)</div></div>`;
+    return `<div class="weather-card">${header}<div class="weather-error">Weather unavailable (no hourly data)</div>${scheduleHtml}</div>`;
   }
 
   const triadHtml = triadPoints.map((p, i) => {
     const sep = i < triadPoints.length - 1 ? `<div class="wx-triad-sep">|</div>` : '';
     const tempHtml = p.temp != null ? `${Math.round(p.temp)}°` : '—';
+    const itemCls = p.emphasis ? ' is-high' : '';
     return `
-      <div class="wx-triad-item">
+      <div class="wx-triad-item${itemCls}">
         <div class="wx-triad-time">${p.label}</div>
         <div class="wx-triad-temp">${tempHtml}</div>
       </div>${sep}`;
@@ -2097,26 +2277,29 @@ function wxRenderCard({ day, data, source, error }) {
   return `
     <div class="weather-card">
       ${header}
-      ${conditionHtml}
-      <div class="wx-triad">${triadHtml}</div>
-      <div class="wx-meta">
-        <div class="wx-meta-item">
-          <span class="wx-meta-label">Wind (3PM)</span>
-          <span class="wx-meta-value">${windHtml}</span>
-        </div>
-        <div class="wx-meta-item">
-          <span class="wx-meta-label">Precip (3PM)</span>
-          <span class="wx-meta-value">${precipHtml}</span>
-        </div>
-        <div class="wx-meta-item">
-          <span class="wx-meta-label">Feels 11AM / 5PM</span>
-          <span class="wx-meta-value">${feelsHtml}</span>
-        </div>
-        <div class="wx-meta-item">
-          <span class="wx-meta-label">Sunset</span>
-          <span class="wx-meta-value">${sunsetHtml}</span>
+      <div class="wx-section">
+        ${conditionHtml}
+        <div class="wx-triad">${triadHtml}</div>
+        <div class="wx-meta">
+          <div class="wx-meta-item">
+            <span class="wx-meta-label">Wind (3PM)</span>
+            <span class="wx-meta-value">${windHtml}</span>
+          </div>
+          <div class="wx-meta-item">
+            <span class="wx-meta-label">Precip (3PM)</span>
+            <span class="wx-meta-value">${precipHtml}</span>
+          </div>
+          <div class="wx-meta-item">
+            <span class="wx-meta-label">Feels 11AM / 5PM</span>
+            <span class="wx-meta-value">${feelsHtml}</span>
+          </div>
+          <div class="wx-meta-item">
+            <span class="wx-meta-label">Sunset</span>
+            <span class="wx-meta-value">${sunsetHtml}</span>
+          </div>
         </div>
       </div>
+      ${scheduleHtml}
     </div>`;
 }
 

@@ -560,8 +560,20 @@
   }
   .side-row + .side-row { border-top: 1px dashed rgba(255,255,255,0.05); }
   .side-row .label-l {
-    color: var(--text-muted); font-size: 0.7rem; min-width: 70px;
+    color: var(--text-muted); font-size: 0.7rem; min-width: 80px;
     padding-top: 0.05rem;
+  }
+  .side-row .label-l .label-hole {
+    font-family: 'Oswald', sans-serif; font-weight: 600;
+    color: var(--text); font-size: 0.78rem; letter-spacing: 0.04em;
+    text-transform: uppercase; line-height: 1.15;
+  }
+  .side-row .label-l .label-detail {
+    font-size: 0.55rem; color: var(--text-muted); margin-top: 0.15rem;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .side-row .tbd {
+    color: var(--text-muted); font-style: italic; font-weight: 500;
   }
   .side-row .player-block {
     flex: 1; padding: 0 0.5rem; min-width: 0;
@@ -1118,7 +1130,7 @@ function nameBadges(fullName, size, side) {
     badges.push(`<span class="rookie-badge${sizeCls}${sideCls}" title="2026 Boyne debut">Rookie</span>`);
   }
   if (belt && fullName === belt) {
-    badges.push(`<span class="belt-badge${sizeCls}${sideCls}" title="Current Belt Holder (Longest Drive)">🏆 Belt</span>`);
+    badges.push(`<span class="belt-badge${sizeCls}${sideCls}" title="Current Belt Holder (Longest Drive)">🥋 LD</span>`);
   }
   if (!badges.length) return '';
   const joined = badges.join(' ');
@@ -1150,6 +1162,11 @@ const sideAction = [
     course: "The Monument — Boyne Mountain",
     detail: "Skins pot $220 &bull; 2 CTPs &bull; 1 Long Drive",
     status: "upcoming",
+    ctpHoles: [
+      { hole: 3, yds: 135, par: 3 },
+      { hole: 9, yds: 143, par: 3 },
+    ],
+    ldHole: { hole: 5, yds: 470, par: 5 },
     ctps: [], longDrive: null, skins: []
   },
   {
@@ -1157,6 +1174,11 @@ const sideAction = [
     course: "The Heather — Boyne Highlands",
     detail: "Skins pot $220 &bull; 2 CTPs &bull; 1 Long Drive",
     status: "upcoming",
+    ctpHoles: [
+      { hole: 6,  yds: 139, par: 3 },
+      { hole: 12, yds: 130, par: 3 },
+    ],
+    ldHole: { hole: 17, yds: 339, par: 4 },
     ctps: [], longDrive: null, skins: []
   },
   {
@@ -1164,6 +1186,11 @@ const sideAction = [
     course: "Bay Harbor — Links / Quarry",
     detail: "Skins pot $220 &bull; 2 CTPs &bull; 1 Long Drive",
     status: "upcoming",
+    ctpHoles: [
+      { hole: 4,  yds: 127, par: 3 },
+      { hole: 17, yds: 139, par: 3 },
+    ],
+    ldHole: { hole: 14, yds: 446, par: 5 },
     ctps: [], longDrive: null, skins: []
   },
   {
@@ -1171,6 +1198,21 @@ const sideAction = [
     course: "Bay Harbor — Preserve",
     detail: "Skins pot $220 &bull; 2 CTPs &bull; 1 Long Drive",
     status: "upcoming",
+    ctpHoles: [
+      { hole: 5, yds: 145, par: 3 },
+      { hole: 9, yds: 144, par: 3 },
+    ],
+    ldHole: { hole: 7, yds: 303, par: 4 },
+    ctps: [], longDrive: null, skins: []
+  },
+  {
+    id: "mp", day: 4, session: "AM", format: "Match Play",
+    course: "Arthur Hills — Boyne Highlands",
+    detail: "1 Long Drive &bull; No Skins &bull; No CTP",
+    status: "upcoming",
+    noSkins: true,
+    ctpHoles: [],
+    ldHole: { hole: 12, yds: 516, par: 5 },
     ctps: [], longDrive: null, skins: []
   },
   {
@@ -1178,6 +1220,11 @@ const sideAction = [
     course: "Donald Ross Memorial — Boyne Highlands",
     detail: "Skins pot $220 &bull; 2 CTPs &bull; 1 Long Drive &bull; Net strokeplay championship",
     status: "upcoming",
+    ctpHoles: [
+      { hole: 3,  yds: 135, par: 3 },
+      { hole: 12, yds: 147, par: 3 },
+    ],
+    ldHole: { hole: 15, yds: 458, par: 4 },
     ctps: [], longDrive: null, skins: []
   },
 ];
@@ -1649,16 +1696,24 @@ function renderSide() {
     // CTPs (each pays $20; optional sponsor message)
     h += `<div class="side-section">
       <div class="side-section-label">Closest to Pin</div>`;
-    if (isUp || round.ctps.length === 0) {
-      h += `<div class="side-empty">${isUp ? 'TBD' : 'No CTP winners recorded.'}</div>`;
+    const ctpHoles = round.ctpHoles || [];
+    if (ctpHoles.length === 0) {
+      h += `<div class="side-empty">No CTP on this round.</div>`;
     } else {
-      round.ctps.forEach(c => {
-        const badges = nameBadgesFromAny(c.player, 'sm');
+      ctpHoles.forEach(ch => {
+        const win = (round.ctps || []).find(c => c.hole === ch.hole);
+        const badges = win ? nameBadgesFromAny(win.player, 'sm') : '';
+        const playerHtml = win
+          ? `${win.player}${badges}`
+          : `<span class="tbd">TBD</span>`;
         h += `<div class="side-row">
-          <div class="label-l">${c.hole}</div>
+          <div class="label-l">
+            <div class="label-hole">Hole ${ch.hole}</div>
+            <div class="label-detail">${ch.yds}y &middot; Par ${ch.par}</div>
+          </div>
           <div class="player-block">
-            <div class="player">${c.player}${badges}</div>
-            ${c.sponsor ? `<div class="sponsor">${c.sponsor}</div>` : ''}
+            <div class="player">${playerHtml}</div>
+            ${win && win.sponsor ? `<div class="sponsor">${win.sponsor}</div>` : ''}
           </div>
           <div class="meta">$20</div>
         </div>`;
@@ -1669,15 +1724,23 @@ function renderSide() {
     // Long Drive
     h += `<div class="side-section">
       <div class="side-section-label">Long Drive</div>`;
-    if (isUp || !round.longDrive) {
-      h += `<div class="side-empty">${isUp ? 'TBD' : 'No Long Drive winner recorded.'}</div>`;
+    const ldHole = round.ldHole;
+    if (!ldHole) {
+      h += `<div class="side-empty">No Long Drive on this round.</div>`;
     } else {
-      const ldBadges = nameBadgesFromAny(round.longDrive.player, 'sm');
+      const win = round.longDrive;
+      const ldBadges = win ? nameBadgesFromAny(win.player, 'sm') : '';
+      const playerHtml = win
+        ? `${win.player}${ldBadges}`
+        : `<span class="tbd">TBD</span>`;
       h += `<div class="side-row">
-        <div class="label-l">${round.longDrive.hole}</div>
+        <div class="label-l">
+          <div class="label-hole">Hole ${ldHole.hole}</div>
+          <div class="label-detail">${ldHole.yds}y &middot; Par ${ldHole.par}</div>
+        </div>
         <div class="player-block">
-          <div class="player">${round.longDrive.player}${ldBadges}</div>
-          ${round.longDrive.sponsor ? `<div class="sponsor">${round.longDrive.sponsor}</div>` : ''}
+          <div class="player">${playerHtml}</div>
+          ${win && win.sponsor ? `<div class="sponsor">${win.sponsor}</div>` : ''}
         </div>
       </div>`;
     }
@@ -1686,7 +1749,9 @@ function renderSide() {
     // Skins
     h += `<div class="side-section">
       <div class="side-section-label">Skins</div>`;
-    if (isUp || round.skins.length === 0) {
+    if (round.noSkins) {
+      h += `<div class="side-empty">No Skins on this round.</div>`;
+    } else if (isUp || round.skins.length === 0) {
       h += `<div class="side-empty">${isUp ? 'TBD' : 'No skins won (carryover or pot retained).'}</div>`;
     } else {
       // Header row
@@ -1987,10 +2052,7 @@ async function wxLoadAll() {
 
 function wxRenderCard({ day, data, source, error }) {
   const badgeClass = source === 'forecast' ? 'forecast' : 'historical';
-  const badgeText =
-    source === 'forecast'   ? 'Forecast' :
-    source === 'archive'    ? 'Historical avg' :
-    source === 'climatology'? 'Typical May' : 'Unavailable';
+  const badgeText = source === 'forecast' ? 'Forecast' : 'Historical data';
   const header = `
     <div class="weather-card-head">
       <div>
@@ -2042,32 +2104,31 @@ function wxRenderCard({ day, data, source, error }) {
   const wCode = idx3p >= 0 ? data.hourly.weather_code[idx3p] : null;
   const conditionHtml = `<div class="wx-condition"><span class="wx-icon">${wmoIcon(wCode)}</span>${wmoDesc(wCode)}</div>`;
 
-  // Meta: wind @ 3p, precip % @ 3p, feels (3p/8p), daylight
-  const idx8p = wxHourIndex(data.hourly.time, 20);
+  // Meta: wind @ 3p, precip % @ 3p, feels (11a/5p), sunset
+  const idx11a = wxHourIndex(data.hourly.time, 11);
+  const idx5p  = wxHourIndex(data.hourly.time, 17);
   const wind = idx3p >= 0 ? data.hourly.wind_speed_10m[idx3p] : null;
   const windDir = idx3p >= 0 ? data.hourly.wind_direction_10m[idx3p] : null;
   const precip = idx3p >= 0 ? data.hourly.precipitation_probability[idx3p] : null;
-  const feels3p = idx3p >= 0 ? data.hourly.apparent_temperature[idx3p] : null;
-  const feels8p = idx8p >= 0 ? data.hourly.apparent_temperature[idx8p] : null;
-  const sunrise = data.daily?.sunrise?.[0];
+  const feels11a = idx11a >= 0 ? data.hourly.apparent_temperature[idx11a] : null;
+  const feels5p  = idx5p  >= 0 ? data.hourly.apparent_temperature[idx5p]  : null;
   const sunset  = data.daily?.sunset?.[0];
 
   const windHtml = (wind != null)
     ? `<span class="wx-wind-arrow" style="transform:rotate(${(((windDir || 0) + 180) % 360)}deg);">↑</span>${Math.round(wind)} km/h ${wxCompass(windDir)}`.trim()
     : '—';
   const precipHtml = (precip != null) ? `${Math.round(precip)}%` : '—';
-  const feelsHtml  = (feels3p != null || feels8p != null)
-    ? `${feels3p != null ? Math.round(feels3p) + '°' : '—'} / ${feels8p != null ? Math.round(feels8p) + '°' : '—'}`
+  const feelsHtml  = (feels11a != null || feels5p != null)
+    ? `${feels11a != null ? Math.round(feels11a) + '°' : '—'} / ${feels5p != null ? Math.round(feels5p) + '°' : '—'}`
     : '—';
-  const daylightHtml = (sunrise && sunset) ? `${wxFormatTime(sunrise)} → ${wxFormatTime(sunset)}` : '—';
+  const sunsetHtml = sunset ? wxFormatTime(sunset) : '—';
 
   return `
     <div class="weather-card">
       ${header}
       ${conditionHtml}
       <div class="wx-bar-wrap">
-        <div class="wx-bar"></div>
-        ${markerHtml}
+        <div class="wx-bar">${markerHtml}</div>
       </div>
       <div class="wx-endpoints">
         <span class="wx-low">${Math.round(minT)}°</span>
@@ -2084,12 +2145,12 @@ function wxRenderCard({ day, data, source, error }) {
           <span class="wx-meta-value">${precipHtml}</span>
         </div>
         <div class="wx-meta-item">
-          <span class="wx-meta-label">Feels 3p / 8p</span>
+          <span class="wx-meta-label">Feels 11a / 5p</span>
           <span class="wx-meta-value">${feelsHtml}</span>
         </div>
         <div class="wx-meta-item">
-          <span class="wx-meta-label">Daylight</span>
-          <span class="wx-meta-value">${daylightHtml}</span>
+          <span class="wx-meta-label">Sunset</span>
+          <span class="wx-meta-value">${sunsetHtml}</span>
         </div>
       </div>
     </div>`;
@@ -2098,22 +2159,16 @@ function wxRenderCard({ day, data, source, error }) {
 function wxRenderFromCache() {
   const view = document.getElementById('view-weather');
   if (!view || !weatherCache) return;
-  const allForecast     = weatherCache.every(r => r.source === 'forecast');
-  const anyForecast     = weatherCache.some (r => r.source === 'forecast');
-  const anyArchive      = weatherCache.some (r => r.source === 'archive');
-  const anyClimatology  = weatherCache.some (r => r.source === 'climatology');
+  const allForecast = weatherCache.every(r => r.source === 'forecast');
+  const anyForecast = weatherCache.some (r => r.source === 'forecast');
   const tripDaysOut = wxDaysUntilDate(WEATHER_DAYS[0].date);
   let intro;
   if (allForecast) {
     intro = `Live forecast from Open-Meteo · ${tripDaysOut} day${tripDaysOut === 1 ? '' : 's'} until Day 1.`;
   } else if (anyForecast) {
-    intro = `Mixed: earlier days on live forecast, later days on historical/typical averages. ${tripDaysOut} day${tripDaysOut === 1 ? '' : 's'} until Day 1.`;
-  } else if (anyArchive && !anyClimatology) {
-    intro = `Showing 3-year May averages from the Open-Meteo archive. Live forecast takes over as the trip gets within ~16 days (around May 1).`;
-  } else if (anyClimatology && !anyArchive) {
-    intro = `Showing typical mid-May conditions for northern Michigan (NOAA normals). Forecast API couldn't be reached — live forecast will take over when the trip is within ~16 days.`;
+    intro = `Earlier days on live forecast, later days on historical data. ${tripDaysOut} day${tripDaysOut === 1 ? '' : 's'} until Day 1.`;
   } else {
-    intro = `Mixed historical sources — some days from the 3-year archive, some from NOAA May normals. Live forecast replaces these as the trip gets closer.`;
+    intro = `Showing historical data for mid-May in northern Michigan. Live forecast takes over as the trip gets within ~16 days (around May 1).`;
   }
   view.innerHTML = `
     <div class="weather-wrap">

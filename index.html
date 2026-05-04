@@ -431,6 +431,41 @@
     font-size: 0.68rem; color: var(--text-muted); line-height: 1.5;
     margin: 0 0 0.6rem; padding: 0 0.1rem;
   }
+  .hcp-controls {
+    display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center;
+    margin: 0.4rem 0 0.8rem; padding: 0 0.1rem;
+  }
+  .hcp-controls-group {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .hcp-controls-label {
+    font-family: 'Oswald', sans-serif; font-size: 0.58rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted);
+  }
+  .hcp-pills { display: inline-flex; gap: 0.25rem; }
+  .hcp-pill {
+    appearance: none; cursor: pointer;
+    background: transparent; border: 1px solid var(--border); color: var(--text-muted);
+    font-family: 'Oswald', sans-serif; font-size: 0.6rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.35rem 0.75rem; border-radius: 999px;
+    transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  }
+  .hcp-pill:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+  .hcp-pill.active { color: #0f1115; background: var(--text); border-color: var(--text); }
+  .hcp-pill.red.active  { background: var(--red);  border-color: var(--red);  color: #fff; }
+  .hcp-pill.blue.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .hcp-sort-select {
+    appearance: none; cursor: pointer;
+    background: transparent; border: 1px solid var(--border); color: var(--text);
+    font-family: 'Oswald', sans-serif; font-size: 0.65rem; font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 0.35rem 1.6rem 0.35rem 0.75rem; border-radius: 6px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23808080' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 0.6rem center;
+  }
+  .hcp-sort-select:hover { border-color: rgba(255,255,255,0.2); }
+  .hcp-sort-select:focus { outline: none; border-color: rgba(255,255,255,0.3); }
   .hcp-table {
     width: 100%; border-collapse: collapse;
     background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
@@ -1209,6 +1244,10 @@ const handicaps = {
   "Jesse Joosten":     { jan: 22.9, may: 23.0, live: null },
 };
 
+// UI state for the Handicap Trends section.
+let hcpSort = 'live';      // 'live' | 'may' | 'jan' | 'moverJanMay'
+let hcpFilter = 'all';     // 'all' | 'red' | 'blue'
+
 // ═══════════════════════════════════════════════
 // PER-ROUND NET LEADERBOARDS
 // One entry per FedEx-eligible round. After each round, flip status to "final"
@@ -1854,11 +1893,32 @@ function renderBoyne() {
 }
 
 function renderHandicapTrends() {
-  const rows = fedex.players.map(p => {
+  return `<div class="hcp-section" id="hcp-section">${renderHandicapTrendsInner()}</div>`;
+}
+
+function rerenderHandicapTrends() {
+  const el = document.getElementById('hcp-section');
+  if (el) el.innerHTML = renderHandicapTrendsInner();
+}
+
+function renderHandicapTrendsInner() {
+  let rows = fedex.players.map(p => {
     const full = `${p.first} ${p.last}`;
     const hc = handicaps[full] || {};
     return { first: p.first, last: p.last, team: p.team, jan: hc.jan, may: hc.may, live: hc.live };
-  }).sort((a, b) => (a.live ?? a.may ?? 99) - (b.live ?? b.may ?? 99));
+  });
+
+  // Filter by team
+  if (hcpFilter !== 'all') rows = rows.filter(r => r.team === hcpFilter);
+
+  // Sort
+  const cmp = {
+    live: (a, b) => (a.live ?? a.may ?? 99) - (b.live ?? b.may ?? 99),
+    may:  (a, b) => (a.may  ?? 99) - (b.may  ?? 99),
+    jan:  (a, b) => (a.jan  ?? 99) - (b.jan  ?? 99),
+    moverJanMay: (a, b) => Math.abs((b.may ?? 0) - (b.jan ?? 0)) - Math.abs((a.may ?? 0) - (a.jan ?? 0)),
+  };
+  rows.sort(cmp[hcpSort] || cmp.live);
 
   const fmt = v => v != null ? v.toFixed(1) : '—';
   const trendDir = (value, prev) => {
@@ -1881,10 +1941,38 @@ function renderHandicapTrends() {
     return `<td class="num hcp-cell${cls}">${fmt(value)}</td>`;
   };
 
+  const pillCls = (val, kind) =>
+    `hcp-pill${kind ? ' ' + kind : ''}${hcpFilter === val ? ' active' : ''}`;
+  const sortOpts = [
+    ['live',         'Live'],
+    ['may',          'May 2026'],
+    ['jan',          'Jan 2026'],
+    ['moverJanMay',  'Biggest mover (Jan→May)'],
+  ];
+
   let h = '';
-  h += `<div class="hcp-section">`;
   h += `<div class="rounds-header">Handicap Trends</div>`;
   h += `<div class="hcp-intro">Captain draft prep — Jan 2026 baseline → May 2026 going-in → live (updates as Boyne rounds finalize). Green ▼ = handicap improved · red ▲ = handicap rose.</div>`;
+  h += `<div class="hcp-controls">
+    <div class="hcp-controls-group">
+      <span class="hcp-controls-label">Team</span>
+      <div class="hcp-pills">
+        <button type="button" class="${pillCls('all')}"  data-hcp-filter="all">All</button>
+        <button type="button" class="${pillCls('red',  'red')}"  data-hcp-filter="red">Red</button>
+        <button type="button" class="${pillCls('blue', 'blue')}" data-hcp-filter="blue">Blue</button>
+      </div>
+    </div>
+    <div class="hcp-controls-group">
+      <span class="hcp-controls-label">Sort by</span>
+      <select class="hcp-sort-select">${sortOpts.map(([v, label]) =>
+        `<option value="${v}"${hcpSort === v ? ' selected' : ''}>${label}</option>`
+      ).join('')}</select>
+    </div>
+  </div>`;
+  if (rows.length === 0) {
+    h += `<div class="round-block-empty">No players match this filter</div>`;
+    return h;
+  }
   h += `<table class="hcp-table">
     <thead>
       <tr>
@@ -1910,7 +1998,6 @@ function renderHandicapTrends() {
     </tr>`;
   });
   h += `</tbody></table>`;
-  h += `</div>`;
   return h;
 }
 
@@ -2524,6 +2611,21 @@ function setupTabs() {
   });
 }
 
+function setupHcpControls() {
+  // Delegated handlers — survive re-renders of the hcp-section.
+  document.addEventListener('click', (e) => {
+    const pill = e.target.closest('[data-hcp-filter]');
+    if (!pill) return;
+    hcpFilter = pill.dataset.hcpFilter;
+    rerenderHandicapTrends();
+  });
+  document.addEventListener('change', (e) => {
+    if (!e.target.classList || !e.target.classList.contains('hcp-sort-select')) return;
+    hcpSort = e.target.value;
+    rerenderHandicapTrends();
+  });
+}
+
 function renderAll() {
   renderRyder();
   renderBoyne();
@@ -2533,6 +2635,7 @@ function renderAll() {
 
 renderAll();
 setupTabs();
+setupHcpControls();
 window.addEventListener('resize', renderAll);
 </script>
 </body>

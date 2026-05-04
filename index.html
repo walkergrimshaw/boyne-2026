@@ -1875,10 +1875,10 @@ function renderHandicapTrends() {
     return `<td class="arrow-col ${dir}">${arrowChar[dir]}</td>`;
   };
   const valueCell = (value, prev) => {
-    if (value == null) return `<td class="left hcp-cell">—</td>`;
+    if (value == null) return `<td class="num hcp-cell">—</td>`;
     const dir = trendDir(value, prev);
     const cls = dir ? ` ${dir}` : '';
-    return `<td class="left hcp-cell${cls}">${fmt(value)}</td>`;
+    return `<td class="num hcp-cell${cls}">${fmt(value)}</td>`;
   };
 
   let h = '';
@@ -1890,11 +1890,11 @@ function renderHandicapTrends() {
       <tr>
         <th class="num col-rank">#</th>
         <th>Player</th>
-        <th class="right col-cap">Jan 2026</th>
+        <th class="num col-cap">Jan 2026</th>
         <th class="arrow-col"></th>
-        <th class="left col-cap">May 2026</th>
+        <th class="num col-cap">May 2026</th>
         <th class="arrow-col"></th>
-        <th class="left col-cap">Live</th>
+        <th class="num col-cap">Live</th>
       </tr>
     </thead>
     <tbody>`;
@@ -1902,7 +1902,7 @@ function renderHandicapTrends() {
     h += `<tr>
       <td class="rank">${i + 1}</td>
       <td class="player"><span class="team-dot ${r.team}"></span>${r.first[0]}. ${r.last}</td>
-      <td class="right hcp-cell">${fmt(r.jan)}</td>
+      <td class="num hcp-cell">${fmt(r.jan)}</td>
       ${arrowCell(r.may, r.jan)}
       ${valueCell(r.may, r.jan)}
       ${arrowCell(r.live, r.may)}

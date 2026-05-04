@@ -455,17 +455,14 @@
   .hcp-pill.active { color: #0f1115; background: var(--text); border-color: var(--text); }
   .hcp-pill.red.active  { background: var(--red);  border-color: var(--red);  color: #fff; }
   .hcp-pill.blue.active { background: var(--blue); border-color: var(--blue); color: #fff; }
-  .hcp-sort-select {
-    appearance: none; cursor: pointer;
-    background: transparent; border: 1px solid var(--border); color: var(--text);
-    font-family: 'Oswald', sans-serif; font-size: 0.65rem; font-weight: 600;
-    letter-spacing: 0.05em;
-    padding: 0.35rem 1.6rem 0.35rem 0.75rem; border-radius: 6px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23808080' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 0.6rem center;
+  /* Click-to-sort headers */
+  .hcp-table th.sortable { cursor: pointer; user-select: none; transition: color 0.12s ease; }
+  .hcp-table th.sortable:hover { color: var(--text); }
+  .hcp-table th.sortable.active { color: var(--text); }
+  .hcp-sort-caret {
+    display: inline-block; margin-left: 0.25rem; font-size: 0.55rem;
+    opacity: 0.85; vertical-align: middle;
   }
-  .hcp-sort-select:hover { border-color: rgba(255,255,255,0.2); }
-  .hcp-sort-select:focus { outline: none; border-color: rgba(255,255,255,0.3); }
   .hcp-table {
     width: 100%; border-collapse: collapse;
     background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
@@ -1245,8 +1242,9 @@ const handicaps = {
 };
 
 // UI state for the Handicap Trends section.
-let hcpSort = 'live';      // 'live' | 'may' | 'jan' | 'moverJanMay'
-let hcpFilter = 'all';     // 'all' | 'red' | 'blue'
+let hcpSortKey = 'live';   // 'player' | 'jan' | 'may' | 'live'
+let hcpSortDir = 'asc';    // 'asc' | 'desc'
+let hcpFilter  = 'all';    // 'all' | 'red' | 'blue'
 
 // ═══════════════════════════════════════════════
 // PER-ROUND NET LEADERBOARDS
@@ -1911,14 +1909,15 @@ function renderHandicapTrendsInner() {
   // Filter by team
   if (hcpFilter !== 'all') rows = rows.filter(r => r.team === hcpFilter);
 
-  // Sort
-  const cmp = {
-    live: (a, b) => (a.live ?? a.may ?? 99) - (b.live ?? b.may ?? 99),
-    may:  (a, b) => (a.may  ?? 99) - (b.may  ?? 99),
-    jan:  (a, b) => (a.jan  ?? 99) - (b.jan  ?? 99),
-    moverJanMay: (a, b) => Math.abs((b.may ?? 0) - (b.jan ?? 0)) - Math.abs((a.may ?? 0) - (a.jan ?? 0)),
+  // Sort — all comparators defined ascending; direction reversed when 'desc'.
+  const cmpAsc = {
+    live:   (a, b) => (a.live ?? a.may ?? 99) - (b.live ?? b.may ?? 99),
+    may:    (a, b) => (a.may  ?? 99) - (b.may  ?? 99),
+    jan:    (a, b) => (a.jan  ?? 99) - (b.jan  ?? 99),
+    player: (a, b) => a.last.localeCompare(b.last) || a.first.localeCompare(b.first),
   };
-  rows.sort(cmp[hcpSort] || cmp.live);
+  const baseCmp = cmpAsc[hcpSortKey] || cmpAsc.live;
+  rows.sort(hcpSortDir === 'desc' ? (a, b) => baseCmp(b, a) : baseCmp);
 
   const fmt = v => v != null ? v.toFixed(1) : '—';
   const trendDir = (value, prev) => {
@@ -1943,16 +1942,17 @@ function renderHandicapTrendsInner() {
 
   const pillCls = (val, kind) =>
     `hcp-pill${kind ? ' ' + kind : ''}${hcpFilter === val ? ' active' : ''}`;
-  const sortOpts = [
-    ['live',         'Live'],
-    ['may',          'May 2026'],
-    ['jan',          'Jan 2026'],
-    ['moverJanMay',  'Biggest mover (Jan→May)'],
-  ];
+
+  const sortHeader = (key, label, extraCls = '') => {
+    const isActive = hcpSortKey === key;
+    const caret = isActive ? (hcpSortDir === 'asc' ? '▲' : '▼') : '';
+    const cls = `${extraCls} sortable${isActive ? ' active' : ''}`.trim();
+    return `<th class="${cls}" data-hcp-sort="${key}">${label}<span class="hcp-sort-caret">${caret}</span></th>`;
+  };
 
   let h = '';
   h += `<div class="rounds-header">Handicap Trends</div>`;
-  h += `<div class="hcp-intro">Captain draft prep — Jan 2026 baseline → May 2026 going-in → live (updates as Boyne rounds finalize). Green ▼ = handicap improved · red ▲ = handicap rose.</div>`;
+  h += `<div class="hcp-intro">Captain draft prep — Jan 2026 baseline → May 2026 going-in → live (updates as Boyne rounds finalize). Green ▼ = handicap improved · red ▲ = handicap rose. Click a column header to sort.</div>`;
   h += `<div class="hcp-controls">
     <div class="hcp-controls-group">
       <span class="hcp-controls-label">Team</span>
@@ -1961,12 +1961,6 @@ function renderHandicapTrendsInner() {
         <button type="button" class="${pillCls('red',  'red')}"  data-hcp-filter="red">Red</button>
         <button type="button" class="${pillCls('blue', 'blue')}" data-hcp-filter="blue">Blue</button>
       </div>
-    </div>
-    <div class="hcp-controls-group">
-      <span class="hcp-controls-label">Sort by</span>
-      <select class="hcp-sort-select">${sortOpts.map(([v, label]) =>
-        `<option value="${v}"${hcpSort === v ? ' selected' : ''}>${label}</option>`
-      ).join('')}</select>
     </div>
   </div>`;
   if (rows.length === 0) {
@@ -1977,12 +1971,12 @@ function renderHandicapTrendsInner() {
     <thead>
       <tr>
         <th class="num col-rank">#</th>
-        <th>Player</th>
-        <th class="num col-cap">Jan 2026</th>
+        ${sortHeader('player', 'Player')}
+        ${sortHeader('jan',    'Jan 2026', 'num col-cap')}
         <th class="arrow-col"></th>
-        <th class="num col-cap">May 2026</th>
+        ${sortHeader('may',    'May 2026', 'num col-cap')}
         <th class="arrow-col"></th>
-        <th class="num col-cap">Live</th>
+        ${sortHeader('live',   'Live',     'num col-cap')}
       </tr>
     </thead>
     <tbody>`;
@@ -2613,16 +2607,27 @@ function setupTabs() {
 
 function setupHcpControls() {
   // Delegated handlers — survive re-renders of the hcp-section.
+  // Default sort direction per key: caps ascend (low handicap first), player ascends (A→Z).
+  const defaultDir = { player: 'asc', jan: 'asc', may: 'asc', live: 'asc' };
+
   document.addEventListener('click', (e) => {
     const pill = e.target.closest('[data-hcp-filter]');
-    if (!pill) return;
-    hcpFilter = pill.dataset.hcpFilter;
-    rerenderHandicapTrends();
-  });
-  document.addEventListener('change', (e) => {
-    if (!e.target.classList || !e.target.classList.contains('hcp-sort-select')) return;
-    hcpSort = e.target.value;
-    rerenderHandicapTrends();
+    if (pill) {
+      hcpFilter = pill.dataset.hcpFilter;
+      rerenderHandicapTrends();
+      return;
+    }
+    const sortTh = e.target.closest('[data-hcp-sort]');
+    if (sortTh) {
+      const key = sortTh.dataset.hcpSort;
+      if (hcpSortKey === key) {
+        hcpSortDir = hcpSortDir === 'asc' ? 'desc' : 'asc';
+      } else {
+        hcpSortKey = key;
+        hcpSortDir = defaultDir[key] || 'asc';
+      }
+      rerenderHandicapTrends();
+    }
   });
 }
 

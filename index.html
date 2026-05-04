@@ -443,7 +443,11 @@
     border-bottom: 1px solid var(--border);
   }
   .hcp-table th.num, .hcp-table td.num { text-align: center; }
-  .hcp-table th.right, .hcp-table td.right { text-align: right; padding-right: 0.85rem; }
+  /* Cap-value cells: cluster around the centered arrow column. */
+  /* Cells BEFORE arrow → right-aligned, no right padding so value butts against arrow column. */
+  .hcp-table th.right, .hcp-table td.right { text-align: right; padding-right: 0; padding-left: 0.85rem; }
+  /* Cells AFTER arrow → left-aligned, no left padding so value butts against arrow column. */
+  .hcp-table th.left,  .hcp-table td.left  { text-align: left;  padding-left: 0;  padding-right: 0.85rem; }
   .hcp-table td {
     padding: 0.5rem 0.6rem; font-size: 0.8rem;
     border-bottom: 1px solid rgba(255,255,255,0.04);
@@ -1866,10 +1870,10 @@ function renderHandicapTrends() {
     return `<td class="arrow-col ${dir}">${arrowChar[dir]}</td>`;
   };
   const valueCell = (value, prev) => {
-    if (value == null) return `<td class="right hcp-cell">—</td>`;
+    if (value == null) return `<td class="left hcp-cell">—</td>`;
     const dir = trendDir(value, prev);
     const cls = dir ? ` ${dir}` : '';
-    return `<td class="right hcp-cell${cls}">${fmt(value)}</td>`;
+    return `<td class="left hcp-cell${cls}">${fmt(value)}</td>`;
   };
 
   let h = '';
@@ -1883,9 +1887,9 @@ function renderHandicapTrends() {
         <th>Player</th>
         <th class="right">Jan 2026</th>
         <th></th>
-        <th class="right">May 2026</th>
+        <th class="left">May 2026</th>
         <th></th>
-        <th class="right">Live</th>
+        <th class="left">Live</th>
       </tr>
     </thead>
     <tbody>`;

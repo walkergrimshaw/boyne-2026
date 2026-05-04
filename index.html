@@ -435,7 +435,12 @@
     width: 100%; border-collapse: collapse;
     background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
     overflow: hidden;
+    table-layout: fixed;
   }
+  /* Fixed-layout column widths — Player column absorbs the remaining space. */
+  .hcp-table .col-rank { width: 38px; }
+  .hcp-table .col-cap  { width: 70px; }
+  /* arrow-col width is set elsewhere (32px / 22px mobile) */
   .hcp-table th {
     padding: 0.55rem 0.6rem; text-align: left;
     font-family: 'Oswald', sans-serif; font-size: 0.55rem; font-weight: 600;
@@ -1883,13 +1888,13 @@ function renderHandicapTrends() {
   h += `<table class="hcp-table">
     <thead>
       <tr>
-        <th class="num">#</th>
+        <th class="num col-rank">#</th>
         <th>Player</th>
-        <th class="right">Jan 2026</th>
-        <th></th>
-        <th class="left">May 2026</th>
-        <th></th>
-        <th class="left">Live</th>
+        <th class="right col-cap">Jan 2026</th>
+        <th class="arrow-col"></th>
+        <th class="left col-cap">May 2026</th>
+        <th class="arrow-col"></th>
+        <th class="left col-cap">Live</th>
       </tr>
     </thead>
     <tbody>`;

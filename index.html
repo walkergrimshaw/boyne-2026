@@ -444,10 +444,10 @@
   }
   .hcp-table th.num, .hcp-table td.num { text-align: center; }
   /* Cap-value cells: cluster around the centered arrow column. */
-  /* Cells BEFORE arrow → right-aligned, no right padding so value butts against arrow column. */
-  .hcp-table th.right, .hcp-table td.right { text-align: right; padding-right: 0; padding-left: 0.85rem; }
-  /* Cells AFTER arrow → left-aligned, no left padding so value butts against arrow column. */
-  .hcp-table th.left,  .hcp-table td.left  { text-align: left;  padding-left: 0;  padding-right: 0.85rem; }
+  /* Cells BEFORE arrow → right-aligned, small right padding for breathing room. */
+  .hcp-table th.right, .hcp-table td.right { text-align: right; padding-right: 0.5rem; padding-left: 0.85rem; }
+  /* Cells AFTER arrow → left-aligned, small left padding for breathing room. */
+  .hcp-table th.left,  .hcp-table td.left  { text-align: left;  padding-left: 0.5rem;  padding-right: 0.85rem; }
   .hcp-table td {
     padding: 0.5rem 0.6rem; font-size: 0.8rem;
     border-bottom: 1px solid rgba(255,255,255,0.04);

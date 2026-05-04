@@ -1178,22 +1178,22 @@ const fedex = {
 // ═══════════════════════════════════════════════
 
 const handicaps = {
-  "Justin Vere":       { jan: 5.6,  may: 5.6,  live: 5.6  },
-  "Steve Rioux":       { jan: 12.3, may: 12.3, live: 12.3 },
-  "Josh MacDonald":    { jan: 13.3, may: 12.9, live: 12.9 },
-  "Kyle Elliott":      { jan: 13.2, may: 13.1, live: 13.1 },
-  "Corey Joosten":     { jan: 16.6, may: 14.2, live: 14.2 },
-  "Nick Grimshaw":     { jan: 13.5, may: 14.2, live: 14.2 },
-  "Andrew Versolatto": { jan: 13.2, may: 14.4, live: 14.4 },
-  "Alex Churchill":    { jan: 17.0, may: 15.2, live: 15.2 },
-  "William Churchill": { jan: 15.5, may: 15.3, live: 15.3 },
-  "Ryan Versolatto":   { jan: 15.7, may: 15.7, live: 15.7 },
-  "Tyler Barnwell":    { jan: 16.0, may: 16.2, live: 16.2 },
-  "Mike Grimshaw":     { jan: 17.3, may: 17.0, live: 17.0 },
-  "Luke Vandenbosch":  { jan: 17.5, may: 17.6, live: 17.6 },
-  "Ryan Dixon":        { jan: 17.8, may: 18.5, live: 18.5 },
-  "Jeff Hogg":         { jan: 19.9, may: 18.5, live: 18.5 },
-  "Jesse Joosten":     { jan: 22.9, may: 23.0, live: 23.0 },
+  "Justin Vere":       { jan: 5.6,  may: 5.6,  live: null },
+  "Steve Rioux":       { jan: 12.3, may: 12.3, live: null },
+  "Josh MacDonald":    { jan: 13.3, may: 12.9, live: null },
+  "Kyle Elliott":      { jan: 13.2, may: 13.1, live: null },
+  "Corey Joosten":     { jan: 16.6, may: 14.2, live: null },
+  "Nick Grimshaw":     { jan: 13.5, may: 14.2, live: null },
+  "Andrew Versolatto": { jan: 13.2, may: 14.4, live: null },
+  "Alex Churchill":    { jan: 17.0, may: 15.2, live: null },
+  "William Churchill": { jan: 15.5, may: 15.3, live: null },
+  "Ryan Versolatto":   { jan: 15.7, may: 15.7, live: null },
+  "Tyler Barnwell":    { jan: 16.0, may: 16.2, live: null },
+  "Mike Grimshaw":     { jan: 17.3, may: 17.0, live: null },
+  "Luke Vandenbosch":  { jan: 17.5, may: 17.6, live: null },
+  "Ryan Dixon":        { jan: 17.8, may: 18.5, live: null },
+  "Jeff Hogg":         { jan: 19.9, may: 18.5, live: null },
+  "Jesse Joosten":     { jan: 22.9, may: 23.0, live: null },
 };
 
 // ═══════════════════════════════════════════════
@@ -1845,7 +1845,7 @@ function renderHandicapTrends() {
     const full = `${p.first} ${p.last}`;
     const hc = handicaps[full] || {};
     return { first: p.first, last: p.last, team: p.team, jan: hc.jan, may: hc.may, live: hc.live };
-  }).sort((a, b) => (a.live ?? 99) - (b.live ?? 99));
+  }).sort((a, b) => (a.live ?? a.may ?? 99) - (b.live ?? b.may ?? 99));
 
   const trendHtml = (from, to) => {
     if (from == null || to == null) return '';

@@ -2502,31 +2502,28 @@ function wxRenderCard({ day, data, source, error }) {
   const wCode = idx3p >= 0 ? data.hourly.weather_code[idx3p] : null;
   const conditionHtml = `<div class="wx-condition"><span class="wx-icon">${wmoIcon(wCode)}</span>${wmoDesc(wCode)}</div>`;
 
-  // Meta: wind @ 3p, precip % @ 3p, feels (11a/5p), sunset
-  const idx11a = wxHourIndex(data.hourly.time, 11);
-  const idx5p  = wxHourIndex(data.hourly.time, 17);
+  // Meta: wind @ 3p, precip % @ 3p, total precip mm across round window, sunset
   const wind = idx3p >= 0 ? data.hourly.wind_speed_10m[idx3p] : null;
   const windDir = idx3p >= 0 ? data.hourly.wind_direction_10m[idx3p] : null;
   // Precip: weighted avg across golf window 10AM–7PM, peak hours (12–5PM) weighted 2x.
   const precipWeights = { 10: 1, 11: 1, 12: 2, 13: 2, 14: 2, 15: 2, 16: 2, 17: 2, 18: 1, 19: 1 };
   let precipNum = 0, precipDen = 0;
+  let precipMm = 0, precipMmHas = false;
   for (const [h, w] of Object.entries(precipWeights)) {
     const i = wxHourIndex(data.hourly.time, parseInt(h, 10));
     const v = i >= 0 ? data.hourly.precipitation_probability[i] : null;
     if (v != null) { precipNum += v * w; precipDen += w; }
+    const mm = i >= 0 ? data.hourly.precipitation[i] : null;
+    if (mm != null) { precipMm += mm; precipMmHas = true; }
   }
   const precip = precipDen > 0 ? precipNum / precipDen : null;
-  const feels11a = idx11a >= 0 ? data.hourly.apparent_temperature[idx11a] : null;
-  const feels5p  = idx5p  >= 0 ? data.hourly.apparent_temperature[idx5p]  : null;
   const sunset  = data.daily?.sunset?.[0];
 
   const windHtml = (wind != null)
     ? `<span class="wx-wind-arrow" style="transform:rotate(${(((windDir || 0) + 180) % 360)}deg);">↑</span>${Math.round(wind)} km/h ${wxCompass(windDir)}`.trim()
     : '—';
   const precipHtml = (precip != null) ? `${Math.round(precip)}%` : '—';
-  const feelsHtml  = (feels11a != null || feels5p != null)
-    ? `${feels11a != null ? Math.round(feels11a) + '°' : '—'} / ${feels5p != null ? Math.round(feels5p) + '°' : '—'}`
-    : '—';
+  const precipMmHtml = precipMmHas ? `${precipMm.toFixed(1)} mm` : '—';
   const sunsetHtml = sunset ? wxFormatTime(sunset) : '—';
 
   return `
@@ -2545,8 +2542,8 @@ function wxRenderCard({ day, data, source, error }) {
             <span class="wx-meta-value">${precipHtml}</span>
           </div>
           <div class="wx-meta-item">
-            <span class="wx-meta-label">Feels 11AM / 5PM</span>
-            <span class="wx-meta-value">${feelsHtml}</span>
+            <span class="wx-meta-label">Total precip</span>
+            <span class="wx-meta-value">${precipMmHtml}</span>
           </div>
           <div class="wx-meta-item">
             <span class="wx-meta-label">Sunset</span>

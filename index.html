@@ -829,6 +829,16 @@
     gap: 0.3rem;
     min-width: 3.5rem;
   }
+  .wx-triad-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--text-muted);
+    margin-bottom: 0.1rem;
+  }
+  .wx-triad-item.is-high .wx-triad-icon {
+    font-size: 2.4rem;
+    color: var(--text);
+  }
   .wx-triad-time {
     font-family: 'Oswald', sans-serif;
     font-size: 0.65rem;
@@ -849,13 +859,10 @@
     font-size: 3.6rem;
   }
   .wx-triad-sep {
-    font-family: 'Oswald', sans-serif;
-    font-size: 2rem;
-    font-weight: 200;
-    color: var(--text-muted);
+    align-self: stretch;
+    width: 1px;
+    background: var(--text-muted);
     opacity: 0.3;
-    line-height: 1;
-    transform: translateY(0.55rem);
   }
 
   /* Secondary weather info row */
@@ -1021,6 +1028,8 @@
     .wx-triad { gap: 0.6rem; }
     .wx-triad-temp { font-size: 2rem; }
     .wx-triad-item.is-high .wx-triad-temp { font-size: 3rem; }
+    .wx-triad-icon { font-size: 1.1rem; }
+    .wx-triad-item.is-high .wx-triad-icon { font-size: 1.9rem; }
     .wx-triad-item { min-width: 3rem; }
     .wx-meta-value { font-size: 0.78rem; }
     .wx-section { padding: 0.9rem 0.7rem; }
@@ -2470,28 +2479,32 @@ function wxRenderCard({ day, data, source, error }) {
     const idx = wxHourIndex(data.hourly.time, hour);
     return idx >= 0 ? data.hourly.temperature_2m[idx] : null;
   };
-  const dayWindowTemps = [];
+  const codeAt = (hour) => {
+    const idx = wxHourIndex(data.hourly.time, hour);
+    return idx >= 0 ? data.hourly.weather_code[idx] : null;
+  };
+  let maxT = null, maxHour = 15;
   for (let h = 9; h <= 21; h++) {
     const t = tempAt(h);
-    if (t != null) dayWindowTemps.push(t);
+    if (t != null && (maxT == null || t > maxT)) { maxT = t; maxHour = h; }
   }
-  const maxT = dayWindowTemps.length ? Math.max(...dayWindowTemps) : null;
 
   const triadHours = day.triadHours || [9, 'HIGH', 20];
   const triadPoints = triadHours.map(h => {
-    if (h === 'HIGH') return { label: 'HIGH', temp: maxT, emphasis: true };
-    return { label: fmtHourLabel(h), temp: tempAt(h) };
+    if (h === 'HIGH') return { label: 'HIGH', temp: maxT, code: codeAt(maxHour), emphasis: true };
+    return { label: fmtHourLabel(h), temp: tempAt(h), code: codeAt(h) };
   });
   if (triadPoints.every(p => p.temp == null)) {
     return `<div class="weather-card">${header}<div class="weather-error">Weather unavailable (no hourly data)</div>${scheduleHtml}</div>`;
   }
 
   const triadHtml = triadPoints.map((p, i) => {
-    const sep = i < triadPoints.length - 1 ? `<div class="wx-triad-sep">|</div>` : '';
+    const sep = i < triadPoints.length - 1 ? `<div class="wx-triad-sep"></div>` : '';
     const tempHtml = p.temp != null ? `${Math.round(p.temp)}°` : '—';
     const itemCls = p.emphasis ? ' is-high' : '';
     return `
       <div class="wx-triad-item${itemCls}">
+        <div class="wx-triad-icon">${wmoIcon(p.code)}</div>
         <div class="wx-triad-time">${p.label}</div>
         <div class="wx-triad-temp">${tempHtml}</div>
       </div>${sep}`;

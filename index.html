@@ -2585,6 +2585,7 @@ function wxRenderFromCache() {
   view.innerHTML = `
     <div class="weather-wrap">
       <div class="weather-intro">${intro}</div>
+      <div class="weather-intro" style="margin-top:-0.85rem;opacity:0.75;">HIGH = peak temp during golf hours (9a–9p), not the 24-hour max. May read lower than Apple Weather on cold-front days.</div>
       ${weatherCache.map(wxRenderCard).join('')}
     </div>`;
 }

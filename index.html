@@ -1418,13 +1418,25 @@ const sideAction = [
     id: "ir", day: 1, session: "PM", format: "Irish Rumble",
     course: "The Monument — Boyne Mountain",
     detail: "Skins pot $220 &bull; 2 CTPs &bull; 1 Long Drive",
-    status: "upcoming",
+    status: "final",
     ctpHoles: [
       { hole: 3, yds: 135, par: 3 },
       { hole: 9, yds: 143, par: 3 },
     ],
     ldHole: { hole: 5, yds: 470, par: 5 },
-    ctps: [], longDrive: null, skins: []
+    ctps: [
+      { hole: 3, player: "Nick Grimshaw" },
+      { hole: 9, player: "Ryan Versolatto" },
+    ],
+    longDrive: { player: "Alex Churchill" },
+    skins: [
+      { player: "Tyler Barnwell",    count: 3, payout: 66 },
+      { player: "Jeff Hogg",         count: 2, payout: 44 },
+      { player: "Steve Rioux",       count: 2, payout: 44 },
+      { player: "Andrew Versolatto", count: 1, payout: 22 },
+      { player: "Jesse Joosten",     count: 1, payout: 22 },
+      { player: "Ryan Dixon",        count: 1, payout: 22 },
+    ]
   },
   {
     id: "lr", day: 2, session: "AM", format: "Lone Ranger",

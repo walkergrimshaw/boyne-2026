@@ -1083,13 +1083,13 @@ const data = {
       rounds: [{
         format: "Irish Rumble", id: "ir",
         detail: "8v8 &bull; Escalating count &bull; 18 holes",
-        pointsAvail: 4, status: "upcoming",
+        pointsAvail: 4, status: "final",
         matches: [{
           label: "",
           red: [["Stiff Shaft", "Swingers"]], blue: [["Gaylord", "Gooners"]], isTeam: true,
           redRoster: ["K. Elliott", "N. Grimshaw", "A. Churchill", "J. Joosten", "J. Vere", "W. Churchill", "C. Joosten", "L. Vandenbosch"],
           blueRoster: ["S. Rioux", "R. Versolatto", "T. Barnwell", "R. Dixon", "J. MacDonald", "A. Versolatto", "M. Grimshaw", "J. Hogg"],
-          redPts: 0, bluePts: 0,
+          redPts: 0, bluePts: 4,
         }]
       }]
     },
@@ -1209,22 +1209,22 @@ const fedex = {
   // Set this once enough rounds have completed that the leaderboard is meaningful (e.g. after round 1).
   showLeaderboard: true,
   players: [
-    { first: "Kyle",    last: "Elliott",      team: "red",  total: 0 },
-    { first: "Nick",    last: "Grimshaw",     team: "red",  total: 0 },
-    { first: "Alex",    last: "Churchill",    team: "red",  total: 0 },
-    { first: "Jesse",   last: "Joosten",      team: "red",  total: 0 },
-    { first: "Justin",  last: "Vere",         team: "red",  total: 0 },
-    { first: "William", last: "Churchill",    team: "red",  total: 0 },
-    { first: "Corey",   last: "Joosten",      team: "red",  total: 0 },
-    { first: "Luke",    last: "Vandenbosch",  team: "red",  total: 0 },
-    { first: "Steve",   last: "Rioux",        team: "blue", total: 0 },
-    { first: "Ryan",    last: "Versolatto",   team: "blue", total: 0 },
-    { first: "Tyler",   last: "Barnwell",     team: "blue", total: 0 },
-    { first: "Ryan",    last: "Dixon",        team: "blue", total: 0 },
-    { first: "Josh",    last: "MacDonald",    team: "blue", total: 0 },
-    { first: "Andrew",  last: "Versolatto",   team: "blue", total: 0 },
-    { first: "Mike",    last: "Grimshaw",     team: "blue", total: 0 },
-    { first: "Jeff",    last: "Hogg",         team: "blue", total: 0 },
+    { first: "Kyle",    last: "Elliott",      team: "red",  total: 49 },
+    { first: "Nick",    last: "Grimshaw",     team: "red",  total: 54 },
+    { first: "Alex",    last: "Churchill",    team: "red",  total: 46 },
+    { first: "Jesse",   last: "Joosten",      team: "red",  total: 63.5 },
+    { first: "Justin",  last: "Vere",         team: "red",  total: 53 },
+    { first: "William", last: "Churchill",    team: "red",  total: 51 },
+    { first: "Corey",   last: "Joosten",      team: "red",  total: 57 },
+    { first: "Luke",    last: "Vandenbosch",  team: "red",  total: 49 },
+    { first: "Steve",   last: "Rioux",        team: "blue", total: 47 },
+    { first: "Ryan",    last: "Versolatto",   team: "blue", total: 57 },
+    { first: "Tyler",   last: "Barnwell",     team: "blue", total: 72 },
+    { first: "Ryan",    last: "Dixon",        team: "blue", total: 57 },
+    { first: "Josh",    last: "MacDonald",    team: "blue", total: 49 },
+    { first: "Andrew",  last: "Versolatto",   team: "blue", total: 72 },
+    { first: "Mike",    last: "Grimshaw",     team: "blue", total: 52 },
+    { first: "Jeff",    last: "Hogg",         team: "blue", total: 63.5 },
   ]
 };
 
@@ -1269,7 +1269,24 @@ let hcpFilter  = 'all';    // 'all' | 'red' | 'blue'
 // ═══════════════════════════════════════════════
 
 const rounds = [
-  { id: "ir", format: "Irish Rumble",  day: 1, session: "PM", course: "The Monument — Boyne Mountain", status: "upcoming", results: [] },
+  { id: "ir", format: "Irish Rumble",  day: 1, session: "PM", course: "The Monument — Boyne Mountain", status: "final", results: [
+    { first: "Andrew",  last: "Versolatto",  team: "blue", net: 5 },
+    { first: "Tyler",   last: "Barnwell",    team: "blue", net: 5 },
+    { first: "Jeff",    last: "Hogg",        team: "blue", net: 8 },
+    { first: "Jesse",   last: "Joosten",     team: "red",  net: 8 },
+    { first: "Corey",   last: "Joosten",     team: "red",  net: 9 },
+    { first: "Ryan",    last: "Dixon",       team: "blue", net: 9 },
+    { first: "Ryan",    last: "Versolatto",  team: "blue", net: 9 },
+    { first: "Nick",    last: "Grimshaw",    team: "red",  net: 10 },
+    { first: "Justin",  last: "Vere",        team: "red",  net: 11 },
+    { first: "Mike",    last: "Grimshaw",    team: "blue", net: 13 },
+    { first: "William", last: "Churchill",   team: "red",  net: 14 },
+    { first: "Josh",    last: "MacDonald",   team: "blue", net: 15 },
+    { first: "Kyle",    last: "Elliott",     team: "red",  net: 15 },
+    { first: "Luke",    last: "Vandenbosch", team: "red",  net: 15 },
+    { first: "Steve",   last: "Rioux",       team: "blue", net: 17 },
+    { first: "Alex",    last: "Churchill",   team: "red",  net: 19 },
+  ] },
   { id: "lr", format: "Lone Ranger",   day: 2, session: "AM", course: "The Heather — Boyne Highlands", status: "upcoming", results: [] },
   { id: "bp", format: "Blind Pairs",   day: 3, session: "AM", course: "Bay Harbor — Links / Quarry",   status: "upcoming", results: [] },
   { id: "wb", format: "Worst Ball",    day: 3, session: "PM", course: "Bay Harbor — Preserve",         status: "upcoming", results: [] },

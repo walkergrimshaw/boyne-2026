@@ -1101,15 +1101,15 @@ const data = {
         pointsAvail: 4, status: "final",
         matches: [
           {
-            label: "Match A",
+            label: "Match 1",
             red: [["Kyle","Elliott"],["Nick","Grimshaw"],["Alex","Churchill"],["Jesse","Joosten"]],
-            blue: [["Steve","Rioux"],["Ryan","Versolatto"],["Tyler","Barnwell"],["Ryan","Dixon"]],
+            blue: [["Josh","MacDonald"],["Andrew","Versolatto"],["Mike","Grimshaw"],["Jeff","Hogg"]],
             redPts: 0, bluePts: 2,
           },
           {
-            label: "Match B",
+            label: "Match 2",
             red: [["Justin","Vere"],["William","Churchill"],["Corey","Joosten"],["Luke","Vandenbosch"]],
-            blue: [["Josh","MacDonald"],["Andrew","Versolatto"],["Mike","Grimshaw"],["Jeff","Hogg"]],
+            blue: [["Steve","Rioux"],["Ryan","Versolatto"],["Tyler","Barnwell"],["Ryan","Dixon"]],
             redPts: 0, bluePts: 2,
           },
         ]
@@ -1146,23 +1146,24 @@ const data = {
       rounds: [{
         format: "Blind Pairs", id: "bp",
         detail: "Singles → Paired by card draw &bull; Team sum &bull; 18 holes",
-        pointsAvail: 4, status: "upcoming",
+        pointsAvail: 4, status: "live",
+        liveHole: "In progress",
         matches: [
           { label: "Jacks",
-            red: [["", "J♥"], ["", "J♦"]],
-            blue: [["", "J♠"], ["", "J♣"]], isTeam: true,
+            red: [["William","Churchill"], ["Jesse","Joosten"]],
+            blue: [["Jeff","Hogg"], ["Josh","MacDonald"]],
             redPts: 0, bluePts: 0 },
           { label: "Queens",
-            red: [["", "Q♥"], ["", "Q♦"]],
-            blue: [["", "Q♠"], ["", "Q♣"]], isTeam: true,
+            red: [["Justin","Vere"], ["Luke","Vandenbosch"]],
+            blue: [["Mike","Grimshaw"], ["Tyler","Barnwell"]],
             redPts: 0, bluePts: 0 },
           { label: "Kings",
-            red: [["", "K♥"], ["", "K♦"]],
-            blue: [["", "K♠"], ["", "K♣"]], isTeam: true,
+            red: [["Alex","Churchill"], ["Nick","Grimshaw"]],
+            blue: [["Ryan","Versolatto"], ["Steve","Rioux"]],
             redPts: 0, bluePts: 0 },
           { label: "Aces",
-            red: [["", "A♥"], ["", "A♦"]],
-            blue: [["", "A♠"], ["", "A♣"]], isTeam: true,
+            red: [["Corey","Joosten"], ["Kyle","Elliott"]],
+            blue: [["Andrew","Versolatto"], ["Ryan","Dixon"]],
             redPts: 0, bluePts: 0 },
         ]
       }]

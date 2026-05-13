@@ -1172,13 +1172,13 @@ const data = {
       rounds: [{
         format: "Worst Ball", id: "wb",
         detail: "8v8 &bull; Worst score counts &bull; 9 holes",
-        pointsAvail: 4, status: "upcoming",
+        pointsAvail: 4, status: "final",
         matches: [{
           label: "",
           red: [["Stiff Shaft","Swingers"]], blue: [["Gaylord","Gooners"]], isTeam: true,
           redRoster: ["K. Elliott", "N. Grimshaw", "A. Churchill", "J. Joosten", "J. Vere", "W. Churchill", "C. Joosten", "L. Vandenbosch"],
           blueRoster: ["S. Rioux", "R. Versolatto", "T. Barnwell", "R. Dixon", "J. MacDonald", "A. Versolatto", "M. Grimshaw", "J. Hogg"],
-          redPts: 0, bluePts: 0,
+          redPts: 0, bluePts: 4,
         }]
       }]
     },
@@ -1213,19 +1213,19 @@ const fedex = {
   // Set this once enough rounds have completed that the leaderboard is meaningful (e.g. after round 1).
   showLeaderboard: true,
   players: [
-    { first: "Kyle",    last: "Elliott",      team: "red",  total: 146 },
-    { first: "Nick",    last: "Grimshaw",     team: "red",  total: 157 },
-    { first: "Alex",    last: "Churchill",    team: "red",  total: 169 },
-    { first: "Jesse",   last: "Joosten",      team: "red",  total: 162 },
-    { first: "Justin",  last: "Vere",         team: "red",  total: 150.5 },
-    { first: "William", last: "Churchill",    team: "red",  total: 161.5 },
+    { first: "Kyle",    last: "Elliott",      team: "red",  total: 148.5 },
+    { first: "Nick",    last: "Grimshaw",     team: "red",  total: 182 },
+    { first: "Alex",    last: "Churchill",    team: "red",  total: 179.25 },
+    { first: "Jesse",   last: "Joosten",      team: "red",  total: 181.33 },
+    { first: "Justin",  last: "Vere",         team: "red",  total: 169.83 },
+    { first: "William", last: "Churchill",    team: "red",  total: 163 },
     { first: "Corey",   last: "Joosten",      team: "red",  total: 162.5 },
-    { first: "Luke",    last: "Vandenbosch",  team: "red",  total: 154 },
-    { first: "Steve",   last: "Rioux",        team: "blue", total: 144.5 },
+    { first: "Luke",    last: "Vandenbosch",  team: "red",  total: 163.25 },
+    { first: "Steve",   last: "Rioux",        team: "blue", total: 147 },
     { first: "Ryan",    last: "Versolatto",   team: "blue", total: 167.5 },
     { first: "Tyler",   last: "Barnwell",     team: "blue", total: 207.5 },
-    { first: "Ryan",    last: "Dixon",        team: "blue", total: 178 },
-    { first: "Josh",    last: "MacDonald",    team: "blue", total: 161 },
+    { first: "Ryan",    last: "Dixon",        team: "blue", total: 187.33 },
+    { first: "Josh",    last: "MacDonald",    team: "blue", total: 168.25 },
     { first: "Andrew",  last: "Versolatto",   team: "blue", total: 187 },
     { first: "Mike",    last: "Grimshaw",     team: "blue", total: 170.5 },
     { first: "Jeff",    last: "Hogg",         team: "blue", total: 197.5 },
@@ -1327,7 +1327,24 @@ const rounds = [
     { first: "Kyle",    last: "Elliott",     team: "red",  net: 13 },
     { first: "Jesse",   last: "Joosten",     team: "red",  net: 14 },
   ] },
-  { id: "wb", format: "Worst Ball",    day: 3, session: "PM", course: "Bay Harbor — Preserve",         status: "upcoming", results: [] },
+  { id: "wb", format: "Worst Ball",    day: 3, session: "PM", course: "Bay Harbor — Preserve",         status: "final", results: [
+    { first: "Nick",    last: "Grimshaw",    team: "red",  net: 2 },
+    { first: "Jesse",   last: "Joosten",     team: "red",  net: 4 },
+    { first: "Justin",  last: "Vere",        team: "red",  net: 4 },
+    { first: "Ryan",    last: "Dixon",       team: "blue", net: 4 },
+    { first: "Alex",    last: "Churchill",   team: "red",  net: 5 },
+    { first: "Josh",    last: "MacDonald",   team: "blue", net: 5 },
+    { first: "Luke",    last: "Vandenbosch", team: "red",  net: 5 },
+    { first: "Tyler",   last: "Barnwell",    team: "blue", net: 5 },
+    { first: "Jeff",    last: "Hogg",        team: "blue", net: 6 },
+    { first: "William", last: "Churchill",   team: "red",  net: 6 },
+    { first: "Andrew",  last: "Versolatto",  team: "blue", net: 8 },
+    { first: "Corey",   last: "Joosten",     team: "red",  net: 8 },
+    { first: "Kyle",    last: "Elliott",     team: "red",  net: 8 },
+    { first: "Steve",   last: "Rioux",       team: "blue", net: 8 },
+    { first: "Ryan",    last: "Versolatto",  team: "blue", net: 9 },
+    { first: "Mike",    last: "Grimshaw",    team: "blue", net: 10 },
+  ] },
   { id: "mp", format: "1v1 Matchplay", day: 4, session: "AM", course: "Arthur Hills — Boyne Highlands", status: "upcoming", results: [] },
 ];
 
@@ -1523,14 +1540,20 @@ const sideAction = [
   {
     id: "wb", day: 3, session: "PM", format: "Worst Ball",
     course: "Bay Harbor — Preserve",
-    detail: "Skins pot $220 &bull; 2 CTPs",
-    status: "upcoming",
+    detail: "Skins pot $220 (doubled, 9 holes) &bull; 2 CTPs",
+    status: "final",
     ctpHoles: [
       { hole: 5, yds: 145, par: 3 },
       { hole: 9, yds: 144, par: 3 },
     ],
     ldHole: null,
-    ctps: [], longDrive: null, skins: []
+    ctps: [], longDrive: null,
+    skins: [
+      { player: "Jeff Hogg",       count: 1, payout: 55 },
+      { player: "Jesse Joosten",   count: 1, payout: 55 },
+      { player: "Ryan Dixon",      count: 1, payout: 55 },
+      { player: "Ryan Versolatto", count: 1, payout: 55 },
+    ]
   },
   {
     id: "mp", day: 4, session: "AM", format: "Match Play",

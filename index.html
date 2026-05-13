@@ -1812,6 +1812,7 @@ function renderRoundLeaderboard(round) {
   }
   h += `<table class="fedex-table compact"><tbody>`;
   const ranked = rankNetResults(round.results);
+  const fmtNet = n => n > 0 ? `+${n}` : n < 0 ? `${n}` : 'E';
   ranked.forEach(p => {
     const rankCls = (p.rank === 1) ? 'rank top' : 'rank';
     const rankDisp = (p.tied ? 'T' : '') + p.rank;
@@ -1819,7 +1820,7 @@ function renderRoundLeaderboard(round) {
     h += `<tr>
       <td class="${rankCls}">${rankDisp}</td>
       <td class="player"><span class="team-dot ${p.team}"></span>${p.first[0]}. ${p.last}${badges}</td>
-      <td class="right total">${p.net}</td>
+      <td class="right total">${fmtNet(p.net)}</td>
     </tr>`;
   });
   h += `</tbody></table></div>`;

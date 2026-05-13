@@ -1833,6 +1833,7 @@ function renderBedSelection(irRound) {
   if (!irRound || irRound.status !== 'final' || !irRound.results || irRound.results.length === 0) return '';
   const red = irRound.results.filter(p => p.team === 'red').sort((a,b) => a.net - b.net);
   const blue = irRound.results.filter(p => p.team === 'blue').sort((a,b) => a.net - b.net);
+  const fmtNet = n => n > 0 ? `+${n}` : n < 0 ? `${n}` : 'E';
   const renderTeam = (players, teamName, teamCls) => {
     let h = `<div><div class="bed-team-name ${teamCls}">${teamName}</div>`;
     players.forEach((p, i) => {
@@ -1840,7 +1841,7 @@ function renderBedSelection(irRound) {
       h += `<div class="bed-row">
         <span class="bed-rank">${i + 1}.</span>
         <span class="bed-name">${p.first[0]}. ${p.last}${badges}</span>
-        <span class="bed-net">${p.net}</span>
+        <span class="bed-net">${fmtNet(p.net)}</span>
       </div>`;
     });
     h += `</div>`;

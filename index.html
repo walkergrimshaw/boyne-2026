@@ -1187,16 +1187,16 @@ const data = {
       rounds: [{
         format: "1v1 Matchplay", id: "mp",
         detail: "8 individual matches &bull; 18 holes &bull; 3 pts each",
-        pointsAvail: 24, status: "upcoming",
+        pointsAvail: 24, status: "final",
         matches: [
-          { label: "Match 1", red: [["Justin","Vere"]],         blue: [["Andrew","Versolatto"]], redPts: 0, bluePts: 0 },
-          { label: "Match 2", red: [["Nick","Grimshaw"]],       blue: [["Josh","MacDonald"]],    redPts: 0, bluePts: 0 },
-          { label: "Match 3", red: [["Jesse","Joosten"]],       blue: [["Tyler","Barnwell"]],    redPts: 0, bluePts: 0 },
-          { label: "Match 4", red: [["Corey","Joosten"]],       blue: [["Ryan","Versolatto"]],   redPts: 0, bluePts: 0 },
-          { label: "Match 5", red: [["William","Churchill"]],   blue: [["Steve","Rioux"]],       redPts: 0, bluePts: 0 },
-          { label: "Match 6", red: [["Alex","Churchill"]],      blue: [["Mike","Grimshaw"]],     redPts: 0, bluePts: 0 },
-          { label: "Match 7", red: [["Kyle","Elliott"]],        blue: [["Ryan","Dixon"]],        redPts: 0, bluePts: 0 },
-          { label: "Match 8", red: [["Luke","Vandenbosch"]],    blue: [["Jeff","Hogg"]],         redPts: 0, bluePts: 0 },
+          { label: "Match 1", red: [["Nick","Grimshaw"]],       blue: [["Josh","MacDonald"]],    redPts: 3,   bluePts: 0   },
+          { label: "Match 2", red: [["Kyle","Elliott"]],        blue: [["Ryan","Dixon"]],        redPts: 0,   bluePts: 3   },
+          { label: "Match 3", red: [["Justin","Vere"]],         blue: [["Andrew","Versolatto"]], redPts: 0,   bluePts: 3   },
+          { label: "Match 4", red: [["Jesse","Joosten"]],       blue: [["Tyler","Barnwell"]],    redPts: 0,   bluePts: 3   },
+          { label: "Match 5", red: [["Corey","Joosten"]],       blue: [["Ryan","Versolatto"]],   redPts: 0,   bluePts: 3   },
+          { label: "Match 6", red: [["Alex","Churchill"]],      blue: [["Mike","Grimshaw"]],     redPts: 3,   bluePts: 0   },
+          { label: "Match 7", red: [["William","Churchill"]],   blue: [["Steve","Rioux"]],       redPts: 3,   bluePts: 0   },
+          { label: "Match 8", red: [["Luke","Vandenbosch"]],    blue: [["Jeff","Hogg"]],         redPts: 1.5, bluePts: 1.5 },
         ]
       }]
     }
@@ -1345,7 +1345,24 @@ const rounds = [
     { first: "Ryan",    last: "Versolatto",  team: "blue", net: 9 },
     { first: "Mike",    last: "Grimshaw",    team: "blue", net: 10 },
   ] },
-  { id: "mp", format: "1v1 Matchplay", day: 4, session: "AM", course: "Arthur Hills — Boyne Highlands", status: "upcoming", results: [] },
+  { id: "mp", format: "1v1 Matchplay", day: 4, session: "AM", course: "Arthur Hills — Boyne Highlands", status: "final", results: [
+    { first: "Ryan",    last: "Versolatto",  team: "blue", net: -1 },
+    { first: "Tyler",   last: "Barnwell",    team: "blue", net: 3 },
+    { first: "Andrew",  last: "Versolatto",  team: "blue", net: 4 },
+    { first: "William", last: "Churchill",   team: "red",  net: 5 },
+    { first: "Justin",  last: "Vere",        team: "red",  net: 7 },
+    { first: "Nick",    last: "Grimshaw",    team: "red",  net: 9 },
+    { first: "Alex",    last: "Churchill",   team: "red",  net: 10 },
+    { first: "Jeff",    last: "Hogg",        team: "blue", net: 10 },
+    { first: "Josh",    last: "MacDonald",   team: "blue", net: 10 },
+    { first: "Luke",    last: "Vandenbosch", team: "red",  net: 10 },
+    { first: "Ryan",    last: "Dixon",       team: "blue", net: 10 },
+    { first: "Steve",   last: "Rioux",       team: "blue", net: 10 },
+    { first: "Jesse",   last: "Joosten",     team: "red",  net: 12 },
+    { first: "Mike",    last: "Grimshaw",    team: "blue", net: 15 },
+    { first: "Corey",   last: "Joosten",     team: "red",  net: 17 },
+    { first: "Kyle",    last: "Elliott",     team: "red",  net: 18 },
+  ] },
 ];
 
 // ═══════════════════════════════════════════════
@@ -1563,11 +1580,13 @@ const sideAction = [
     id: "mp", day: 4, session: "AM", format: "Match Play",
     course: "Arthur Hills — Boyne Highlands",
     detail: "1 Long Drive",
-    status: "upcoming",
+    status: "final",
     noSkins: true,
     ctpHoles: [],
-    ldHole: { hole: 12, yds: 516, par: 5 },
-    ctps: [], longDrive: null, skins: []
+    ldHole: { hole: 13 },
+    ctps: [],
+    longDrive: { player: "Nick Grimshaw", yds: 302 },
+    skins: []
   },
   {
     id: "bc", day: 4, session: "PM", format: "Boyne Cup",

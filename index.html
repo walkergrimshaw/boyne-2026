@@ -1373,8 +1373,25 @@ const rounds = [
 const boyneCup = {
   id: "bc", format: "Boyne Cup", day: 4, session: "PM",
   course: "Donald Ross Memorial — Boyne Highlands",
-  status: "upcoming", results: [],
-  winner: null, // optional override: e.g. "Kyle Elliott" if playoff-decided
+  status: "final", results: [
+    { first: "Corey",   last: "Joosten",      team: "red",  net: 3 },
+    { first: "Ryan",    last: "Versolatto",   team: "blue", net: 5 },
+    { first: "William", last: "Churchill",    team: "red",  net: 5 },
+    { first: "Josh",    last: "MacDonald",    team: "blue", net: 6 },
+    { first: "Steve",   last: "Rioux",        team: "blue", net: 6 },
+    { first: "Tyler",   last: "Barnwell",     team: "blue", net: 6 },
+    { first: "Alex",    last: "Churchill",    team: "red",  net: 7 },
+    { first: "Jeff",    last: "Hogg",         team: "blue", net: 7 },
+    { first: "Andrew",  last: "Versolatto",   team: "blue", net: 9 },
+    { first: "Nick",    last: "Grimshaw",     team: "red",  net: 9 },
+    { first: "Jesse",   last: "Joosten",      team: "red",  net: 11 },
+    { first: "Mike",    last: "Grimshaw",     team: "blue", net: 11 },
+    { first: "Justin",  last: "Vere",         team: "red",  net: 13 },
+    { first: "Kyle",    last: "Elliott",      team: "red",  net: 13 },
+    { first: "Ryan",    last: "Dixon",        team: "blue", net: 15 },
+    { first: "Luke",    last: "Vandenbosch",  team: "red",  net: 17 },
+  ],
+  winner: "Corey Joosten", // optional override: e.g. "Kyle Elliott" if playoff-decided
 };
 
 // Players making their Boyne debut in 2026. Gets a muted "ROOKIE" badge wherever their name appears.
@@ -1592,13 +1609,25 @@ const sideAction = [
     id: "bc", day: 4, session: "PM", format: "Boyne Cup",
     course: "Donald Ross Memorial — Boyne Highlands",
     detail: "Skins pot $220 &bull; 2 CTPs &bull; 1 Long Drive &bull; Net strokeplay championship",
-    status: "upcoming",
+    status: "final",
     ctpHoles: [
       { hole: 3,  yds: 135, par: 3 },
       { hole: 12, yds: 147, par: 3 },
     ],
     ldHole: { hole: 15, yds: 458, par: 4 },
-    ctps: [], longDrive: null, skins: []
+    ctps: [
+      { hole: 3, player: "Nick Grimshaw" },
+    ],
+    longDrive: { player: "Nick Grimshaw", dist: "226 yards" },
+    skins: [
+      { player: "Corey Joosten",      count: 1, payout: 31.43 },
+      { player: "Jeff Hogg",           count: 1, payout: 31.43 },
+      { player: "Luke Vandenbosch",    count: 1, payout: 31.43 },
+      { player: "Nick Grimshaw",       count: 1, payout: 31.43 },
+      { player: "Ryan Versolatto",     count: 1, payout: 31.43 },
+      { player: "Steve Rioux",         count: 1, payout: 31.43 },
+      { player: "William Churchill",   count: 1, payout: 31.43 },
+    ]
   },
 ];
 
